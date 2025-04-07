@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = 'https://dummy.restapiexample.com/api/v1';
+const API_BASE_URL = ''; // Replace with your API base URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -13,7 +13,7 @@ const api = axios.create({
 export const apiService = {
   get: async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     try {
-      const response = (await api.get<T>(url, config)).data;
+      const response = (await api.get<T>(url, config));
       return response.data;
     } catch (error) {
       console.error(`GET ${url} failed`, error);
