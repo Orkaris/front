@@ -11,12 +11,14 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 //import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList
-
- } from "../../model/types";
+import { AuthStackParamList } from "../navigation/AppNavigator";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useAuth } from '../../services/authContext';
+import { Alert } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { useThemeContext } from '../../theme/ThemeContext';
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList, "authentication/signin">;
+type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
 const SignUpScreen = () => {
     const [username, setUsername] = useState('');
@@ -25,25 +27,55 @@ const SignUpScreen = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const theme = useTheme();
     //const navigation = useNavigation<NavigationProps>();
-
+    const { signUp } = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigation = useNavigation<NavigationProps>();
+    const { theme: appTheme } = useThemeContext();
     const [passwordError, setPasswordError] = useState('');
     const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-    const handleSignUp = () => {
-        console.log('Attempting Sign Up with:', { name, email, password });
-        if (!email.includes('@')) {
-            alert('Email invalide');
+    const handleSignUp = async () => {
+        setPasswordError(''); // Reset error
+        if (!username || !email || !password) {
+            Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+            return;
+        }
+         if (!email.includes('@')) {
+            Alert.alert('Email invalide');
             return;
         }
         if (!PASSWORD_REGEX.test(password)) {
             setPasswordError('Le mot de passe doit contenir :\n- 8 caractères minimum\n- 1 majuscule\n- 1 chiffre');
             return;
         }
+
+        setIsSubmitting(true);
+        try {
+            // Assurez-vous que la clé correspond à ce que l'API attend ('name' ou 'username')
+            await signUp({ name: username, email, password });
+            Alert.alert(
+                'Inscription réussie',
+                'Votre compte a été créé. Vous pouvez maintenant vous connecter.',
+                [{ text: 'OK', onPress: () => navigation.navigate('authentication/signin') }]
+            );
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.response?.data?.error ||"Une erreur s'est produite lors de l'inscription.";
+            // Gérer spécifiquement l'erreur "Email already exists" si l'API la fournit
+             if (error.response?.data?.error === 'EMAIL_EXISTS' || errorMessage.toLowerCase().includes('exist')) {
+                 Alert.alert('Erreur', 'Cette adresse email est déjà utilisée.');
+             } else {
+                 Alert.alert('Échec de l\'inscription', errorMessage);
+             }
+            console.error(error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+
 
     const handleSignIn = () => {
         console.log('Navigate to Sign In Screen');
-        //navigation.navigate("authentication/signin");
+        navigation.navigate("authentication/signin");
     };
 
     return (

@@ -12,14 +12,15 @@ export default function HomeScreen() {
     const currentUser = async () => {
       const data: User = {
         id: '1d1f-1d1f-1d1f-1d1f',
-        username: 'Xx_JohnDoe_xX',
+        name: 'Xx_JohnDoe_xX',
         email: '',
         gender: 'Male',
         height: 180,
         weight: 75,
-        birthdate: new Date('1990-01-01'),
+        birthDate: '1990-01-01',
         profileType: 1,
-        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
+        createdAt: '2025-01-01',
+        //profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
       };
 
       if (data) setUser(data);
@@ -34,12 +35,12 @@ export default function HomeScreen() {
       {user ? (
         <View style={{ backgroundColor: theme.colors.background, padding: 20 }}>
           <View style={styles.container}>
-            <Image
-              source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
+            {/* <Image
+              //source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
               style={styles.image}
               resizeMode="cover"
-            />
-            <Text style={{ color: theme.colors.text }}>{user.username}</Text>
+            /> */}
+            <Text style={{ color: theme.colors.text }}>{user.name}</Text>
           </View>
 
           <Text style={{ color: theme.colors.text }}>Current Theme: {isDark ? 'Dark' : 'Light'}</Text>

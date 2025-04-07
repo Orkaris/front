@@ -1,6 +1,3 @@
-export type RootStackParamList = {
-  "authentication/register": undefined; // Add other routes as needed
-};
 
 // Types de base
 type ISOString = string; // Pour représenter les dates au format string ISO 8601
@@ -92,4 +89,16 @@ export interface SessionPerformance {
 export interface Sport {
     id: UniqueId;
     name: string;
+}
+
+// Définir l'interface pour l'état d'authentification
+export interface AuthState {
+  userToken: string | null;
+  isLoading: boolean; // Pour l'écran de chargement initial
+  isSignout: boolean; // Utile pour certaines logiques de navigation
+  signIn: (data: { email: string; password: string }) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (data: { name: string; email: string; password: string }) => Promise<void>;
+  // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
+  // user: User | null;
 }
