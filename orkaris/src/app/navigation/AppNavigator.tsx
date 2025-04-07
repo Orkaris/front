@@ -8,6 +8,7 @@ import { useAuth } from '../../services/authContext'; // Adaptez le chemin
 import SignInScreen from '../authentication/signin'; // Adaptez le chemin
 import SignUpScreen from '../authentication/register'; // Adaptez le chemin
 
+import { AuthStackParamList } from "../../model/types";
 // Écrans Principaux (post-connexion)
 import HomeScreen from '../index'; // Exemple
 //import ProfileScreen from '../screens/app/ProfileScreen'; // Exemple
@@ -16,10 +17,7 @@ import HomeScreen from '../index'; // Exemple
 //import SplashScreen from '../screens/SplashScreen'; // Un écran de chargement simple
 
 // Définissez vos types de paramètres de route si ce n'est pas déjà fait
-export type AuthStackParamList = {
-  'authentication/signin': undefined;
-  'authentication/register': undefined;
-};
+
 
 export type AppTabsParamList = { // Exemple avec des onglets
     Home: undefined;

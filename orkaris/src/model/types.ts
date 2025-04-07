@@ -1,3 +1,14 @@
+export type AuthStackParamList = {
+  'authentication/signin': undefined;
+  'authentication/register': undefined;
+};
+
+export type RootStackParamList = {
+  'profile': undefined;
+  'editProfile': { userId: string };
+  'workout': undefined;
+  'workout/:id': { id: string };
+};
 
 // Types de base
 type ISOString = string; // Pour représenter les dates au format string ISO 8601
