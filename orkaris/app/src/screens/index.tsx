@@ -36,7 +36,7 @@ export default function HomeScreen() {
         <View style={{ backgroundColor: theme.colors.background, padding: 20 }}>
           <View style={styles.container}>
             <Image
-              source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
+              source={user.profilePicture ? { uri: user.profilePicture } : require('../../assets/images/avatar.png')}
               style={styles.image}
               resizeMode="cover"
             />
