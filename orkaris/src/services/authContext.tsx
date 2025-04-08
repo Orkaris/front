@@ -1,9 +1,16 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
-
+import { jwtDecode } from 'jwt-decode';
 import { AuthState } from '../model/types';
+
+interface DecodedToken {
+  sub: string;
+  name?: string;
+  email?: string;
+  exp?: number;
+  iat?: number;
+}
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -15,38 +22,55 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userToken, setUserToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSignout, setIsSignout] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
-  // --- Configuration API ---
   const API_BASE_URL = 'http://127.0.0.1:5000/api';
-
   const authApi = axios.create({
     baseURL: API_BASE_URL + '/Users',
     timeout: 5000,
     headers: { 'Content-Type': 'application/json' },
   });
 
+  const processToken = useCallback((token: string | null) => {
+    if (token) {
+      try {
+        const decoded = jwtDecode<DecodedToken>(token);
+        const idFromToken = decoded.sub;
+
+        if (idFromToken) {
+          setUserId(idFromToken);
+          setUserToken(token);
+          setIsSignout(false);
+        } else {
+          setUserId(null);
+          setUserToken(null);
+        }
+      } catch (e) {
+        setUserId(null);
+        setUserToken(null);
+      }
+    } else {
+      setUserId(null);
+      setUserToken(null);
+    }
+  }, []);
+
   // --- Vérification du token au démarrage ---
   useEffect(() => {
     const bootstrapAsync = async () => {
+      let token: string | null = null;
+      setIsLoading(true);
       try {
-        const token = await AsyncStorage.getItem('userToken');
-        if (token) {
-          // Optionnel : Valider le token auprès de l'API
-          const isValid = await validateToken(token);
-          if (isValid) {
-            setUserToken(token);
-          } else {
-            await AsyncStorage.removeItem('userToken');
-          }
-        }
+        token = await AsyncStorage.getItem('userToken');
+        processToken(token);
       } catch (e) {
-        console.error('Erreur lors de la restauration du token', e);
+        processToken(null);
       } finally {
         setIsLoading(false);
       }
     };
     bootstrapAsync();
-  }, []);
+  }, [processToken]);
 
   const validateToken = async (token: string): Promise<boolean> => {
     try {
@@ -71,17 +95,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             password: data.password,
           });
 
-          const token = response.data.token;
-          if (token) {
-            await AsyncStorage.setItem('userToken', token);
-            setUserToken(token);
-            setIsSignout(false);
+          const receivedToken = response.data.token;
+          console.log("Token reçu:", receivedToken);
+          if (receivedToken) {
+            await AsyncStorage.setItem('userToken', receivedToken);
+            console.log("Token enregistré dans AsyncStorage");
+            
+            processToken(receivedToken);
           } else {
-            throw new Error('Token non reçu après connexion.');
+             throw new Error("Token non reçu après connexion.");
           }
         } catch (error: any) {
-          console.error('Erreur de connexion :', error.response?.data || error.message);
-          throw error;
+            processToken(null);
+            throw error;
         } finally {
           setIsLoading(false);
         }
@@ -89,60 +115,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       signOut: async () => {
         setIsLoading(true);
         try {
-          await AsyncStorage.removeItem('userToken');
-        } catch (e) {
-          console.error('Erreur lors de la déconnexion', e);
+            await AsyncStorage.removeItem('userToken');
+        } catch(e) {
         }
-        setUserToken(null);
+        processToken(null);
         setIsSignout(true);
         setIsLoading(false);
       },
       signUp: async (data: { name: string; email: string; password: string }) => {
         setIsLoading(true);
         try {
-          const response = await authApi.post('/register', {
-            name: data.name,
-            email: data.email,
-            password: data.password,
-          });
-          console.log('Inscription réussie :', response.data);
+            const response = await authApi.post('/register', {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+            });
         } catch (error: any) {
-          console.error('Erreur lors de l\'inscription :', error.response?.data || error.message);
-          throw error;
+            throw error;
         } finally {
           setIsLoading(false);
         }
       },
     }),
-    []
+    [authApi, processToken]
   );
 
-  const isAuthenticated = !!userToken;
-
   return (
-    <AuthContext.Provider value={{ ...authActions, userToken, isAuthenticated, isLoading, isSignout }}>
+    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook personnalisé pour utiliser le contexte facilement
-export const useAuth = () => {
+export const useAuth = (): AuthState => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
-
-// Hook pour rediriger si non authentifié
-export const useRequireAuth = () => {
-  const { isAuthenticated, isLoading } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.replace('/authentication/signin');
-    }
-  }, [isAuthenticated, isLoading, router]);
 };

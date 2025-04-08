@@ -15,39 +15,30 @@ import { AuthStackParamList } from "../../model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from '../../services/authContext';
 import { Alert } from 'react-native';
-import { i18n } from '@/src/i18n/i18n'; // Import du fichier i18n
-import { useLayoutEffect } from "react";
 
-type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
+type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
 const SignInScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const theme = useTheme();
-
     const navigation = useNavigation<NavigationProps>();
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: '', // Supprime le titre
-        });
-    }, [navigation]);
-
     const { signIn } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSignIn = async () => {
         if (!email || !password) {
-            Alert.alert(i18n.t('authentication.error'), i18n.t('authentication.fill_all_fields'));
+            Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
             return;
         }
         setIsSubmitting(true); // Active l'indicateur de chargement
         try {
             await signIn({ email, password });
-            console.log(i18n.t('authentication.signin_success'));
+            console.log('Sign In Successful');
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || error.response?.data?.error || i18n.t('authentication.invalid_credentials');
-            Alert.alert(i18n.t('authentication.signin_failed'), errorMessage);
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Email ou mot de passe incorrect.";
+            Alert.alert('Échec de la connexion', errorMessage);
             console.error(error);
         } finally {
             setIsSubmitting(false); // Désactive l'indicateur
@@ -55,9 +46,8 @@ const SignInScreen = () => {
     };
 
     const handleSignUp = () => {
-        console.log(i18n.t('authentication.navigate_to_signup'));
-        navigation.navigate("authentication/register");
-    };
+        console.log('Navigate to Sign Up Screen');
+        navigation.navigate("authentication/register");};
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -67,13 +57,13 @@ const SignInScreen = () => {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
-                        <Headline style={styles.headline}>{i18n.t('authentication.welcome')}</Headline>
+                        <Headline style={styles.headline}>Bonjour,</Headline>
                         <Paragraph style={styles.paragraph}>
-                            {i18n.t('authentication.signin_to_continue')}
+                            Connectez vous pour continuer.
                         </Paragraph>
 
                         <TextInput
-                            label={i18n.t('authentication.email')}
+                            label="Email"
                             value={email}
                             onChangeText={setEmail}
                             mode="outlined"
@@ -84,7 +74,7 @@ const SignInScreen = () => {
                         />
 
                         <TextInput
-                            label={i18n.t('authentication.password')}
+                            label="Mot De Passe"
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
@@ -107,12 +97,12 @@ const SignInScreen = () => {
                             labelStyle={[styles.buttonLabel, { color: theme.colors.surface }]}
                             theme={{ roundness: 30 }}
                         >
-                            {i18n.t('authentication.continue')}
+                            Continuer
                         </Button>
 
                         <View style={styles.signUpContainer}>
                             <RNText style={styles.signUpText}>
-                                {i18n.t('authentication.no_account')}{' '}
+                                Vous n'avez pas de compte?{' '}
                             </RNText>
                             <Button
                                 mode="text"
@@ -121,7 +111,7 @@ const SignInScreen = () => {
                                 labelStyle={styles.signUpLink}
                                 compact
                             >
-                                {i18n.t('authentication.signup')}
+                                Inscrivez vous
                             </Button>
                         </View>
                     </View>

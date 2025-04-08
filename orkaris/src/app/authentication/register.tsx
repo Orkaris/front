@@ -20,7 +20,7 @@ import { useThemeContext } from '../../theme/ThemeContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLayoutEffect } from "react";
 
-type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
+type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
 
 const SignUpScreen = () => {
     const [username, setUsername] = useState('');
@@ -28,7 +28,6 @@ const SignUpScreen = () => {
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const theme = useTheme();
-    //const navigation = useNavigation<NavigationProps>();
     const { signUp } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
