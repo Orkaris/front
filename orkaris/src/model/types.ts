@@ -8,6 +8,8 @@ export type RootStackParamList = {
   'editProfile': { userId: string };
   'workout': undefined;
   'workout/:id': { id: string };
+  'home': undefined;
+  'settings': undefined;
 };
 
 // Types de base
@@ -111,6 +113,7 @@ export interface AuthState {
   signIn: (data: { email: string; password: string }) => Promise<void>;
   signOut: () => Promise<void>;
   signUp: (data: { name: string; email: string; password: string }) => Promise<void>;
+  userId: string | null; // ID de l'utilisateur connecté
   // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
   // user: User | null;
 }

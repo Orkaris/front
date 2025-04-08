@@ -1,4 +1,3 @@
-import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from '../services/authContext';
 import AppNavigator from './navigation/AppNavigator'; // Votre composant de navigation principal
 import { ThemeProvider } from '../theme/ThemeContext';
@@ -13,12 +12,10 @@ const AppContent = () => {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </ThemeProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  </AuthProvider>
 
   );
 }

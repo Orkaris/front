@@ -16,7 +16,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from '../../services/authContext';
 import { Alert } from 'react-native';
 
-type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
+type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
 const SignInScreen = () => {
     const [email, setEmail] = useState('');
@@ -35,7 +35,6 @@ const SignInScreen = () => {
         setIsSubmitting(true); // Active l'indicateur de chargement
         try {
             await signIn({ email, password });
-            // La navigation se fera automatiquement via le changement d'état dans AppNavigator (voir étape 6)
             console.log('Sign In Successful');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || error.response?.data?.error || "Email ou mot de passe incorrect.";
