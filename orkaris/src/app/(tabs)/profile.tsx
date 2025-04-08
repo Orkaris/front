@@ -12,7 +12,12 @@ export default function ProfileScreen() {
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ color: theme.colors.text }}>Profile</Text>
-                <Ionicons name="settings-sharp" size={24} color={theme.colors.text} onPress={() => navigation.navigate("settings")} />
+                <Ionicons
+                    name="settings-sharp"
+                    size={24}
+                    color={theme.colors.text}
+                    onPress={() => navigation.navigate("settings")}
+                />
                 {/* <Loader /> */}
             </View>
         </View>
