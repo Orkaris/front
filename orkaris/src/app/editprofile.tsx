@@ -27,6 +27,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { apiService } from '../services/api'; // Notre client Axios configuré
 import { User } from '../model/types'; // Importer le type User
 import { RootStackParamList } from '../model/types'; // Votre type de navigation global
+const [user, setUser] = useState<User | null>(null);
 
 // Définir le type des paramètres de route pour cet écran
 type EditProfileScreenRouteProp = RouteProp<RootStackParamList, 'editProfile'>;
@@ -65,13 +66,31 @@ const EditProfileScreen = () => {
     const theme = useTheme();
     const navigation = useNavigation<EditProfileScreenNavigationProp>();
     const route = useRoute<EditProfileScreenRouteProp>();
-    const { currentUser } = route.params; // Récupérer l'utilisateur passé en paramètre
-
+    useEffect(() => {
+        const currentUser = async () => {
+          const data: User = {
+            id: '1d1f-1d1f-1d1f-1d1f',
+            name: 'Xx_JohnDoe_xX',
+            email: '',
+            gender: 'Male',
+            height: 180,
+            weight: 75,
+            birthDate: '1990-01-01',
+            profileType: 1,
+            createdAt: '2025-01-01',
+            profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
+          };
+    
+          if (data) setUser(data);
+        }
+    
+        currentUser();
+      }, []);
     const [formData, setFormData] = useState<EditProfileFormData>({
-        name: currentUser?.name || '',
-        weight: currentUser?.weight?.toString() || '',
-        height: currentUser?.height?.toString() || '',
-        birthDate: currentUser?.birthDate ? new Date(currentUser.birthDate) : null,
+        name: user?.name || '',
+        weight: user?.weight?.toString() || '',
+        height: user?.height?.toString() || '',
+        birthDate: user?.birthDate ? new Date(user.birthDate) : null,
     });
     const [initialData, setInitialData] = useState<EditProfileFormData | null>(null); // Pour détecter les changements
     const [errors, setErrors] = useState<FormErrors>({});

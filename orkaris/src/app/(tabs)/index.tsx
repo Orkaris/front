@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, useColorScheme, Text, View, Image, Button } from 'react-native';
-import { apiService } from '../services/api';
-import { User } from '../model/types';
-import { useThemeContext } from '../theme/ThemeContext';
+import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { apiService } from '../../services/api';
+import { User } from '../../model/types';
+import { useThemeContext } from '../../theme/ThemeContext';
+import Loader from '@/src/components/loader';
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
-  const { theme, toggleTheme, isDark } = useThemeContext();
+  const { theme } = useThemeContext();
 
   useEffect(() => {
     const currentUser = async () => {
@@ -20,20 +21,19 @@ export default function HomeScreen() {
         birthDate: '1990-01-01',
         profileType: 1,
         createdAt: '2025-01-01',
-        //profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
+        profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
       };
 
       if (data) setUser(data);
-      const scheme = useColorScheme();
     }
 
     currentUser();
   }, []);
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       {user ? (
-        <View style={{ backgroundColor: theme.colors.background, padding: 20 }}>
+        <View style={{ padding: 20 }}>
           <View style={styles.container}>
             {/* <Image
               //source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
@@ -42,24 +42,24 @@ export default function HomeScreen() {
             /> */}
             <Text style={{ color: theme.colors.text }}>{user.name}</Text>
           </View>
-
-          <Text style={{ color: theme.colors.text }}>Current Theme: {isDark ? 'Dark' : 'Light'}</Text>
-          <Button title="Toggle Theme" onPress={toggleTheme} />
         </View>
       ) : (
-        <Text>Loading user...</Text>
+        <Loader />
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
-    gap: 10
+    gap: 10,
   },
   image: {
     width: 50,

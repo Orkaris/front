@@ -17,6 +17,7 @@ import { useAuth } from '../../services/authContext';
 import { Alert } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { useThemeContext } from '../../theme/ThemeContext';
+import { i18n } from '@/src/i18n/i18n';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -94,7 +95,7 @@ const SignUpScreen = () => {
                         </Paragraph>
 
                         <TextInput
-                            label="Username"
+                            label={i18n.t('authentication.username')}
                             value={username}
                             onChangeText={setUsername}
                             mode="outlined"
@@ -115,7 +116,7 @@ const SignUpScreen = () => {
                         />
 
                         <TextInput
-                            label="Mot De Passe"
+                            label={i18n.t('authentication.password')}
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
@@ -144,7 +145,7 @@ const SignUpScreen = () => {
                             theme={{ roundness: 30 }}
                             accessibilityLabel="S'inscrire"
                         >
-                            S'inscrire
+                            {i18n.t('authentication.register_button')}
                         </Button>
 
                         <View style={styles.signInContainer}>
@@ -158,7 +159,7 @@ const SignUpScreen = () => {
                                 labelStyle={styles.signInLink}
                                 compact
                             >
-                                Connectez vous
+                                {i18n.t('authentication.connect_button')}
                             </Button>
                         </View>
                     </View>

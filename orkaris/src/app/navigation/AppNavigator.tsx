@@ -10,7 +10,7 @@ import SignUpScreen from '../authentication/register'; // Adaptez le chemin
 
 import { AuthStackParamList } from "../../model/types";
 // Écrans Principaux (post-connexion)
-import HomeScreen from '../index'; // Exemple
+import HomeScreen from '../(tabs)/index'; // Exemple
 //import ProfileScreen from '../screens/app/ProfileScreen'; // Exemple
 // ... importez vos autres écrans principaux
 

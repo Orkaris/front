@@ -1,7 +1,7 @@
-import { ThemeProvider } from '../theme/ThemeContext';
 import { Stack } from 'expo-router';
 import { AuthProvider, useAuth } from '../services/authContext';
 import AppNavigator from './navigation/AppNavigator'; // Votre composant de navigation principal
+import { ThemeProvider } from '../theme/ThemeContext';
 
 const AppContent = () => {
   // Ce composant intermédiaire est nécessaire car useAuth doit être appelé
@@ -9,12 +9,16 @@ const AppContent = () => {
   return <AppNavigator />;
 }
 
+
 export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <Stack />
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
       </ThemeProvider>
     </AuthProvider>
+
   );
 }
