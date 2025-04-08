@@ -51,6 +51,8 @@ const SignUpScreen = () => {
 
         setIsSubmitting(true);
         try {
+            console.log(email, username, password);
+            
             // Assurez-vous que la clé correspond à ce que l'API attend ('name' ou 'username')
             await signUp({ name: username, email, password });
             Alert.alert(

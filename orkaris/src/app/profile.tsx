@@ -48,7 +48,7 @@ const ProfileScreen = () => {
         setError(null);
         try {
             // === ADAPTER L'ENDPOINT SI NECESSAIRE ===
-            const response = await apiService.get<User>('/users/me'); // Endpoint pour récupérer l'utilisateur connecté
+            const response = await apiService.get<User>('/Users/me'); // Endpoint pour récupérer l'utilisateur connecté
             setUser(response);
         } catch (err: any) {
             console.error("Erreur fetchUserProfile:", err.response?.data || err.message);

@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isSignout, setIsSignout] = useState(false);
 
   // --- Configuration API ---
-  const API_BASE_URL = '127.0.0.1::5058/api';
+  const API_BASE_URL = 'http://127.0.0.1:5000/api';
 
   const authApi = axios.create({
     baseURL: API_BASE_URL + '/Users',
@@ -88,7 +88,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       },
       signUp: async (data: { name: string; email: string; password: string }) => {
         setIsLoading(true);
+        
         try {
+          console.log(data.name, data.email, data.password);
             // Remplacez par votre appel API réel
             const response = await authApi.post('/register', {
                 name: data.name, // Assurez-vous que le backend attend 'name' ou 'username'
