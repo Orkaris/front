@@ -5,6 +5,7 @@ import { darkTheme, lightTheme, ThemeType } from './theme';
 
 type ThemeContextType = {
     theme: ThemeType;
+    isDark: boolean;
     updateStoredTheme: (newValue: string) => void;
 };
 
@@ -28,7 +29,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         };
 
         loadStoredTheme();
-    }, [systemScheme]); // Ensure it reacts to systemScheme changes
+    }, [systemScheme]);
 
     const updateStoredTheme = async (newValue: string) => {
         await AsyncStorage.setItem(STORAGE_KEY, newValue);
@@ -41,8 +42,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
     };
 
+    const isDark = theme.dark;
+
     return (
-        <ThemeContext.Provider value={{ theme, updateStoredTheme }}>
+        <ThemeContext.Provider value={{ theme, isDark, updateStoredTheme }}>
             {children}
         </ThemeContext.Provider>
     );

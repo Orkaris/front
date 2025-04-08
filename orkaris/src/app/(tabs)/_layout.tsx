@@ -18,22 +18,22 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen name="index" options={{
-                title: i18n.t('home'), headerShown: false, tabBarIcon: ({ color, focused }) => (
+                title: i18n.t('home'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="programs" options={{
-                title: i18n.t('programs'), headerShown: false, tabBarIcon: ({ color, focused }) => (
+                title: i18n.t('programs'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'list' : 'list-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="history" options={{
-                title: i18n.t('history'), headerShown: false, tabBarIcon: ({ color, focused }) => (
+                title: i18n.t('history'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'time' : 'time-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="profile" options={{
-                title: i18n.t('profile'), headerShown: false, tabBarIcon: ({ color, focused }) => (
+                title: i18n.t('profile'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'person' : 'person-outline'} color={color} size={24} />
                 ),
             }} />
