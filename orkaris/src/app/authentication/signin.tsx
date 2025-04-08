@@ -10,29 +10,44 @@ import {
     useTheme
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-//import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../model/types";
+import { useNavigation } from "@react-navigation/native";
+import { AuthStackParamList } from "../../model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useAuth } from '../../services/authContext';
+import { Alert } from 'react-native';
 
-type NavigationProps = NativeStackNavigationProp<RootStackParamList, "authentication/register">;
+type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
 const SignInScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
     const theme = useTheme();
-    //const navigation = useNavigation<NavigationProps>();
+    const navigation = useNavigation<NavigationProps>();
+    const { signIn } = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-    const handleSignIn = () => {
-        console.log('Attempting Sign In with:', { email, password });
-        // TODO
+    const handleSignIn = async () => {
+        if (!email || !password) {
+            Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
+            return;
+        }
+        setIsSubmitting(true); // Active l'indicateur de chargement
+        try {
+            await signIn({ email, password });
+            console.log('Sign In Successful');
+        } catch (error: any) {
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Email ou mot de passe incorrect.";
+            Alert.alert('Échec de la connexion', errorMessage);
+            console.error(error);
+        } finally {
+            setIsSubmitting(false); // Désactive l'indicateur
+        }
     };
 
     const handleSignUp = () => {
         console.log('Navigate to Sign Up Screen');
-        //navigation.navigate("authentication/register");
-    };
+        navigation.navigate("authentication/register");};
 
     return (
         <SafeAreaView style={styles.safeArea}>

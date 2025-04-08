@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { apiService } from '../../services/api';
-import { User } from '../../model/types';
+import { RootStackParamList, User } from '../../model/types';
 import { useThemeContext } from '../../theme/ThemeContext';
 import Loader from '@/src/components/loader';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+type IndexNavigationProp = NativeStackNavigationProp<RootStackParamList, 'home'>;
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
@@ -13,15 +15,15 @@ export default function HomeScreen() {
     const currentUser = async () => {
       const data: User = {
         id: '1d1f-1d1f-1d1f-1d1f',
-        username: 'Xx_JohnDoe_xX',
+        name: 'Xx_JohnDoe_xX',
         email: '',
         gender: 'Male',
         height: 180,
         weight: 75,
-        birthDate: new Date('1990-01-01').toISOString(),
+        birthDate: '1990-01-01',
         profileType: 1,
+        createdAt: '2025-01-01',
         profilePicture: 'https://static.vecteezy.com/system/resources/thumbnails/053/741/746/small/a-colorful-lizard-with-a-blue-and-orange-face-is-staring-at-the-camera-the-lizard-s-face-is-the-main-focus-of-the-image-and-it-is-curious-or-alert-the-bright-colors-of-the-lizard-s-face-photo.jpg',
-        createdAt: new Date().toISOString(),
       };
 
       if (data) setUser(data);
@@ -35,12 +37,12 @@ export default function HomeScreen() {
       {user ? (
         <View style={{ padding: 20 }}>
           <View style={styles.container}>
-            <Image
-              source={user.profilePicture ? { uri: user.profilePicture } : require('@/src/assets/images/avatar.png')}
-              style={[styles.image, { borderWidth: 2, borderColor: theme.colors.text }]}
-              resizeMode='cover'
-            />
-            <Text style={{ color: theme.colors.text }}>{user.username}</Text>
+            {/* <Image
+              //source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
+              style={styles.image}
+              resizeMode="cover"
+            /> */}
+            <Text style={{ color: theme.colors.text }}>{user.name}</Text>
           </View>
         </View>
       ) : (

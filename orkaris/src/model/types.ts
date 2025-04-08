@@ -1,5 +1,15 @@
+export type AuthStackParamList = {
+  'authentication/signin': undefined;
+  'authentication/register': undefined;
+};
+
 export type RootStackParamList = {
-  "authentication/register": undefined; // Add other routes as needed
+  'profile': undefined;
+  'editProfile': { userId: string };
+  'workout': undefined;
+  'workout/:id': { id: string };
+  'home': undefined;
+  'settings': undefined;
 };
 
 // Types de base
@@ -9,7 +19,7 @@ type UniqueId = string; // Pour représenter les identifiants
 // Interface pour un Utilisateur
 export interface User {
   id: UniqueId;
-  username: string;
+  name: string;
   email: string;
   gender: string;
   height: number;
@@ -91,6 +101,19 @@ export interface SessionPerformance {
 
 // Interface pour un Sport 
 export interface Sport {
-  id: UniqueId;
-  name: string;
+    id: UniqueId;
+    name: string;
+}
+
+// Définir l'interface pour l'état d'authentification
+export interface AuthState {
+  userToken: string | null;
+  isLoading: boolean; // Pour l'écran de chargement initial
+  isSignout: boolean; // Utile pour certaines logiques de navigation
+  signIn: (data: { email: string; password: string }) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (data: { name: string; email: string; password: string }) => Promise<void>;
+  userId: string | null; // ID de l'utilisateur connecté
+  // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
+  // user: User | null;
 }
