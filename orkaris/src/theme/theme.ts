@@ -2,7 +2,7 @@ export const lightTheme = {
     dark: false,
     colors: {
         background: '#ffffff',
-        text: '#000000',
+        text: '#02012D',
     },
 };
 

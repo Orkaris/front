@@ -9,13 +9,14 @@ type UniqueId = string; // Pour représenter les identifiants
 // Interface pour un Utilisateur
 export interface User {
   id: UniqueId;
-  name: string;
+  username: string;
   email: string;
   gender: string;
   height: number;
-  weight: number; 
+  weight: number;
   birthDate: ISOString;
   profileType: number;
+  profilePicture: string;
   createdAt: ISOString;
 }
 
@@ -30,7 +31,7 @@ export interface Workout {
 // Interface pour une Séance (Session)
 export interface Session {
   id: UniqueId;
-  name: string; 
+  name: string;
   userId: UniqueId;
   workoutId: UniqueId;
   createdAt: ISOString;
@@ -45,8 +46,8 @@ export interface Exercise {
 
 // Interface pour une Catégorie d'Exercice
 export interface Category {
-    id: UniqueId;
-    name: string;
+  id: UniqueId;
+  name: string;
 }
 
 // Interface pour la table de jointure Exercice <-> Catégorie
@@ -75,21 +76,21 @@ export interface SessionExercise {
 export interface ExerciseGoalPerformance {
   id: UniqueId;
   reps: number;
-  sets: number; 
-  createdAt: ISOString; 
+  sets: number;
+  createdAt: ISOString;
   exerciseGoalId: UniqueId;
 }
 
 // Interface pour la Performance Globale d'une Séance
 export interface SessionPerformance {
   id: UniqueId;
-  sessionId: UniqueId; 
-  feeling: string; 
-  date: ISOString; 
+  sessionId: UniqueId;
+  feeling: string;
+  date: ISOString;
 }
 
 // Interface pour un Sport 
 export interface Sport {
-    id: UniqueId;
-    name: string;
+  id: UniqueId;
+  name: string;
 }

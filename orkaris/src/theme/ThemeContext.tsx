@@ -5,8 +5,7 @@ import { darkTheme, lightTheme, ThemeType } from './theme';
 
 type ThemeContextType = {
     theme: ThemeType;
-    toggleTheme: () => void;
-    isDark: boolean;
+    updateStoredTheme: (newValue: string) => void;
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -14,28 +13,36 @@ const STORAGE_KEY = 'USER_THEME_PREFERENCE';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const systemScheme = useColorScheme();
-    const [isDark, setIsDark] = useState(systemScheme === 'dark');
+    const [theme, setTheme] = useState<ThemeType>(systemScheme === 'dark' ? darkTheme : lightTheme);
 
     useEffect(() => {
         const loadStoredTheme = async () => {
             const saved = await AsyncStorage.getItem(STORAGE_KEY);
-            if (saved === 'light') setIsDark(false);
-            else if (saved === 'dark') setIsDark(true);
-            else setIsDark(systemScheme === 'dark');
+            if (saved === 'light') {
+                setTheme(lightTheme);
+            } else if (saved === 'dark') {
+                setTheme(darkTheme);
+            } else {
+                setTheme(systemScheme === 'dark' ? darkTheme : lightTheme);
+            }
         };
-        loadStoredTheme();
-    }, [systemScheme]);
 
-    const toggleTheme = async () => {
-        const newValue = !isDark;
-        setIsDark(newValue);
-        await AsyncStorage.setItem(STORAGE_KEY, newValue ? 'dark' : 'light');
+        loadStoredTheme();
+    }, [systemScheme]); // Ensure it reacts to systemScheme changes
+
+    const updateStoredTheme = async (newValue: string) => {
+        await AsyncStorage.setItem(STORAGE_KEY, newValue);
+        if (newValue === 'light') {
+            setTheme(lightTheme);
+        } else if (newValue === 'dark') {
+            setTheme(darkTheme);
+        } else {
+            setTheme(systemScheme === 'dark' ? darkTheme : lightTheme);
+        }
     };
 
-    const theme = isDark ? darkTheme : lightTheme;
-
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, isDark }}>
+        <ThemeContext.Provider value={{ theme, updateStoredTheme }}>
             {children}
         </ThemeContext.Provider>
     );
