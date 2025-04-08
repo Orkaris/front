@@ -1,8 +1,10 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios'; 
+import axios from 'axios';
+import { useRouter } from 'expo-router';
 
-import { AuthState } from '../model/types'; 
+import { AuthState } from '../model/types';
+
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -20,105 +22,105 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authApi = axios.create({
     baseURL: API_BASE_URL + '/Users',
     timeout: 5000,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
   });
-  // --------------------------------------
 
+  // --- Vérification du token au démarrage ---
   useEffect(() => {
-    // Vérifier si un token existe déjà au démarrage
     const bootstrapAsync = async () => {
-      let token: string | null = null;
       try {
-        token = await AsyncStorage.getItem('userToken');
-        // Ici, vous pourriez aussi vouloir valider le token auprès de l'API
-        // pour s'assurer qu'il n'a pas expiré côté serveur.
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+          // Optionnel : Valider le token auprès de l'API
+          const isValid = await validateToken(token);
+          if (isValid) {
+            setUserToken(token);
+          } else {
+            await AsyncStorage.removeItem('userToken');
+          }
+        }
       } catch (e) {
-        console.error("Restoring token failed", e);
+        console.error('Erreur lors de la restauration du token', e);
+      } finally {
+        setIsLoading(false);
       }
-      setUserToken(token);
-      setIsLoading(false);
     };
     bootstrapAsync();
   }, []);
 
+  const validateToken = async (token: string): Promise<boolean> => {
+    try {
+      const response = await authApi.get('/validate-token', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.status === 200;
+    } catch (error) {
+      console.error('Token validation failed:', error);
+      return false;
+    }
+  };
+
+  // --- Actions d'authentification ---
   const authActions = React.useMemo(
     () => ({
       signIn: async (data: { email: string; password: string }) => {
         setIsLoading(true);
         try {
-          // Remplacez par votre appel API réel
           const response = await authApi.post('/login', {
             email: data.email,
             password: data.password,
           });
 
-          // --- Adapter selon la réponse de VOTRE API ---
-          const token = response.data.token; // Ou response.data.accessToken, etc.
-          // const userData = response.data.user; // Si l'API renvoie aussi l'user
-          // --------------------------------------------
-
+          const token = response.data.token;
           if (token) {
             await AsyncStorage.setItem('userToken', token);
             setUserToken(token);
-            // setUser(userData); // Mettre à jour l'objet user si nécessaire
             setIsSignout(false);
           } else {
-             // Gérer le cas où le token n'est pas dans la réponse attendue
-             throw new Error("Token non reçu après connexion.");
+            throw new Error('Token non reçu après connexion.');
           }
         } catch (error: any) {
-            console.error("Sign in error:", error.response?.data || error.message);
-            // Propager l'erreur pour l'afficher dans le formulaire
-            throw error;
+          console.error('Erreur de connexion :', error.response?.data || error.message);
+          throw error;
         } finally {
-            setIsLoading(false);
+          setIsLoading(false);
         }
       },
       signOut: async () => {
         setIsLoading(true);
         try {
-            await AsyncStorage.removeItem('userToken');
-        } catch(e) {
-            console.error("Sign out error", e);
+          await AsyncStorage.removeItem('userToken');
+        } catch (e) {
+          console.error('Erreur lors de la déconnexion', e);
         }
         setUserToken(null);
-        // setUser(null);
-        setIsSignout(true); // Marquer comme déconnecté pour la navigation
+        setIsSignout(true);
         setIsLoading(false);
       },
       signUp: async (data: { name: string; email: string; password: string }) => {
         setIsLoading(true);
-        
         try {
-          console.log(data.name, data.email, data.password);
-            // Remplacez par votre appel API réel
-            const response = await authApi.post('/register', {
-                name: data.name, // Assurez-vous que le backend attend 'name' ou 'username'
-                email: data.email,
-                password: data.password,
-            });
-
-            // --- Gérer la réponse de l'inscription ---
-            // Option 1: L'API renvoie un message de succès, rediriger vers Login
-            console.log("Sign up successful:", response.data);
-            // Ne pas définir de token ici, l'utilisateur doit se connecter
-
-           // -----------------------------------------
-
+          const response = await authApi.post('/register', {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+          });
+          console.log('Inscription réussie :', response.data);
         } catch (error: any) {
-            console.error("Sign up error:", error.response?.data || error.message);
-            // Propager l'erreur pour l'afficher dans le formulaire
-            throw error;
+          console.error('Erreur lors de l\'inscription :', error.response?.data || error.message);
+          throw error;
         } finally {
-            setIsLoading(false);
+          setIsLoading(false);
         }
       },
     }),
-    [] // Dépendances du useMemo
+    []
   );
 
+  const isAuthenticated = !!userToken;
+
   return (
-    <AuthContext.Provider value={{ ...authActions, userToken, isLoading, isSignout }}>
+    <AuthContext.Provider value={{ ...authActions, userToken, isAuthenticated, isLoading, isSignout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -131,4 +133,16 @@ export const useAuth = () => {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
+};
+
+// Hook pour rediriger si non authentifié
+export const useRequireAuth = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.replace('/authentication/signin');
+    }
+  }, [isAuthenticated, isLoading, router]);
 };

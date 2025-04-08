@@ -18,6 +18,7 @@ import { Alert } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import { useThemeContext } from '../../theme/ThemeContext';
 import { i18n } from '@/src/i18n/i18n';
+import { useLayoutEffect } from "react";
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -30,7 +31,14 @@ const SignUpScreen = () => {
     //const navigation = useNavigation<NavigationProps>();
     const { signUp } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const navigation = useNavigation<NavigationProps>();
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: '', // Supprime le titre
+        });
+    }, [navigation]);
+
     const { theme: appTheme } = useThemeContext();
     const [passwordError, setPasswordError] = useState('');
     const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -41,7 +49,7 @@ const SignUpScreen = () => {
             Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
             return;
         }
-         if (!email.includes('@')) {
+        if (!email.includes('@')) {
             Alert.alert('Email invalide');
             return;
         }
@@ -53,7 +61,7 @@ const SignUpScreen = () => {
         setIsSubmitting(true);
         try {
             console.log(email, username, password);
-            
+
             // Assurez-vous que la clé correspond à ce que l'API attend ('name' ou 'username')
             await signUp({ name: username, email, password });
             Alert.alert(
@@ -62,13 +70,13 @@ const SignUpScreen = () => {
                 [{ text: 'OK', onPress: () => navigation.navigate('authentication/signin') }]
             );
         } catch (error: any) {
-            const errorMessage = error.response?.data?.message || error.response?.data?.error ||"Une erreur s'est produite lors de l'inscription.";
+            const errorMessage = error.response?.data?.message || error.response?.data?.error || "Une erreur s'est produite lors de l'inscription.";
             // Gérer spécifiquement l'erreur "Email already exists" si l'API la fournit
-             if (error.response?.data?.error === 'EMAIL_EXISTS' || errorMessage.toLowerCase().includes('exist')) {
-                 Alert.alert('Erreur', 'Cette adresse email est déjà utilisée.');
-             } else {
-                 Alert.alert('Échec de l\'inscription', errorMessage);
-             }
+            if (error.response?.data?.error === 'EMAIL_EXISTS' || errorMessage.toLowerCase().includes('exist')) {
+                Alert.alert('Erreur', 'Cette adresse email est déjà utilisée.');
+            } else {
+                Alert.alert('Échec de l\'inscription', errorMessage);
+            }
             console.error(error);
         } finally {
             setIsSubmitting(false);
@@ -89,9 +97,10 @@ const SignUpScreen = () => {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
-                        <Headline style={styles.headline}>Bonjour,</Headline>
+
+                        <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
                         <Paragraph style={styles.paragraph}>
-                            Inscrivez vous pour continuer.
+                            {i18n.t('authentication.register_prompt')}
                         </Paragraph>
 
                         <TextInput
@@ -150,13 +159,15 @@ const SignUpScreen = () => {
 
                         <View style={styles.signInContainer}>
                             <RNText style={styles.signInText}>
-                                Vous avez déjà un compte?{' '}
+                            {i18n.t('authentication.already_have_account')} ? {''}
+                                
                             </RNText>
                             <Button
                                 mode="text"
                                 onPress={handleSignIn}
                                 uppercase={false}
-                                labelStyle={styles.signInLink}
+                                labelStyle={[styles.signInLink, { textAlign: 'center', flexWrap: 'wrap' }]} // Centrer et autoriser le retour à la ligne
+                                contentStyle={{ flexShrink: 1 }}
                                 compact
                             >
                                 {i18n.t('authentication.connect_button')}

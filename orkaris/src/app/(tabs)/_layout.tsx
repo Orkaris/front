@@ -1,10 +1,30 @@
-import { Tabs } from 'expo-router';
+import { Tabs, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { i18n } from '@/src/i18n/i18n';
 import { useThemeContext } from '@/src/theme/ThemeContext';
+import { useAuth } from '@/src/services/authContext';
+import { useEffect, useState } from 'react';
+import Loader from '@/src/components/loader';
 
 export default function TabLayout() {
-    const { theme, isDark } = useThemeContext();
+    const { theme, isDark } = useThemeContext(); // Appel des hooks au niveau supérieur
+    const { isAuthenticated } = useAuth();
+    const [isRouterReady, setIsRouterReady] = useState(false);
+    const [forceLoader, setForceLoader] = useState(true);
+;
+
+    // Forcer l'affichage du loader pendant 1 seconde
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setForceLoader(false);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (forceLoader) {
+        return <Loader />;
+    }
 
     return (
         <Tabs
