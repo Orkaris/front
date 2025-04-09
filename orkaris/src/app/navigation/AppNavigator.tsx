@@ -1,14 +1,17 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
+import { i18n } from "@/src/i18n/i18n";
 
-import { useAuth } from "../../services/authContext"; // Adaptez le chemin
+import { useAuth } from "../../services/authContext";
+import { useThemeContext } from "@/src/theme/ThemeContext";
+import { AuthStackParamList } from "@/src/model/types";
+import { ThemeType } from "@/src/theme/theme";
 
-import SignInScreen from "../authentication/signin"; // Adaptez le chemin
-import SignUpScreen from "../authentication/register"; // Adaptez le chemin
-import EditProfileScreen from "../editprofile"; // Import the EditProfileScreen
+import SignInScreen from "@/src/app/authentication/signin";
+import SignUpScreen from "@/src/app/authentication/register";
+import Loader from "@/src/components/loader";
 
-import { AuthStackParamList } from "../../model/types";
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
 const AuthNavigator = () => (
@@ -18,21 +21,27 @@ const AuthNavigator = () => (
   </AuthStack.Navigator>
 );
 
-const MainAppNavigator = () => (
+const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
   <Stack>
     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack.Screen name="settings" options={{
+      headerTitle: '',
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+    }} />
   </Stack>
 );
 
-const AppNavigator = () => {
+export default function AppNavigator() {
   const { userToken, isLoading } = useAuth();
-  console.log("Token utilisateur dans AppNavigator:", userToken);
-  console.log("État de chargement dans AppNavigator:", isLoading);
+  const { theme } = useThemeContext();
+
   if (isLoading) {
-    // return <SplashScreen />;
+    return <Loader />
   }
 
-  return userToken ? <MainAppNavigator /> : <AuthNavigator />;
-};
-
-export default AppNavigator;
+  return userToken ? <MainAppNavigator theme={theme} /> : <AuthNavigator />;
+}

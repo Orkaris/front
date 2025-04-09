@@ -8,10 +8,8 @@ import Loader from '@/src/components/loader';
 
 export default function TabLayout() {
     const { theme, isDark } = useThemeContext(); // Appel des hooks au niveau supérieur
-    const { isAuthenticated } = useAuth();
     const [isRouterReady, setIsRouterReady] = useState(false);
     const [forceLoader, setForceLoader] = useState(true);
-;
 
     // Forcer l'affichage du loader pendant 1 seconde
     useEffect(() => {
@@ -38,22 +36,23 @@ export default function TabLayout() {
             }}
         >
             <Tabs.Screen name="index" options={{
-                title: i18n.t('home'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
+                title: i18n.t('navigation.home'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="programs" options={{
-                title: i18n.t('programs'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
+                title: i18n.t('navigation.programs'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'list' : 'list-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="history" options={{
-                title: i18n.t('history'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
+                title: i18n.t('navigation.history'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'time' : 'time-outline'} color={color} size={24} />
                 ),
             }} />
             <Tabs.Screen name="profile" options={{
-                title: i18n.t('profile'), headerShown: false, tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
+                title: i18n.t('navigation.profile'), headerTitleStyle: { fontSize: 32, fontWeight: 'bold' }, headerShadowVisible: false, headerStyle: { backgroundColor: theme.colors.background }, headerTintColor: theme.colors.text,
+                tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'person' : 'person-outline'} color={color} size={24} />
                 ),
             }} />

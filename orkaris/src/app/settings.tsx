@@ -1,33 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { i18n } from '../i18n/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeContext } from '../theme/ThemeContext';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Alert } from 'react-native';
 
 export default function SettingsScreen() {
-    const { theme, updateStoredTheme } = useThemeContext();
+    const { theme, isDark, updateStoredTheme } = useThemeContext();
 
     const [value, setValue] = useState<string | null>(null);
     const [isFocus, setIsFocus] = useState(false);
 
-    const data = [
-        { label: i18n.t('defaultTheme'), value: 'default' },
-        { label: i18n.t('lightTheme'), value: 'light' },
-        { label: i18n.t('darkTheme'), value: 'dark' },
+    const themes = [
+        { label: i18n.t('settings.default_theme'), value: 'default', icon: () => <Ionicons name="pencil-outline" size={20} color={theme.colors.text} /> },
+        { label: i18n.t('settings.light_theme'), value: 'light', icon: () => <Ionicons name="sunny-outline" size={20} color={theme.colors.text} /> },
+        { label: i18n.t('settings.dark_theme'), value: 'dark', icon: () => <Ionicons name="moon-outline" size={20} color={theme.colors.text} /> },
     ];
-
-    const renderLabel = () => {
-        if (value || isFocus) {
-            return (
-                <Text style={[styles.label, isFocus && { color: 'blue' }]}>
-                    Dropdown label
-                </Text>
-            );
-        }
-        return null;
-    };
 
     useEffect(() => {
         const getData = async () => {
@@ -44,79 +34,93 @@ export default function SettingsScreen() {
         getData();
     }, []);
 
+    const showAlert = () => {
+        Alert.alert(
+            i18n.t('settings.delete_account_information'),
+            i18n.t('settings.delete_account_confirmation'),
+            [
+                {
+                    text: i18n.t('alert.cancel'),
+                    style: 'cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                },
+                {
+                    text: i18n.t('alert.ok'),
+                    onPress: () => console.log('OK Pressed')
+                },
+            ],
+            { cancelable: false },
+        );
+    }
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            {renderLabel()}
-            <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                iconStyle={styles.iconStyle}
-                data={data}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isFocus ? i18n.t('selectItem') : '...'}
-                searchPlaceholder="Search..."
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={item => {
-                    setValue(item.value);
-                    setIsFocus(false);
-                    updateStoredTheme(item.value);
-                }}
-                renderLeftIcon={() => (
-                    <AntDesign
-                        style={styles.icon}
-                        color={isFocus ? 'blue' : 'black'}
-                        name="Safety"
-                        size={20}
-                    />
-                )}
-            />
+        <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+            <View style={styles.container}>
+                <Text style={{ color: theme.colors.text, fontSize: 16, marginBottom: 10 }}>
+                    {i18n.t('settings.application_theme')}
+                </Text>
+                <Dropdown
+                    style={[styles.dropdown, { backgroundColor: theme.colors.background }]}
+                    containerStyle={{ backgroundColor: theme.colors.background }}
+                    selectedTextStyle={{ color: theme.colors.text }}
+                    activeColor={theme.colors.background}
+                    data={themes}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    value={value}
+                    onFocus={() => setIsFocus(true)}
+                    onBlur={() => setIsFocus(false)}
+                    onChange={item => {
+                        setValue(item.value);
+                        setIsFocus(false);
+                        updateStoredTheme(item.value);
+                    }}
+                    renderLeftIcon={() => (
+                        <Ionicons
+                            style={[styles.icon, { color: theme.colors.text }]}
+                            color={isFocus ? 'blue' : 'black'}
+                            name={isDark ? 'moon-outline' : 'sunny-outline'}
+                            size={20}
+                        />
+                    )}
+                    renderItem={(item) => {
+                        return (
+                            <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5 }}>
+                                {item.icon()}
+                                <Text style={{ color: theme.colors.text, padding: 5 }}>{item.label}</Text>
+                            </View>
+                        );
+                    }
+                    }
+                />
+
+                <Button
+                    title={i18n.t('settings.delete_account')}
+                    onPress={showAlert}
+                    color='red'
+                />
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    root: {
+        flex: 1,
+    },
     container: {
-        backgroundColor: 'white',
         padding: 16,
     },
     dropdown: {
-        height: 50,
+        height: 40,
         borderColor: 'gray',
         borderWidth: 0.5,
         borderRadius: 8,
         paddingHorizontal: 8,
+        width: '50%',
     },
     icon: {
         marginRight: 5,
-    },
-    label: {
-        position: 'absolute',
-        backgroundColor: 'white',
-        left: 22,
-        top: 8,
-        zIndex: 999,
-        paddingHorizontal: 8,
-        fontSize: 14,
-    },
-    placeholderStyle: {
-        fontSize: 16,
-    },
-    selectedTextStyle: {
-        fontSize: 16,
-    },
-    iconStyle: {
-        width: 20,
-        height: 20,
-    },
-    inputSearchStyle: {
-        height: 40,
-        fontSize: 16,
     },
 });
