@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text as RNText, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import {
-    Provider as PaperProvider,
-    DefaultTheme,
     Headline,
     Paragraph,
     TextInput,
-    Button,
-    useTheme
+    Button
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
-//import { useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "../../model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from '../../services/authContext';
@@ -27,7 +23,7 @@ const SignUpScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const theme = useTheme();
+    const { theme } = useThemeContext();
     const { signUp } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,7 +34,6 @@ const SignUpScreen = () => {
         });
     }, [navigation]);
 
-    const { theme: appTheme } = useThemeContext();
     const [passwordError, setPasswordError] = useState('');
     const PASSWORD_REGEX = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
@@ -89,7 +84,7 @@ const SignUpScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={styles.keyboardAvoiding}
@@ -139,17 +134,17 @@ const SignUpScreen = () => {
                             }
                         />
                         {passwordError ? (
-                            <RNText style={styles.errorText}>
+                            <Text style={styles.errorText}>
                                 {passwordError}
-                            </RNText>
+                            </Text>
                         ) : null}
 
                         <Button
                             mode="contained"
                             onPress={handleSignUp}
-                            style={[styles.button, { backgroundColor: theme.colors.onSurface }]}
+                            style={[styles.button, { backgroundColor: theme.colors.text }]}
                             contentStyle={styles.buttonContent}
-                            labelStyle={[styles.buttonLabel, { color: theme.colors.surface }]}
+                            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
                             theme={{ roundness: 30 }}
                             accessibilityLabel="S'inscrire"
                         >
@@ -157,10 +152,10 @@ const SignUpScreen = () => {
                         </Button>
 
                         <View style={styles.signInContainer}>
-                            <RNText style={styles.signInText}>
-                            {i18n.t('authentication.already_have_account')} ? {''}
-                                
-                            </RNText>
+                            <Text style={styles.signInText}>
+                                {i18n.t('authentication.already_have_account')}
+
+                            </Text>
                             <Button
                                 mode="text"
                                 onPress={handleSignIn}
@@ -228,7 +223,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     signInContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
@@ -240,7 +235,6 @@ const styles = StyleSheet.create({
     signInLink: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginHorizontal: -5,
     },
 });
 

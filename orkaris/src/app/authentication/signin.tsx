@@ -11,8 +11,7 @@ import {
     Headline,
     Paragraph,
     TextInput,
-    Button,
-    useTheme
+    Button
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +20,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useAuth } from '@/src/services/authContext';
 import { Alert } from 'react-native';
 import { i18n } from '@/src/i18n/i18n';
+import { useThemeContext } from '@/src/theme/ThemeContext';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -28,7 +28,7 @@ const SignInScreen = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const theme = useTheme();
+    const { theme } = useThemeContext();
     const navigation = useNavigation<NavigationProps>();
     const { signIn } = useAuth();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +57,7 @@ const SignInScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
                 style={styles.keyboardAvoiding}
@@ -66,7 +66,7 @@ const SignInScreen = () => {
                     <View style={styles.container}>
                         <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
                         <Paragraph style={styles.paragraph}>
-                            Connectez vous pour continuer.
+                            {i18n.t('authentication.signin_to_continue')}
                         </Paragraph>
 
                         <TextInput
@@ -81,7 +81,7 @@ const SignInScreen = () => {
                         />
 
                         <TextInput
-                            label="Mot De Passe"
+                            label={i18n.t('authentication.password')}
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
@@ -99,26 +99,25 @@ const SignInScreen = () => {
                         <Button
                             mode="contained"
                             onPress={handleSignIn}
-                            style={[styles.button, { backgroundColor: theme.colors.onSurface }]}
+                            style={[styles.button, { backgroundColor: theme.colors.text }]}
                             contentStyle={styles.buttonContent}
-                            labelStyle={[styles.buttonLabel, { color: theme.colors.surface }]}
+                            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
                             theme={{ roundness: 30 }}
                         >
-                            Continuer
+                            {i18n.t('authentication.connect_button')}
                         </Button>
 
                         <View style={styles.signUpContainer}>
                             <Text style={styles.signUpText}>
-                                Vous n'avez pas de compte?{' '}
+                                {i18n.t('authentication.no_account')}
                             </Text>
                             <Button
                                 mode="text"
                                 onPress={handleSignUp}
                                 uppercase={false}
                                 labelStyle={styles.signUpLink}
-                                compact
                             >
-                                Inscrivez vous
+                                {i18n.t('authentication.signup')}
                             </Button>
                         </View>
                     </View>
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     signUpContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 40,
@@ -183,7 +182,6 @@ const styles = StyleSheet.create({
     signUpLink: {
         fontSize: 14,
         fontWeight: 'bold',
-        marginHorizontal: -5,
     },
 });
 
