@@ -25,9 +25,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import dayjs from 'dayjs';
 
 // --- Utiliser apiClient si c'est l'export par défaut, sinon apiService ---
-import { apiService} from '../services/api'; // Ou import { apiService } from '...'
+import { apiService } from '../services/api'; // Ou import { apiService } from '...'
 // ---------------------------------------------------------------------
 import { User } from '../model/types';
 import { RootStackParamList } from '../model/types';
@@ -63,7 +64,7 @@ interface FormErrors {
     general?: string; // Pour les erreurs API
 }
 
-const EditProfileScreen = () => {
+export default function EditProfileScreen() {
     const theme = useTheme();
     const navigation = useNavigation<EditProfileScreenNavigationProp>();
     const { userId, signOut } = useAuth(); // Récupérer userId et signOut depuis le contexte
@@ -142,17 +143,17 @@ const EditProfileScreen = () => {
     const hasChanges = JSON.stringify(formData) !== JSON.stringify(initialData);
 
     // handleInputChange, onDateChange, validateForm (inchangés) ...
-     const handleInputChange = (name: keyof EditProfileFormData, value: string) => {
+    const handleInputChange = (name: keyof EditProfileFormData, value: string) => {
         setFormData(prev => ({ ...prev, [name]: value }));
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: undefined, general: undefined }));
         }
     };
-     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
         setShowDatePicker(Platform.OS === 'ios');
         if (event.type === 'set' && selectedDate) {
             setFormData(prev => ({ ...prev, birthDate: selectedDate }));
-             if (errors.birthDate) {
+            if (errors.birthDate) {
                 setErrors(prev => ({ ...prev, birthDate: undefined, general: undefined }));
             }
         }
@@ -171,7 +172,7 @@ const EditProfileScreen = () => {
 
     // Gérer la sauvegarde des modifications (endpoint /users/me reste probablement le bon)
     const handleSave = async () => {
-       if (!validateForm()) {
+        if (!validateForm()) {
             return;
         }
 
@@ -182,14 +183,14 @@ const EditProfileScreen = () => {
             name: formData.name.trim(),
             weight: formData.weight ? parseFloat(formData.weight) : null,
             height: formData.height ? parseFloat(formData.height) : null,
-            birthDate: formData.birthDate ? formData.birthDate.toISOString().split('T')[0] : null,
+            birthDate: formData.birthDate ? dayjs(formData.birthDate).format('YYYY-MM-DD') : null,
         };
         const finalPayload = payload;
 
         try {
             // Utiliser PATCH sur /users/me pour modifier l'utilisateur connecté
-            console.log("Envoi de la mise à jour vers /users/me:", finalPayload);
-            const response = await apiService.put<User>('/users/me', finalPayload);
+            console.log("Envoi de la mise à jour vers /users :", finalPayload);
+            const response = await apiService.put<User>(`/users/${userId}`, finalPayload);
 
             console.log('Profil mis à jour, réponse API:', response);
             Alert.alert('Succès', 'Votre profil a été mis à jour.');
@@ -198,7 +199,7 @@ const EditProfileScreen = () => {
         } catch (err: any) {
             console.error("Erreur sauvegarde profil:", err.response?.data || err.message || err);
             const apiError = err.response?.data?.message || err.response?.data?.error || "Une erreur réseau ou serveur est survenue.";
-             setErrors(prev => ({ ...prev, general: apiError }));
+            setErrors(prev => ({ ...prev, general: apiError }));
             Alert.alert("Échec de la sauvegarde", apiError);
         } finally {
             setIsSubmitting(false);
@@ -209,7 +210,7 @@ const EditProfileScreen = () => {
     if (isLoading) {
         return (
             <SafeAreaView style={[styles.safeArea, styles.centerContent]}>
-                <ActivityIndicator animating={true} size="large" color={theme.colors.primary}/>
+                <ActivityIndicator animating={true} size="large" color={theme.colors.primary} />
                 <PaperText style={{ marginTop: 10 }}>Chargement des informations...</PaperText>
             </SafeAreaView>
         );
@@ -217,13 +218,13 @@ const EditProfileScreen = () => {
 
     // --- Rendu Conditionnel pour l'Erreur de Chargement Initial ---
     if (error) {
-         return (
+        return (
             <SafeAreaView style={[styles.safeArea, styles.centerContent]}>
                 <PaperText style={styles.errorText}>{error}</PaperText>
                 <Button mode="outlined" onPress={fetchDataForEdit} icon="refresh">
                     Réessayer
                 </Button>
-                <Button mode="text" onPress={() => navigation.goBack()} style={{ marginTop: 10}}>
+                <Button mode="text" onPress={() => navigation.goBack()} style={{ marginTop: 10 }}>
                     Retour
                 </Button>
             </SafeAreaView>
@@ -248,7 +249,7 @@ const EditProfileScreen = () => {
                         </View>
 
                         {/* Formulaire (inchangé) */}
-                         <TextInput
+                        <TextInput
                             label="Nom"
                             value={formData.name}
                             onChangeText={(text) => handleInputChange('name', text)}
@@ -264,7 +265,7 @@ const EditProfileScreen = () => {
                             mode="outlined" style={styles.input} keyboardType="numeric" theme={{ roundness: 15 }}
                             error={!!errors.weight} disabled={isSubmitting}
                         />
-                         <HelperText type="error" visible={!!errors.weight}>{errors.weight}</HelperText>
+                        <HelperText type="error" visible={!!errors.weight}>{errors.weight}</HelperText>
 
                         <TextInput
                             label="Taille (cm)"
@@ -273,26 +274,26 @@ const EditProfileScreen = () => {
                             mode="outlined" style={styles.input} keyboardType="numeric" theme={{ roundness: 15 }}
                             error={!!errors.height} disabled={isSubmitting}
                         />
-                         <HelperText type="error" visible={!!errors.height}>{errors.height}</HelperText>
+                        <HelperText type="error" visible={!!errors.height}>{errors.height}</HelperText>
 
                         {/* Date Picker (inchangé) */}
                         <PaperText style={styles.dateLabel}>Date de naissance</PaperText>
                         <TouchableOpacity
-                            style={[ styles.datePickerButton, { borderColor: errors.birthDate ? theme.colors.error : theme.colors.outline }, { backgroundColor: theme.colors.surfaceVariant } ]}
+                            style={[styles.datePickerButton, { borderColor: errors.birthDate ? theme.colors.error : theme.colors.outline }, { backgroundColor: theme.colors.surfaceVariant }]}
                             onPress={() => !isSubmitting && setShowDatePicker(true)} disabled={isSubmitting}
                         >
                             <PaperText style={styles.datePickerText}>{formatDateForDisplay(formData.birthDate)}</PaperText>
-                            <IconButton icon="calendar" size={20} style={{ margin: 0 }}/>
+                            <IconButton icon="calendar" size={20} style={{ margin: 0 }} />
                         </TouchableOpacity>
-                         <HelperText type="error" visible={!!errors.birthDate}>{errors.birthDate}</HelperText>
+                        <HelperText type="error" visible={!!errors.birthDate}>{errors.birthDate}</HelperText>
                         {showDatePicker && (
                             <DateTimePicker value={formData.birthDate || new Date()} mode="date" display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                                 onChange={onDateChange} maximumDate={new Date()}
                             />
                         )}
 
-                         {/* Erreur Générale API */}
-                         <HelperText type="error" visible={!!errors.general} style={styles.generalError}>
+                        {/* Erreur Générale API */}
+                        <HelperText type="error" visible={!!errors.general} style={styles.generalError}>
                             {errors.general}
                         </HelperText>
 
@@ -330,6 +331,3 @@ const styles = StyleSheet.create({
     buttonLabel: { fontSize: 16, fontWeight: 'bold' },
     generalError: { marginTop: 15, textAlign: 'center', fontSize: 14, color: 'red' },
 });
-
-
-export default EditProfileScreen;

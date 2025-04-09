@@ -40,12 +40,12 @@ export default function SettingsScreen() {
             i18n.t('settings.delete_account_confirmation'),
             [
                 {
-                    text: i18n.t('settings.cancel'),
+                    text: i18n.t('alert.cancel'),
                     style: 'cancel',
                     onPress: () => console.log('Cancel Pressed'),
                 },
                 {
-                    text: i18n.t('settings.ok'),
+                    text: i18n.t('alert.ok'),
                     onPress: () => console.log('OK Pressed')
                 },
             ],

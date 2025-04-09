@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text as RNText, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import {
-    Provider as PaperProvider,
-    DefaultTheme,
+    View,
+    StyleSheet,
+    Text,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView
+} from 'react-native';
+import {
     Headline,
     Paragraph,
     TextInput,
@@ -11,10 +16,11 @@ import {
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from "@react-navigation/native";
-import { AuthStackParamList } from "../../model/types";
+import { AuthStackParamList } from "@/src/model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useAuth } from '../../services/authContext';
+import { useAuth } from '@/src/services/authContext';
 import { Alert } from 'react-native';
+import { i18n } from '@/src/i18n/i18n';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -32,7 +38,7 @@ const SignInScreen = () => {
             Alert.alert('Erreur', 'Veuillez remplir tous les champs.');
             return;
         }
-        setIsSubmitting(true); // Active l'indicateur de chargement
+
         try {
             await signIn({ email, password });
             console.log('Sign In Successful');
@@ -41,13 +47,14 @@ const SignInScreen = () => {
             Alert.alert('Échec de la connexion', errorMessage);
             console.error(error);
         } finally {
-            setIsSubmitting(false); // Désactive l'indicateur
+            setIsSubmitting(false);
         }
     };
 
     const handleSignUp = () => {
         console.log('Navigate to Sign Up Screen');
-        navigation.navigate("authentication/register");};
+        navigation.navigate("authentication/register");
+    };
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -57,7 +64,7 @@ const SignInScreen = () => {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
-                        <Headline style={styles.headline}>Bonjour,</Headline>
+                        <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
                         <Paragraph style={styles.paragraph}>
                             Connectez vous pour continuer.
                         </Paragraph>
@@ -101,9 +108,9 @@ const SignInScreen = () => {
                         </Button>
 
                         <View style={styles.signUpContainer}>
-                            <RNText style={styles.signUpText}>
+                            <Text style={styles.signUpText}>
                                 Vous n'avez pas de compte?{' '}
-                            </RNText>
+                            </Text>
                             <Button
                                 mode="text"
                                 onPress={handleSignUp}

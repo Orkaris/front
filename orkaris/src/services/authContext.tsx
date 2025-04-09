@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode, useCa
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { AuthState } from '../model/types';
+import { AuthState, User } from '@/src/model/types';
 
 interface DecodedToken {
   sub: string;
@@ -23,8 +23,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSignout, setIsSignout] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  const API_BASE_URL = 'http://127.0.0.1:5000/api';
+  const API_BASE_URL = 'http://orkaris.irwinladrette.fr/api';
   const authApi = axios.create({
     baseURL: API_BASE_URL + '/Users',
     timeout: 5000,
@@ -100,14 +101,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (receivedToken) {
             await AsyncStorage.setItem('userToken', receivedToken);
             console.log("Token enregistré dans AsyncStorage");
-            
+
+            setUserToken(receivedToken);
             processToken(receivedToken);
           } else {
-             throw new Error("Token non reçu après connexion.");
+            throw new Error("Token non reçu après connexion.");
           }
         } catch (error: any) {
-            processToken(null);
-            throw error;
+          processToken(null);
+          throw error;
         } finally {
           setIsLoading(false);
         }
@@ -115,8 +117,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       signOut: async () => {
         setIsLoading(true);
         try {
-            await AsyncStorage.removeItem('userToken');
-        } catch(e) {
+          await AsyncStorage.removeItem('userToken');
+        } catch (e) {
         }
         processToken(null);
         setIsSignout(true);
@@ -125,13 +127,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       signUp: async (data: { name: string; email: string; password: string }) => {
         setIsLoading(true);
         try {
-            const response = await authApi.post('/register', {
-                name: data.name,
-                email: data.email,
-                password: data.password,
-            });
+          const response = await authApi.post('/register', {
+            name: data.name,
+            email: data.email,
+            password: data.password,
+          });
         } catch (error: any) {
-            throw error;
+          throw error;
         } finally {
           setIsLoading(false);
         }
@@ -141,7 +143,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   return (
-    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout }}>
+    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout, }}>
       {children}
     </AuthContext.Provider>
   );

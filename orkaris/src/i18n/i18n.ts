@@ -13,6 +13,11 @@ export const i18n = new I18n({
             profile: "Profile",
             back: "Back",
         },
+        alert: {
+            cancel: "Cancel",
+            ok: "OK",
+            error: "Error",
+        },
         settings: {
             application_theme: "Application theme",
             light_theme: "Light",
@@ -21,8 +26,6 @@ export const i18n = new I18n({
             delete_account: "Delete account",
             delete_account_information: "Warning",
             delete_account_confirmation: "Are you sure you want to delete your account? This action cannot be undone.",
-            cancel: "Cancel",
-            ok: "OK",
         },
         authentication: {
             username: "Username",
@@ -44,6 +47,17 @@ export const i18n = new I18n({
             navigate_to_signup: "Navigate to the sign-up page",
             register_prompt: "Please register to continue.",
         },
+        profile: {
+            user: "User",
+            weight: "Weight",
+            height: "Height",
+            birthdate: "Birthdate",
+            undefined: "Undefined",
+            invalid_date: "Invalid date",
+            sign_out: "Sign out",
+            sign_out_confirmation: "Are you sure you want to sign out?",
+            sign_out_success: "Sign out successful",
+        }
     },
     fr: {
         hello: "Bonjour",
@@ -54,6 +68,11 @@ export const i18n = new I18n({
             profile: "Profil",
             back: "Retour",
         },
+        alert: {
+            cancel: "Annuler",
+            ok: "OK",
+            error: "Erreur",
+        },
         settings: {
             application_theme: "Thème de l'application",
             light_theme: "Clair",
@@ -62,8 +81,6 @@ export const i18n = new I18n({
             delete_account: "Supprimer le compte",
             delete_account_information: "Attention",
             delete_account_confirmation: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.",
-            cancel: "Annuler",
-            ok: "OK",
         },
         authentication: {
             username: "Nom d'utilisateur",
@@ -84,6 +101,17 @@ export const i18n = new I18n({
             invalid_credentials: "Email ou mot de passe incorrect.",
             navigate_to_signup: "Naviguer vers la page d'inscription",
             register_prompt: "Veuillez vous inscrire pour continuer.",
+        },
+        profile: {
+            user: "Utilisateur",
+            weight: "Poids",
+            height: "Taille",
+            birthdate: "Naissance",
+            undefined: "Non définie",
+            invalid_date: "Date invalide",
+            sign_out: "Se déconnecter",
+            sign_out_confirmation: "Êtes-vous sûr de vouloir vous déconnecter ?",
+            sign_out_success: "Déconnexion réussie",
         },
     },
 });

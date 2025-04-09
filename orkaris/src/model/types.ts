@@ -101,8 +101,8 @@ export interface SessionPerformance {
 
 // Interface pour un Sport 
 export interface Sport {
-    id: UniqueId;
-    name: string;
+  id: UniqueId;
+  name: string;
 }
 
 // Définir l'interface pour l'état d'authentification
