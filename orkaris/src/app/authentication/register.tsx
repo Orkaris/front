@@ -146,7 +146,7 @@ const SignUpScreen = () => {
                             contentStyle={styles.buttonContent}
                             labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
                             theme={{ roundness: 30 }}
-                            accessibilityLabel="S'inscrire"
+                            accessibilityLabel={i18n.t('authentication.register_button')}
                         >
                             {i18n.t('authentication.register_button')}
                         </Button>

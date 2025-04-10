@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
-import { apiService } from '../../services/api';
-import { RootStackParamList, User } from '../../model/types';
+import { User } from '../../model/types';
 import { useThemeContext } from '../../theme/ThemeContext';
 import Loader from '@/src/components/loader';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-type IndexNavigationProp = NativeStackNavigationProp<RootStackParamList, 'home'>;
+import { i18n } from '@/src/i18n/i18n';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
   const { theme } = useThemeContext();
+  const navigation = useRouter();
 
   useEffect(() => {
     const currentUser = async () => {
@@ -37,17 +37,19 @@ export default function HomeScreen() {
       {user ? (
         <View style={{ padding: 20 }}>
           <View style={styles.container}>
-            {/* <Image
-              //source={user.profilePicture ? { uri: user.profilePicture } : require('../assets/images/avatar.png')}
+            <Image
+              source={user.profilePicture ? { uri: user.profilePicture } : require('@/src/assets/images/avatar.png')}
               style={styles.image}
               resizeMode="cover"
-            /> */}
+            />
             <Text style={{ color: theme.colors.text }}>{user.name}</Text>
           </View>
         </View>
       ) : (
         <Loader />
       )}
+
+      <Button title="Nouveau programme" onPress={() => navigation.navigate("/newTraining")} />
     </View>
   );
 }
@@ -67,5 +69,62 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 50,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: -10,
+    marginBottom: 15,
+    marginLeft: 5,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  keyboardAvoiding: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  headline: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: '#222',
+  },
+  paragraph: {
+    fontSize: 16,
+    marginBottom: 30,
+    color: '#555',
+  },
+  input: {
+    marginBottom: 20,
+    backgroundColor: '#fff',
+  },
+  button: {
+    marginTop: 15,
+  },
+  buttonContent: {
+    paddingVertical: 8,
+  },
+  buttonLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  signInContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  signInText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  signInLink: {
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

@@ -10,6 +10,7 @@ export type RootStackParamList = {
   'workout/:id': { id: string };
   'home': undefined;
   'settings': undefined;
+  'newTraining': undefined;
 };
 
 // Types de base

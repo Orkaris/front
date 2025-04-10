@@ -14,6 +14,17 @@ import Loader from "@/src/components/loader";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
+const options = ({ theme }: { theme: ThemeType }) => {
+  return {
+    headerTitle: '',
+    headerBackTitle: i18n.t('navigation.back'),
+    headerShadowVisible: false,
+    headerStyle: {
+      backgroundColor: theme.colors.background,
+    },
+  };
+}
+
 const AuthNavigator = () => (
   <AuthStack.Navigator screenOptions={{ headerShown: false }}>
     <AuthStack.Screen name="authentication/signin" component={SignInScreen} />
@@ -25,6 +36,14 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
   <Stack>
     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     <Stack.Screen name="settings" options={{
+      headerTitle: '',
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+    }} />
+    <Stack.Screen name="newTraining" options={{
       headerTitle: '',
       headerBackTitle: i18n.t('navigation.back'),
       headerShadowVisible: false,

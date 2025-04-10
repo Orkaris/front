@@ -26,6 +26,7 @@ import { useThemeContext } from "@/src/theme/ThemeContext";
 import { RootStackParamList, User } from "@/src/model/types";
 import Loader from "@/src/components/loader";
 import { showAlert } from "@/src/services/alert";
+import { useRouter } from "expo-router";
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
@@ -50,7 +51,7 @@ const formatDate = (isoString: string | undefined | null): string => {
 
 export default function ProfileScreen() {
     const { theme } = useThemeContext();
-    const navigation = useNavigation<ProfileScreenNavigationProp>();
+    const navigation = useRouter();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -120,7 +121,7 @@ export default function ProfileScreen() {
         }
         console.log("Navigation vers EditProfile avec user:", user);
 
-        navigation.navigate("editProfile", { userId: user.id });
+        navigation.navigate({ pathname: "/editProfile", params: { userId: user.id } });
     };
 
     if (isLoading) {
@@ -181,14 +182,14 @@ export default function ProfileScreen() {
                         ]}
                         iconColor={theme.colors.background}
                         size={24}
-                        onPress={() => navigation.navigate("editProfile", { userId: user ? user.id : '' })}
+                        onPress={() => handleEditPress()}
                         accessibilityLabel="Modifier le profil"
                     />
                     <Ionicons
                         name="settings-sharp"
                         size={24}
                         color={theme.colors.text}
-                        onPress={() => navigation.navigate("settings")}
+                        onPress={() => navigation.navigate("/settings")}
                     />
                 </View>
 
