@@ -92,8 +92,8 @@ const SignUpScreen = () => {
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
 
-                        <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
-                        <Paragraph style={styles.paragraph}>
+                        <Headline style={[styles.headline,{color: theme.colors.text}]}>{i18n.t('hello')},</Headline>
+                        <Paragraph style={[styles.paragraph,{color: theme.colors.text}]}>
                             {i18n.t('authentication.register_prompt')}
                         </Paragraph>
 
@@ -102,9 +102,10 @@ const SignUpScreen = () => {
                             value={username}
                             onChangeText={setUsername}
                             mode="outlined"
-                            style={styles.input}
+                            style={[styles.input, { backgroundColor: theme.colors.background}]}
                             autoCapitalize="words"
-                            theme={{ roundness: 20 }}
+                            textColor={theme.colors.text}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                         />
 
                         <TextInput
@@ -112,10 +113,11 @@ const SignUpScreen = () => {
                             value={email}
                             onChangeText={setEmail}
                             mode="outlined"
-                            style={styles.input}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
                             keyboardType="email-address"
                             autoCapitalize="none"
-                            theme={{ roundness: 20 }}
+                            textColor={theme.colors.text}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                         />
 
                         <TextInput
@@ -123,9 +125,10 @@ const SignUpScreen = () => {
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
+                            textColor={theme.colors.text}
                             secureTextEntry={!passwordVisible}
-                            style={styles.input}
-                            theme={{ roundness: 20 }}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                             right={
                                 <TextInput.Icon
                                     icon={passwordVisible ? "eye-off" : "eye"}
@@ -152,7 +155,7 @@ const SignUpScreen = () => {
                         </Button>
 
                         <View style={styles.signInContainer}>
-                            <Text style={styles.signInText}>
+                            <Text style={[styles.signInText,{color: theme.colors.text}]}>
                                 {i18n.t('authentication.already_have_account')}
 
                             </Text>
@@ -210,7 +213,6 @@ const styles = StyleSheet.create({
     },
     input: {
         marginBottom: 20,
-        backgroundColor: '#fff',
     },
     button: {
         marginTop: 15,

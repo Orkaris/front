@@ -3,20 +3,20 @@ export const lightTheme = {
     colors: {
         background: '#ffffff',
         text: '#222222',
+        textSecondary: '#888888',
         onBackground: '#ffffff',
         backdrop: '#f0f0f0',
-        primary: '#222222',
     },
 };
 
 export const darkTheme = {
     dark: true,
     colors: {
-        background: '#000000',
+        background: '#222222',
         text: '#ffffff',
+        textSecondary: '#888888',
         onBackground: '#ffffff',
         backdrop: '#f0f0f0',
-        primary: '#6200ee',
     },
 };
 

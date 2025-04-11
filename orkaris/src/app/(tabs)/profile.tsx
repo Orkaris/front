@@ -6,7 +6,6 @@ import {
     Button,
 } from "react-native";
 import {
-    Headline,
     Paragraph,
     Title,
     Subheading,
@@ -100,6 +99,8 @@ export default function ProfileScreen() {
                     "Impossible de récupérer les informations du profil."
                 );
             }
+
+            signOut();
         } finally {
             setIsLoading(false);
         }
