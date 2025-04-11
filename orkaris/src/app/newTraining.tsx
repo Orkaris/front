@@ -1,5 +1,5 @@
 import { KeyboardAvoidingView, SafeAreaView, ScrollView, View, Text, Button, StyleSheet, Platform } from "react-native";
-import { useThemeContext } from "../theme/ThemeContext";
+import { useThemeContext } from "../context/ThemeContext";
 
 export default function NewTrainingScreen() {
     const { theme } = useThemeContext();

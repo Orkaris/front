@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { i18n, changeLanguage } from '../i18n/i18n';
+import { i18n } from '../i18n/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeContext } from '../context/ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { showAlert } from '../services/alert';
-import { useLanguageContext } from '../services/LanguageContext';
+import { useLanguageContext } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function SettingsScreen() {
+    const { signOut } = useAuth();
     const { theme, isDark, updateStoredTheme } = useThemeContext();
     const { language, setLanguage } = useLanguageContext();
 
@@ -132,7 +134,7 @@ export default function SettingsScreen() {
                 title={i18n.t('settings.delete_account')}
                 onPress={
                     () =>
-                        showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), () => console.log('OK Pressed'))
+                        showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), signOut)
                 }
                 color='red'
             />

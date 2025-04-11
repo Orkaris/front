@@ -1,6 +1,6 @@
 import { AuthProvider } from '../context/AuthContext';
 import { ThemeProvider } from '../context/ThemeContext';
-import { LanguageProvider } from '../services/LanguageContext';
+import { LanguageProvider } from '../context/LanguageContext';
 import AppNavigator from './navigation/AppNavigator';
 
 const AppContent = () => {

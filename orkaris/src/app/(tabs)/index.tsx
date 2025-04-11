@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button, SafeAreaView } from 'react-native';
 import { apiService } from '../../services/api';
-import { RootStackParamList, User } from '../../model/types';
+import { User, Workout } from '../../model/types';
 import { useThemeContext } from '../../context/ThemeContext';
 import Loader from '@/src/components/loader';
 import { i18n } from '@/src/i18n/i18n';
 import { useRouter } from 'expo-router';
-import { useLanguageContext } from '@/src/services/LanguageContext';
+import { useLanguageContext } from '@/src/context/LanguageContext';
+import { useAuth } from '@/src/context/AuthContext';
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
   const { theme } = useThemeContext();
   const { language } = useLanguageContext();
   const navigation = useRouter();
+  const { userId } = useAuth();
 
   useEffect(() => {
     const currentUser = async () => {
@@ -34,6 +37,19 @@ export default function HomeScreen() {
 
     currentUser();
   }, []);
+
+  useEffect(() => {
+    const fetchWorkouts = async () => {
+      try {
+        const response = await apiService.get<Workout[]>(`/Workout/ById/${userId}`);
+        setWorkouts(response);
+      } catch (error) {
+        console.error('Error fetching workouts:', error);
+      }
+    }
+
+    fetchWorkouts();
+  }, [])
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>

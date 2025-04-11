@@ -142,3 +142,9 @@ export interface DecodedToken {
   exp?: number;
   iat?: number;
 }
+
+export interface Workout {
+  id: string;
+  name: string;
+  description: string;
+}
