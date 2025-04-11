@@ -23,6 +23,9 @@ export const i18n = new I18n({
             light_theme: "Light",
             dark_theme: "Dark",
             default_theme: "Default",
+            application_language: "Application language",
+            english: "English",
+            french: "French",
             delete_account: "Delete account",
             delete_account_information: "Warning",
             delete_account_confirmation: "Are you sure you want to delete your account? This action cannot be undone.",
@@ -57,7 +60,10 @@ export const i18n = new I18n({
             sign_out: "Sign out",
             sign_out_confirmation: "Are you sure you want to sign out?",
             sign_out_success: "Sign out successful",
-        }
+        },
+        program: {
+            new_program: "New program",
+        },
     },
     fr: {
         hello: "Bonjour",
@@ -78,6 +84,9 @@ export const i18n = new I18n({
             light_theme: "Clair",
             dark_theme: "Sombre",
             default_theme: "Par défaut",
+            application_language: "Langue de l'application",
+            english: "Anglais",
+            french: "Français",
             delete_account: "Supprimer le compte",
             delete_account_information: "Attention",
             delete_account_confirmation: "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action ne peut pas être annulée.",
@@ -112,6 +121,9 @@ export const i18n = new I18n({
             sign_out: "Se déconnecter",
             sign_out_confirmation: "Êtes-vous sûr de vouloir vous déconnecter ?",
             sign_out_success: "Déconnexion réussie",
+        },
+        program: {
+            new_program: "Nouveau programme",
         },
     },
 });

@@ -11,8 +11,20 @@ import { ThemeType } from "@/src/theme/theme";
 import SignInScreen from "@/src/app/authentication/signin";
 import SignUpScreen from "@/src/app/authentication/register";
 import Loader from "@/src/components/loader";
+import { useLanguageContext } from "@/src/context/LanguageContext";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
+
+const options = ({ theme }: { theme: ThemeType }) => {
+  return {
+    headerTitle: '',
+    headerBackTitle: i18n.t('navigation.back'),
+    headerShadowVisible: false,
+    headerStyle: {
+      backgroundColor: theme.colors.background,
+    },
+  };
+}
 
 const AuthNavigator = () => (
   <AuthStack.Navigator screenOptions={{ headerShown: false }}>
@@ -32,12 +44,29 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
         backgroundColor: theme.colors.background,
       },
     }} />
+    <Stack.Screen name="newTraining" options={{
+      headerTitle: '',
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+    }} />
+    <Stack.Screen name="editProfile" options={{
+      headerTitle: '',
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+    }} />
   </Stack>
 );
 
 export default function AppNavigator() {
   const { userToken, isLoading } = useAuth();
   const { theme } = useThemeContext();
+  const { language } = useLanguageContext();
 
   if (isLoading) {
     return <Loader />

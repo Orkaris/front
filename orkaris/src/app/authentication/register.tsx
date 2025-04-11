@@ -18,7 +18,7 @@ import { useLayoutEffect } from "react";
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
 
-const SignUpScreen = () => {
+export default function SignUpScreen() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -146,7 +146,7 @@ const SignUpScreen = () => {
                             contentStyle={styles.buttonContent}
                             labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
                             theme={{ roundness: 30 }}
-                            accessibilityLabel="S'inscrire"
+                            accessibilityLabel={i18n.t('authentication.register_button')}
                         >
                             {i18n.t('authentication.register_button')}
                         </Button>
@@ -237,5 +237,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default SignUpScreen;

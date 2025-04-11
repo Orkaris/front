@@ -24,7 +24,7 @@ import { useThemeContext } from '@/src/context/ThemeContext';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
-const SignInScreen = () => {
+export default function SignInScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordVisible, setPasswordVisible] = useState(false);
@@ -184,5 +184,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default SignInScreen;

@@ -10,6 +10,7 @@ export type RootStackParamList = {
   'workout/:id': { id: string };
   'home': undefined;
   'settings': undefined;
+  'newTraining': undefined;
 };
 
 // Types de base
@@ -140,4 +141,10 @@ export interface DecodedToken {
   email?: string;
   exp?: number;
   iat?: number;
+}
+
+export interface Workout {
+  id: string;
+  name: string;
+  description: string;
 }

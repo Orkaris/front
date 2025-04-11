@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     View,
     StyleSheet,
@@ -7,8 +7,6 @@ import {
     Platform,
     TouchableOpacity,
     Alert,
-    Text as RNText,
-    ActivityIndicator // Importer ActivityIndicator
 } from 'react-native';
 import {
     Headline,
@@ -16,14 +14,12 @@ import {
     Button,
     IconButton,
     useTheme,
-    // ActivityIndicator, // Déjà importé depuis react-native
     HelperText,
-    Text as PaperText
+    Text,
 } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // Retirer useRoute car on n'utilise plus les params
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useFocusEffect } from '@react-navigation/native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
 
@@ -31,12 +27,9 @@ import dayjs from 'dayjs';
 import { apiService } from '../services/api'; // Ou import { apiService } from '...'
 // ---------------------------------------------------------------------
 import { User } from '../model/types';
-import { RootStackParamList } from '../model/types';
 import { useAuth } from '../context/AuthContext'; // Importer useAuth
-
-// --- CORRECTION: S'assurer que le nom de la route est correct ---
-type EditProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'editProfile'>;
-// ---------------------------------------------------------------
+import { useRouter } from 'expo-router';
+import Loader from '../components/loader';
 
 
 const formatDateForDisplay = (date: Date | null | undefined): string => {
@@ -66,7 +59,7 @@ interface FormErrors {
 
 export default function EditProfileScreen() {
     const theme = useTheme();
-    const navigation = useNavigation<EditProfileScreenNavigationProp>();
+    const navigation = useRouter();
     const { userId, signOut } = useAuth(); // Récupérer userId et signOut depuis le contexte
 
     // États pour les données et le formulaire
@@ -194,7 +187,7 @@ export default function EditProfileScreen() {
 
             console.log('Profil mis à jour, réponse API:', response);
             Alert.alert('Succès', 'Votre profil a été mis à jour.');
-            navigation.goBack();
+            navigation.back();
 
         } catch (err: any) {
             console.error("Erreur sauvegarde profil:", err.response?.data || err.message || err);
@@ -210,8 +203,7 @@ export default function EditProfileScreen() {
     if (isLoading) {
         return (
             <SafeAreaView style={[styles.safeArea, styles.centerContent]}>
-                <ActivityIndicator animating={true} size="large" color={theme.colors.primary} />
-                <PaperText style={{ marginTop: 10 }}>Chargement des informations...</PaperText>
+                <Loader />
             </SafeAreaView>
         );
     }
@@ -220,11 +212,11 @@ export default function EditProfileScreen() {
     if (error) {
         return (
             <SafeAreaView style={[styles.safeArea, styles.centerContent]}>
-                <PaperText style={styles.errorText}>{error}</PaperText>
+                <Text style={styles.errorText}>{error}</Text>
                 <Button mode="outlined" onPress={fetchDataForEdit} icon="refresh">
                     Réessayer
                 </Button>
-                <Button mode="text" onPress={() => navigation.goBack()} style={{ marginTop: 10 }}>
+                <Button mode="text" onPress={() => navigation.back()} style={{ marginTop: 10 }}>
                     Retour
                 </Button>
             </SafeAreaView>
@@ -243,7 +235,7 @@ export default function EditProfileScreen() {
                     <View style={styles.container}>
                         {/* Header */}
                         <View style={styles.headerRow}>
-                            <IconButton icon="arrow-left" size={28} onPress={() => navigation.goBack()} />
+                            <IconButton icon="arrow-left" size={28} onPress={() => navigation.back()} />
                             <Headline style={styles.title}>Modifier le Profil</Headline>
                             <View style={{ width: 40 }} />
                         </View>
@@ -277,12 +269,12 @@ export default function EditProfileScreen() {
                         <HelperText type="error" visible={!!errors.height}>{errors.height}</HelperText>
 
                         {/* Date Picker (inchangé) */}
-                        <PaperText style={styles.dateLabel}>Date de naissance</PaperText>
+                        <Text style={styles.dateLabel}>Date de naissance</Text>
                         <TouchableOpacity
                             style={[styles.datePickerButton, { borderColor: errors.birthDate ? theme.colors.error : theme.colors.outline }, { backgroundColor: theme.colors.surfaceVariant }]}
                             onPress={() => !isSubmitting && setShowDatePicker(true)} disabled={isSubmitting}
                         >
-                            <PaperText style={styles.datePickerText}>{formatDateForDisplay(formData.birthDate)}</PaperText>
+                            <Text style={styles.datePickerText}>{formatDateForDisplay(formData.birthDate)}</Text>
                             <IconButton icon="calendar" size={20} style={{ margin: 0 }} />
                         </TouchableOpacity>
                         <HelperText type="error" visible={!!errors.birthDate}>{errors.birthDate}</HelperText>
