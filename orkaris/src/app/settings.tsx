@@ -3,7 +3,7 @@ import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { i18n, changeLanguage } from '../i18n/i18n';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useThemeContext } from '../theme/ThemeContext';
+import { useThemeContext } from '../context/ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { showAlert } from '../services/alert';
 import { useLanguageContext } from '../services/LanguageContext';

@@ -9,10 +9,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthStackParamList } from "../../model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useAuth } from '../../services/authContext';
+import { useAuth } from '../../context/AuthContext';
 import { Alert } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
-import { useThemeContext } from '../../theme/ThemeContext';
+import { useThemeContext } from '../../context/ThemeContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLayoutEffect } from "react";
 

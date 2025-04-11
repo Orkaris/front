@@ -1,5 +1,5 @@
-import { AuthProvider } from '../services/authContext';
-import { ThemeProvider } from '../theme/ThemeContext';
+import { AuthProvider } from '../context/AuthContext';
+import { ThemeProvider } from '../context/ThemeContext';
 import { LanguageProvider } from '../services/LanguageContext';
 import AppNavigator from './navigation/AppNavigator';
 

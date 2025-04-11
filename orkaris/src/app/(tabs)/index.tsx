@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button, SafeAreaView } from 'react-native';
-import { User } from '../../model/types';
-import { useThemeContext } from '../../theme/ThemeContext';
+import { apiService } from '../../services/api';
+import { RootStackParamList, User } from '../../model/types';
+import { useThemeContext } from '../../context/ThemeContext';
 import Loader from '@/src/components/loader';
 import { i18n } from '@/src/i18n/i18n';
 import { useRouter } from 'expo-router';

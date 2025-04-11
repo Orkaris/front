@@ -111,10 +111,34 @@ export interface AuthState {
   userToken: string | null;
   isLoading: boolean; // Pour l'écran de chargement initial
   isSignout: boolean; // Utile pour certaines logiques de navigation
-  signIn: (data: { email: string; password: string }) => Promise<void>;
+  signIn: (data: ConnectUser) => Promise<void>;
   signOut: () => Promise<void>;
-  signUp: (data: { name: string; email: string; password: string }) => Promise<void>;
+  signUp: (data: CreateUser) => Promise<void>;
   userId: string | null; // ID de l'utilisateur connecté
   // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
   // user: User | null;
+}
+
+export interface ConnectUser {
+  email: string;
+  password: string;
+}
+
+export interface CreateUser {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface ResponseToken {
+  token?: string;
+  status?: number;
+}
+
+export interface DecodedToken {
+  sub: string;
+  name?: string;
+  email?: string;
+  exp?: number;
+  iat?: number;
 }

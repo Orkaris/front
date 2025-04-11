@@ -17,10 +17,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from "@react-navigation/native";
 import { AuthStackParamList } from "@/src/model/types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useAuth } from '@/src/services/authContext';
+import { useAuth } from '@/src/context/AuthContext';
 import { Alert } from 'react-native';
 import { i18n } from '@/src/i18n/i18n';
-import { useThemeContext } from '@/src/theme/ThemeContext';
+import { useThemeContext } from '@/src/context/ThemeContext';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 

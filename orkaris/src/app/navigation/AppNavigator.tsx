@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
 import { i18n } from "@/src/i18n/i18n";
 
-import { useAuth } from "../../services/authContext";
-import { useThemeContext } from "@/src/theme/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
+import { useThemeContext } from "@/src/context/ThemeContext";
 import { AuthStackParamList } from "@/src/model/types";
 import { ThemeType } from "@/src/theme/theme";
 

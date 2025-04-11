@@ -27,7 +27,7 @@ import dayjs from 'dayjs';
 import { apiService } from '../services/api'; // Ou import { apiService } from '...'
 // ---------------------------------------------------------------------
 import { User } from '../model/types';
-import { useAuth } from '../services/authContext'; // Importer useAuth
+import { useAuth } from '../context/AuthContext'; // Importer useAuth
 import { useRouter } from 'expo-router';
 import Loader from '../components/loader';
 

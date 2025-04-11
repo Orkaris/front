@@ -1,16 +1,8 @@
 import React, { createContext, useState, useContext, useEffect, ReactNode, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import { AuthState, User } from '@/src/model/types';
-
-interface DecodedToken {
-  sub: string;
-  name?: string;
-  email?: string;
-  exp?: number;
-  iat?: number;
-}
+import { AuthState, ConnectUser, CreateUser, DecodedToken, ResponseToken, User } from '@/src/model/types';
+import { apiService } from '../services/api';
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -23,14 +15,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSignout, setIsSignout] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
-
-  const API_BASE_URL = 'http://orkaris.irwinladrette.fr/api';
-  const authApi = axios.create({
-    baseURL: API_BASE_URL + '/Users',
-    timeout: 5000,
-    headers: { 'Content-Type': 'application/json' },
-  });
 
   const processToken = useCallback((token: string | null) => {
     if (token) {
@@ -73,30 +57,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     bootstrapAsync();
   }, [processToken]);
 
-  const validateToken = async (token: string): Promise<boolean> => {
-    try {
-      const response = await authApi.get('/validate-token', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return response.status === 200;
-    } catch (error) {
-      console.error('Token validation failed:', error);
-      return false;
-    }
-  };
-
   // --- Actions d'authentification ---
   const authActions = React.useMemo(
     () => ({
-      signIn: async (data: { email: string; password: string }) => {
+      signIn: async (data: ConnectUser) => {
         setIsLoading(true);
         try {
-          const response = await authApi.post('/login', {
+          const response = await apiService.post<ResponseToken>('/Users/login', {
             email: data.email,
             password: data.password,
           });
 
-          const receivedToken = response.data.token;
+          const receivedToken = response.token;
           console.log("Token reçu:", receivedToken);
           if (receivedToken) {
             await AsyncStorage.setItem('userToken', receivedToken);
@@ -124,10 +96,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsSignout(true);
         setIsLoading(false);
       },
-      signUp: async (data: { name: string; email: string; password: string }) => {
+      signUp: async (data: CreateUser) => {
         setIsLoading(true);
         try {
-          const response = await authApi.post('/register', {
+          await apiService.post('/Users/register', {
             name: data.name,
             email: data.email,
             password: data.password,
@@ -139,7 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       },
     }),
-    [authApi, processToken]
+    [processToken]
   );
 
   return (
