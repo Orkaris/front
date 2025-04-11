@@ -64,6 +64,20 @@ export const i18n = new I18n({
         program: {
             new_program: "New program",
         },
+        edit_profile: {
+            title: "Edit profile",
+            save: "Save",
+            name: "Name",
+            weight: "Weight (kg)",
+            height: "Height (cm)",
+            birthdate: "Birthdate",
+            gender: 'Gender',
+            genders :{
+                male: 'Homme',
+                female: 'Female',
+                other : 'Other'
+            }
+        }
     },
     fr: {
         hello: "Bonjour",
@@ -125,6 +139,20 @@ export const i18n = new I18n({
         program: {
             new_program: "Nouveau programme",
         },
+        edit_profile: {
+            title: "Modifier le profil",
+            save: "Sauvegarder",
+            name: "Nom",
+            weight: "Poids (kg)",
+            height: "Taille (cm)",
+            birthdate: "Date de naissance",
+            gender: 'Genre',
+            genders :{
+                male: 'Homme',
+                female: 'Femme',
+                other: 'Autre'
+            }
+        }
     },
 });
 

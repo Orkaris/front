@@ -6,6 +6,7 @@ export const lightTheme = {
         textSecondary: '#888888',
         onBackground: '#ffffff',
         backdrop: '#f0f0f0',
+        error: '#f44336',
     },
 };
 
@@ -17,6 +18,7 @@ export const darkTheme = {
         textSecondary: '#888888',
         onBackground: '#ffffff',
         backdrop: '#f0f0f0',
+        error: '#f44336',
     },
 };
 

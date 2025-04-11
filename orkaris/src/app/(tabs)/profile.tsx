@@ -186,12 +186,6 @@ export default function ProfileScreen() {
                         onPress={() => handleEditPress()}
                         accessibilityLabel="Modifier le profil"
                     />
-                    <Ionicons
-                        name="settings-sharp"
-                        size={24}
-                        color={theme.colors.text}
-                        onPress={() => navigation.navigate("/settings")}
-                    />
                 </View>
 
                 <View style={styles.statsRow}>
@@ -256,7 +250,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        paddingHorizontal: 20,
+        paddingHorizontal: 30,
+        marginTop: 30,
     },
     title: {
         fontSize: 32,
