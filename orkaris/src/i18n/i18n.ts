@@ -35,7 +35,7 @@ export const i18n = new I18n({
             password: "Password",
             email: "Email",
             register_button: "Register",
-            connect_button: "Connect",
+            connect_button: "Sign in",
             already_have_account: "Already have an account?",
             no_account: "Don't have an account?",
             signup: "Sign up",
