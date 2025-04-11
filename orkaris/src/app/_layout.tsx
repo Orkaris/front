@@ -1,6 +1,7 @@
-import { AuthProvider, useAuth } from '../services/authContext';
-import AppNavigator from './navigation/AppNavigator'; // Votre composant de navigation principal
-import { ThemeProvider, useThemeContext } from '../theme/ThemeContext';
+import { AuthProvider } from '../services/authContext';
+import { ThemeProvider } from '../theme/ThemeContext';
+import { LanguageProvider } from '../services/LanguageContext';
+import AppNavigator from './navigation/AppNavigator';
 
 const AppContent = () => {
   return <AppNavigator />;
@@ -10,7 +11,9 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <AppContent />
+        <LanguageProvider>
+          <AppContent />
+        </LanguageProvider>
       </ThemeProvider>
     </AuthProvider>
 

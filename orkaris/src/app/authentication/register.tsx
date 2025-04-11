@@ -18,7 +18,7 @@ import { useLayoutEffect } from "react";
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
 
-const SignUpScreen = () => {
+export default function SignUpScreen() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -237,5 +237,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 });
-
-export default SignUpScreen;

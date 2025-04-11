@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, SafeAreaView } from 'react-native';
 import { User } from '../../model/types';
 import { useThemeContext } from '../../theme/ThemeContext';
 import Loader from '@/src/components/loader';
 import { i18n } from '@/src/i18n/i18n';
 import { useRouter } from 'expo-router';
+import { useLanguageContext } from '@/src/services/LanguageContext';
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
   const { theme } = useThemeContext();
+  const { language } = useLanguageContext();
   const navigation = useRouter();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
       {user ? (
         <View style={{ padding: 20 }}>
           <View style={styles.container}>
@@ -49,13 +51,16 @@ export default function HomeScreen() {
         <Loader />
       )}
 
-      <Button title="Nouveau programme" onPress={() => navigation.navigate("/newTraining")} />
-    </View>
+      <Button
+        title={i18n.t('program.new_program')}
+        onPress={() => navigation.navigate("/newTraining")}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
+  safeArea: {
     flex: 1,
   },
   container: {
@@ -76,10 +81,6 @@ const styles = StyleSheet.create({
     marginTop: -10,
     marginBottom: 15,
     marginLeft: 5,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#fff',
   },
   keyboardAvoiding: {
     flex: 1,

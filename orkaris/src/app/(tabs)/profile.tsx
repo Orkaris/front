@@ -235,8 +235,9 @@ export default function ProfileScreen() {
 
             <Button
                 title={i18n.t('profile.sign_out')}
-                onPress={() =>
-                    showAlert(i18n.t('profile.sign_out'), i18n.t('profile.sign_out_confirmation'), signOut)
+                onPress={
+                    () =>
+                        showAlert(i18n.t('profile.sign_out'), i18n.t('profile.sign_out_confirmation'), signOut)
                 }
                 color='red'
             />

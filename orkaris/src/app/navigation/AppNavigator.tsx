@@ -11,6 +11,7 @@ import { ThemeType } from "@/src/theme/theme";
 import SignInScreen from "@/src/app/authentication/signin";
 import SignUpScreen from "@/src/app/authentication/register";
 import Loader from "@/src/components/loader";
+import { useLanguageContext } from "@/src/services/LanguageContext";
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 
@@ -57,10 +58,11 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
 export default function AppNavigator() {
   const { userToken, isLoading } = useAuth();
   const { theme } = useThemeContext();
+  const { language } = useLanguageContext();
 
   if (isLoading) {
     return <Loader />
   }
 
-  return userToken ? <MainAppNavigator theme={theme} /> : <AuthNavigator />;
+  return <MainAppNavigator theme={theme} />;
 }
