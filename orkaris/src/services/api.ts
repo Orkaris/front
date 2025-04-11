@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
 
 const API_BASE_URL = 'http://orkaris.irwinladrette.fr/api/';
 

@@ -20,8 +20,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { i18n } from "@/src/i18n/i18n";
 
 import { apiService } from "@/src/services/api";
-import { useAuth } from "@/src/services/authContext";
-import { useThemeContext } from "@/src/theme/ThemeContext";
+import { useAuth } from "@/src/context/AuthContext";
+import { useThemeContext } from "@/src/context/ThemeContext";
 
 import { RootStackParamList, User } from "@/src/model/types";
 import Loader from "@/src/components/loader";

@@ -1,6 +1,6 @@
-import { AuthProvider, useAuth } from '../services/authContext';
+import { AuthProvider } from '../context/AuthContext';
 import AppNavigator from './navigation/AppNavigator'; // Votre composant de navigation principal
-import { ThemeProvider, useThemeContext } from '../theme/ThemeContext';
+import { ThemeProvider } from '../context/ThemeContext';
 
 const AppContent = () => {
   return <AppNavigator />;
