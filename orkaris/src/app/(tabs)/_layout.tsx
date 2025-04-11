@@ -1,8 +1,7 @@
 import { Tabs, useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { i18n } from '@/src/i18n/i18n';
-import { useThemeContext } from '@/src/theme/ThemeContext';
-import { useAuth } from '@/src/services/authContext';
+import { useThemeContext } from '@/src/context/ThemeContext';
 import { useEffect, useState } from 'react';
 import Loader from '@/src/components/loader';
 

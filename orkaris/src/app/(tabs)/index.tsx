@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, Button } from 'react-native';
 import { apiService } from '../../services/api';
 import { RootStackParamList, User } from '../../model/types';
-import { useThemeContext } from '../../theme/ThemeContext';
+import { useThemeContext } from '../../context/ThemeContext';
 import Loader from '@/src/components/loader';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type IndexNavigationProp = NativeStackNavigationProp<RootStackParamList, 'home'>;

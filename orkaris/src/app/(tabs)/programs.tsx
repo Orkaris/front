@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import { useThemeContext } from "@/src/theme/ThemeContext";
+import { useThemeContext } from "@/src/context/ThemeContext";
 import Loader from "@/src/components/loader";
 
 export default function ProgramScreen() {

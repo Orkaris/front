@@ -32,7 +32,7 @@ import { apiService } from '../services/api'; // Ou import { apiService } from '
 // ---------------------------------------------------------------------
 import { User } from '../model/types';
 import { RootStackParamList } from '../model/types';
-import { useAuth } from '../services/authContext'; // Importer useAuth
+import { useAuth } from '../context/AuthContext'; // Importer useAuth
 
 // --- CORRECTION: S'assurer que le nom de la route est correct ---
 type EditProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'editProfile'>;
