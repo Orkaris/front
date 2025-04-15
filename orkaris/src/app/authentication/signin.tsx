@@ -21,6 +21,7 @@ import { useAuth } from '@/src/context/AuthContext';
 import { Alert } from 'react-native';
 import { i18n } from '@/src/i18n/i18n';
 import { useThemeContext } from '@/src/context/ThemeContext';
+import CustomButton from '@/src/components/CustomButton';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -64,8 +65,8 @@ export default function SignInScreen() {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
-                        <Headline style={[styles.headline,{color: theme.colors.text}]}>{i18n.t('hello')},</Headline>
-                        <Paragraph style={[styles.paragraph,{color: theme.colors.text}]}>
+                        <Headline style={[styles.headline, { color: theme.colors.text }]}>{i18n.t('hello')},</Headline>
+                        <Paragraph style={[styles.paragraph, { color: theme.colors.text }]}>
                             {i18n.t('authentication.signin_to_continue')}
                         </Paragraph>
 
@@ -99,19 +100,16 @@ export default function SignInScreen() {
                             }
                         />
 
-                        <Button
-                            mode="contained"
+                        <CustomButton
                             onPress={handleSignIn}
-                            style={[styles.button, { backgroundColor: theme.colors.text }]}
-                            contentStyle={styles.buttonContent}
-                            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
-                            theme={{ roundness: 30 }}
-                        >
-                            {i18n.t('authentication.connect_button')}
-                        </Button>
+                            label={i18n.t('authentication.connect_button')}
+                            loading={isSubmitting}
+                            disabled={isSubmitting}
+                            theme={theme}
+                        />
 
                         <View style={styles.signUpContainer}>
-                            <Text style={[styles.signUpText,{color: theme.colors.text}]}>
+                            <Text style={[styles.signUpText, { color: theme.colors.text }]}>
                                 {i18n.t('authentication.no_account')}
                             </Text>
                             <Button

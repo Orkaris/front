@@ -53,12 +53,13 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       },
     }} />
     <Stack.Screen name="editProfile" options={{
-      headerTitle: '',
+      headerTitle: i18n.t('edit_profile.title'),
       headerBackTitle: i18n.t('navigation.back'),
       headerShadowVisible: false,
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
+      headerTintColor: theme.colors.text,
     }} />
   </Stack>
 );
