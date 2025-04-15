@@ -44,13 +44,14 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
         backgroundColor: theme.colors.background,
       },
     }} />
-    <Stack.Screen name="newTraining" options={{
-      headerTitle: '',
+    <Stack.Screen name="newProgram" options={{
+      headerTitle: i18n.t('program.new_program'),
       headerBackTitle: i18n.t('navigation.back'),
       headerShadowVisible: false,
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
+      headerTintColor: theme.colors.text,
     }} />
     <Stack.Screen name="editProfile" options={{
       headerTitle: '',

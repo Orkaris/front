@@ -63,6 +63,9 @@ export const i18n = new I18n({
         },
         program: {
             new_program: "New program",
+            name_required: "Name is required.",
+            name: "Program name",
+            create_program: "Create program",
         },
     },
     fr: {
@@ -124,6 +127,9 @@ export const i18n = new I18n({
         },
         program: {
             new_program: "Nouveau programme",
+            name_required: "Le nom est requis.",
+            name: "Nom du programme",
+            create_program: "Créer le programme",
         },
     },
 });
