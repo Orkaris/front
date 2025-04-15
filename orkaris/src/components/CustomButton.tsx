@@ -8,16 +8,38 @@ interface CustomButtonProps {
     loading?: boolean;
     disabled?: boolean;
     theme: any;
+    type?: 'primary' | 'secondary' | 'danger';
 }
 
-const CustomButton: React.FC<CustomButtonProps> = ({ onPress, label, loading = false, disabled = false, theme }) => {
+const CustomButton: React.FC<CustomButtonProps> = ({ onPress, label, loading = false, disabled = false, theme, type = 'primary' }) => {
+    const getButtonStyle = () => {
+        switch (type) {
+            case 'secondary':
+                return { backgroundColor: theme.colors.surfaceVariant };
+            case 'danger':
+                return { backgroundColor:  'transparent'};
+            default:
+                return { backgroundColor: theme.colors.primary };
+        }
+    };
+
+    const getLabelStyle = () => {
+        switch (type) {
+            case 'secondary':
+                return { color: theme.colors.text };
+            case 'danger':
+                return { color: theme.colors.error };
+            default: 
+                return { color: theme.colors.textButton };
+        }
+    };
     return (
         <Button
             mode="contained"
             onPress={onPress}
-            style={[styles.button, { backgroundColor: theme.colors.text }]}
+            style={[styles.button, getButtonStyle()]}
             contentStyle={styles.buttonContent}
-            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
+            labelStyle={[styles.buttonLabel, getLabelStyle()]}
             theme={{ roundness: 30 }}
             loading={loading}
             disabled={disabled}

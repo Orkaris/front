@@ -26,27 +26,13 @@ import { RootStackParamList, User } from "@/src/model/types";
 import Loader from "@/src/components/loader";
 import { showAlert } from "@/src/services/alert";
 import { useRouter } from "expo-router";
+import dayjs from "dayjs";
+import CustomButton from "@/src/components/CustomButton";
 
 type ProfileScreenNavigationProp = NativeStackNavigationProp<
     RootStackParamList,
     "profile"
 >;
-
-const formatDate = (isoString: string | undefined | null): string => {
-    if (!isoString) return i18n.t('profile.undefined');
-    try {
-        const date = new Date(isoString);
-        const options: Intl.DateTimeFormatOptions = {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-        };
-        return date.toLocaleDateString("fr-FR", options);
-    } catch (e) {
-        console.error("Failed to format date:", e);
-        return i18n.t('profile.invalid_date');
-    }
-};
 
 export default function ProfileScreen() {
     const { theme } = useThemeContext();
@@ -222,25 +208,40 @@ export default function ProfileScreen() {
                         <Title
                             style={[styles.statValue, { color: theme.colors.text }]}
                         >
-                            {formatDate(user?.birthDate)}
+                            {
+                                user?.birthDate ?
+                                    dayjs(user?.birthDate).format("D MMMM YYYY") :
+                                    i18n.t('profile.undefined')
+                            }
                         </Title>
                     </View>
                 </View>
-            </View>
 
-            <Button
-                title={i18n.t('profile.sign_out')}
-                onPress={
+            </View>
+            <View style={styles.buttonContainer}>
+                <CustomButton onPress={
                     () =>
                         showAlert(i18n.t('profile.sign_out'), i18n.t('profile.sign_out_confirmation'), signOut)
                 }
-                color='red'
-            />
+                    label={i18n.t('profile.sign_out')}
+                    theme={theme}
+                    loading={false}
+                    disabled={false}
+                    type="danger"
+                />
+            </View>
+
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    buttonContainer: {
+        justifyContent: 'flex-end',
+        marginBottom: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
     safeArea: {
         flex: 1,
     },
