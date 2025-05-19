@@ -2,6 +2,7 @@ import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+import Statistics from "../app/statistics";
 
 export const deviceLanguage = getLocales()?.[0]?.languageCode ?? "en";
 
@@ -79,7 +80,10 @@ export const i18n = new I18n({
                 female: 'Female',
                 other : 'Other'
             }
-        }
+        },
+        statistics: {
+            statistics_button: "Statistics",
+        },
     },
     fr: {
         hello: "Bonjour",
@@ -154,7 +158,10 @@ export const i18n = new I18n({
                 female: 'Femme',
                 other: 'Autre'
             }
-        }
+        },
+        statistics: {
+            statistics_button: "Statistiques",
+        },
     },
 });
 

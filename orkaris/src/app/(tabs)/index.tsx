@@ -8,6 +8,7 @@ import { i18n } from '@/src/i18n/i18n';
 import { useRouter } from 'expo-router';
 import { useLanguageContext } from '@/src/context/LanguageContext';
 import { useAuth } from '@/src/context/AuthContext';
+import CustomButton from "@/src/components/CustomButton";
 
 export default function HomeScreen() {
   const [user, setUser] = useState<User | null>(null);
@@ -73,10 +74,9 @@ export default function HomeScreen() {
         onPress={() => navigation.navigate("/newTraining")}
       />
 
-      <Button
-        title={i18n.t('statistics.statistics')}
-        onPress={() => navigation.navigate("/statistics")}
-      />
+      <CustomButton onPress={() => navigation.navigate("/statistics")}
+      label={i18n.t('statistics.statistics_button')} theme={theme} />
+      
       
     </SafeAreaView>
   );
