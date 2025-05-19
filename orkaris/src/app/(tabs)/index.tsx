@@ -72,6 +72,12 @@ export default function HomeScreen() {
         title={i18n.t('program.new_program')}
         onPress={() => navigation.navigate("/newTraining")}
       />
+
+      <Button
+        title={i18n.t('statistics.statistics')}
+        onPress={() => navigation.navigate("/statistics")}
+      />
+      
     </SafeAreaView>
   );
 }
