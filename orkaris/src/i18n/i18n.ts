@@ -1,5 +1,7 @@
 import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
 
 export const deviceLanguage = getLocales()?.[0]?.languageCode ?? "en";
 
@@ -35,7 +37,7 @@ export const i18n = new I18n({
             password: "Password",
             email: "Email",
             register_button: "Register",
-            connect_button: "Connect",
+            connect_button: "Sign in",
             already_have_account: "Already have an account?",
             no_account: "Don't have an account?",
             signup: "Sign up",
@@ -67,6 +69,20 @@ export const i18n = new I18n({
             name: "Program name",
             create_program: "Create program",
         },
+        edit_profile: {
+            title: "Edit profile",
+            save: "Save",
+            name: "Name",
+            weight: "Weight (kg)",
+            height: "Height (cm)",
+            birthdate: "Birthdate",
+            gender: 'Gender',
+            genders :{
+                male: 'Homme',
+                female: 'Female',
+                other : 'Other'
+            }
+        }
     },
     fr: {
         hello: "Bonjour",
@@ -131,13 +147,29 @@ export const i18n = new I18n({
             name: "Nom du programme",
             create_program: "Créer le programme",
         },
+        edit_profile: {
+            title: "Modifier le profil",
+            save: "Sauvegarder",
+            name: "Nom",
+            weight: "Poids (kg)",
+            height: "Taille (cm)",
+            birthdate: "Date de naissance",
+            gender: 'Genre',
+            genders :{
+                male: 'Homme',
+                female: 'Femme',
+                other: 'Autre'
+            }
+        }
     },
 });
 
 i18n.defaultLocale = deviceLanguage;
 
 i18n.locale = deviceLanguage;
+dayjs.locale(deviceLanguage);
 
 export function changeLanguage(lang: string) {
     i18n.locale = lang;
+    dayjs.locale(lang);
 }

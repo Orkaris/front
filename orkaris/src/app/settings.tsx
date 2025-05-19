@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { showAlert } from '../services/alert';
 import { useLanguageContext } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import CustomButton from '../components/CustomButton';
 
 export default function SettingsScreen() {
     const { signOut } = useAuth();
@@ -128,21 +129,34 @@ export default function SettingsScreen() {
                         }
                     />
                 </View>
+                
             </View>
 
-            <Button
-                title={i18n.t('settings.delete_account')}
-                onPress={
-                    () =>
-                        showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), signOut)
-                }
-                color='red'
-            />
+            <View style={styles.buttonContainer}>
+            <CustomButton
+                    onPress={
+                        () =>
+                            showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), signOut)
+                    }
+                    label={i18n.t('settings.delete_account')}
+                    theme={theme}
+                    loading={false}
+                    disabled={false}
+                    type="danger"
+                />
+            </View>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+
+    buttonContainer: {
+        justifyContent: 'flex-end',
+        marginBottom: 20,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
     safeArea: {
         flex: 1,
     },

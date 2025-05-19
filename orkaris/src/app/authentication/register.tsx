@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useThemeContext } from '../../context/ThemeContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLayoutEffect } from "react";
+import CustomButton from '@/src/components/CustomButton';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/register">;
 
@@ -92,8 +93,8 @@ export default function SignUpScreen() {
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
 
-                        <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
-                        <Paragraph style={styles.paragraph}>
+                        <Headline style={[styles.headline, { color: theme.colors.text }]}>{i18n.t('hello')},</Headline>
+                        <Paragraph style={[styles.paragraph, { color: theme.colors.text }]}>
                             {i18n.t('authentication.register_prompt')}
                         </Paragraph>
 
@@ -102,9 +103,10 @@ export default function SignUpScreen() {
                             value={username}
                             onChangeText={setUsername}
                             mode="outlined"
-                            style={styles.input}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
                             autoCapitalize="words"
-                            theme={{ roundness: 20 }}
+                            textColor={theme.colors.text}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                         />
 
                         <TextInput
@@ -112,10 +114,11 @@ export default function SignUpScreen() {
                             value={email}
                             onChangeText={setEmail}
                             mode="outlined"
-                            style={styles.input}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
                             keyboardType="email-address"
                             autoCapitalize="none"
-                            theme={{ roundness: 20 }}
+                            textColor={theme.colors.text}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                         />
 
                         <TextInput
@@ -123,9 +126,10 @@ export default function SignUpScreen() {
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
+                            textColor={theme.colors.text}
                             secureTextEntry={!passwordVisible}
-                            style={styles.input}
-                            theme={{ roundness: 20 }}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                             right={
                                 <TextInput.Icon
                                     icon={passwordVisible ? "eye-off" : "eye"}
@@ -139,20 +143,17 @@ export default function SignUpScreen() {
                             </Text>
                         ) : null}
 
-                        <Button
-                            mode="contained"
+                        
+                        <CustomButton
                             onPress={handleSignUp}
-                            style={[styles.button, { backgroundColor: theme.colors.text }]}
-                            contentStyle={styles.buttonContent}
-                            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
-                            theme={{ roundness: 30 }}
-                            accessibilityLabel={i18n.t('authentication.register_button')}
-                        >
-                            {i18n.t('authentication.register_button')}
-                        </Button>
+                            label={i18n.t('authentication.register_button')}
+                            loading={isSubmitting}
+                            disabled={isSubmitting}
+                            theme={theme}
+                        />
 
                         <View style={styles.signInContainer}>
-                            <Text style={styles.signInText}>
+                            <Text style={[styles.signInText, { color: theme.colors.text }]}>
                                 {i18n.t('authentication.already_have_account')}
 
                             </Text>
@@ -210,7 +211,6 @@ const styles = StyleSheet.create({
     },
     input: {
         marginBottom: 20,
-        backgroundColor: '#fff',
     },
     button: {
         marginTop: 15,

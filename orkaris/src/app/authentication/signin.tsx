@@ -21,6 +21,7 @@ import { useAuth } from '@/src/context/AuthContext';
 import { Alert } from 'react-native';
 import { i18n } from '@/src/i18n/i18n';
 import { useThemeContext } from '@/src/context/ThemeContext';
+import CustomButton from '@/src/components/CustomButton';
 
 type NavigationProps = NativeStackNavigationProp<AuthStackParamList, "authentication/signin">;
 
@@ -64,8 +65,8 @@ export default function SignInScreen() {
             >
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
-                        <Headline style={styles.headline}>{i18n.t('hello')},</Headline>
-                        <Paragraph style={styles.paragraph}>
+                        <Headline style={[styles.headline, { color: theme.colors.text }]}>{i18n.t('hello')},</Headline>
+                        <Paragraph style={[styles.paragraph, { color: theme.colors.text }]}>
                             {i18n.t('authentication.signin_to_continue')}
                         </Paragraph>
 
@@ -74,10 +75,12 @@ export default function SignInScreen() {
                             value={email}
                             onChangeText={setEmail}
                             mode="outlined"
-                            style={styles.input}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
                             keyboardType="email-address"
+                            textColor={theme.colors.text}
                             autoCapitalize="none"
-                            theme={{ roundness: 20 }}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
+
                         />
 
                         <TextInput
@@ -85,9 +88,10 @@ export default function SignInScreen() {
                             value={password}
                             onChangeText={setPassword}
                             mode="outlined"
+                            textColor={theme.colors.text}
                             secureTextEntry={!passwordVisible}
-                            style={styles.input}
-                            theme={{ roundness: 20 }}
+                            style={[styles.input, { backgroundColor: theme.colors.background }]}
+                            theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary } }}
                             right={
                                 <TextInput.Icon
                                     icon={passwordVisible ? "eye-off" : "eye"}
@@ -96,19 +100,16 @@ export default function SignInScreen() {
                             }
                         />
 
-                        <Button
-                            mode="contained"
+                        <CustomButton
                             onPress={handleSignIn}
-                            style={[styles.button, { backgroundColor: theme.colors.text }]}
-                            contentStyle={styles.buttonContent}
-                            labelStyle={[styles.buttonLabel, { color: theme.colors.background }]}
-                            theme={{ roundness: 30 }}
-                        >
-                            {i18n.t('authentication.connect_button')}
-                        </Button>
+                            label={i18n.t('authentication.connect_button')}
+                            loading={isSubmitting}
+                            disabled={isSubmitting}
+                            theme={theme}
+                        />
 
                         <View style={styles.signUpContainer}>
-                            <Text style={styles.signUpText}>
+                            <Text style={[styles.signUpText, { color: theme.colors.text }]}>
                                 {i18n.t('authentication.no_account')}
                             </Text>
                             <Button
@@ -148,16 +149,13 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontWeight: 'bold',
         marginBottom: 8,
-        color: '#222',
     },
     paragraph: {
         fontSize: 16,
         marginBottom: 30,
-        color: '#555',
     },
     input: {
         marginBottom: 20,
-        backgroundColor: '#fff',
     },
     button: {
         marginTop: 15,
@@ -177,7 +175,6 @@ const styles = StyleSheet.create({
     },
     signUpText: {
         fontSize: 14,
-        color: '#555',
     },
     signUpLink: {
         fontSize: 14,
