@@ -32,7 +32,7 @@ export interface User {
 }
 
 // Interface pour un Programme (Workout)
-export interface Workout {
+export interface Program {
   id: UniqueId;
   name: string;
   userId: UniqueId; // Clé étrangère vers User

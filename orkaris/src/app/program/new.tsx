@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 import { i18n } from "@/src/i18n/i18n";
 import CustomButton from "@/src/components/CustomButton";
 
-export default function NewTrainingScreen() {
+export default function NewProgramScreen() {
     const { theme } = useThemeContext();
     const { userId } = useAuth();
     const [name, setName] = useState('');

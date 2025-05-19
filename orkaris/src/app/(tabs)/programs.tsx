@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
 import { apiService } from '@/src/services/api';
-import { User, Workout } from '@/src/model/types';
+import { Program } from '@/src/model/types';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import Loader from '@/src/components/loader';
 import { i18n } from '@/src/i18n/i18n';
@@ -10,16 +10,16 @@ import { useLanguageContext } from '@/src/context/LanguageContext';
 import { useAuth } from '@/src/context/AuthContext';
 
 export default function ProgramsScreen() {
-    const [workouts, setWorkouts] = useState<Workout[] | null>(null);
+    const [programs, setPrograms] = useState<Program[] | null>(null);
     const { theme } = useThemeContext();
     const { language } = useLanguageContext();
     const navigation = useRouter();
     const { userId, userToken } = useAuth();
 
-    const fetchWorkouts = useCallback(async () => {
+    const fetchPrograms = useCallback(async () => {
         try {
-            const response = await apiService.get<Workout[]>(`/Workout/ByUserId/${userId}`);
-            setWorkouts(response);
+            const response = await apiService.get<Program[]>(`/Workout/ByUserId/${userId}`);
+            setPrograms(response);
         } catch (error) {
             console.error('Error fetching workouts:', error);
         }
@@ -27,23 +27,23 @@ export default function ProgramsScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            fetchWorkouts();
-        }, [fetchWorkouts])
+            fetchPrograms();
+        }, [fetchPrograms])
     );
 
     return (
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
-            {workouts ? (
+            {programs ? (
                 <View style={styles.container}>
-                    {workouts.length > 0 ? (
+                    {programs.length > 0 ? (
                         <>
-                            {workouts.map((workout) => (
-                                <View key={workout.id} style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
-                                    <Link style={[styles.workout, { color: theme.colors.text }]} href={{
+                            {programs.map((program) => (
+                                <View key={program.id} style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+                                    <Link style={[styles.program, { color: theme.colors.text }]} href={{
                                         pathname: '/program/[id]',
-                                        params: { id: workout.id }
+                                        params: { id: program.id }
                                     }}>
-                                        {workout.name}
+                                        {program.name}
                                     </Link>
                                 </View>
                             ))}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         elevation: 3, // For Android shadow
     },
-    workout: {
+    program: {
         textAlign: 'center',
         fontWeight: '500',
         fontSize: 16,
