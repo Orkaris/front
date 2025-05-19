@@ -64,10 +64,10 @@ export const i18n = new I18n({
             sign_out_success: "Sign out successful",
         },
         program: {
-            new_program: "New program",
-            name_required: "Name is required.",
+            new: "New program",
             name: "Program name",
-            create_program: "Create program",
+            create: "Create program",
+            no_session: "No program found",
         },
         edit_profile: {
             title: "Edit profile",
@@ -76,12 +76,27 @@ export const i18n = new I18n({
             weight: "Weight (kg)",
             height: "Height (cm)",
             birthdate: "Birthdate",
-            gender: 'Gender',
-            genders :{
-                male: 'Homme',
-                female: 'Female',
-                other : 'Other'
+            gender: "Gender",
+            genders : {
+                male: "Male",
+                female: "Female",
+                other : "Other"
             }
+        },
+        session: {
+            new: "New session",
+            name: "Session name",
+            create: "Create session",
+            no_session: "No session found",
+        },
+        exercise: {
+            new: "New exercise",
+            name: "Exercise name",
+            create: "Create exercise",
+            no_session: "No exercise found",
+        },
+        error: {
+            name_required: "Name is required.",
         }
     },
     fr: {
@@ -142,10 +157,10 @@ export const i18n = new I18n({
             sign_out_success: "Déconnexion réussie",
         },
         program: {
-            new_program: "Nouveau programme",
-            name_required: "Le nom est requis.",
+            new: "Nouveau programme",
             name: "Nom du programme",
-            create_program: "Créer le programme",
+            create: "Créer le programme",
+            no_program: "Aucun programme trouvé",
         },
         edit_profile: {
             title: "Modifier le profil",
@@ -154,12 +169,27 @@ export const i18n = new I18n({
             weight: "Poids (kg)",
             height: "Taille (cm)",
             birthdate: "Date de naissance",
-            gender: 'Genre',
-            genders :{
-                male: 'Homme',
-                female: 'Femme',
-                other: 'Autre'
+            gender: "Genre",
+            genders : {
+                male: "Homme",
+                female: "Femme",
+                other: "Autre"
             }
+        },
+        session: {
+            new: "Nouvelle session",
+            name: "Nom de la session",
+            create: "Créer la session",
+            no_session: "Aucune session trouvée",
+        },
+        exercise: {
+            new: "Nouvel exercice",
+            name: "Nom de l'exercice",
+            create: "Créer l'exercice",
+            no_session: "Aucun exercice trouvé",
+        },
+        error: {
+            name_required: "Le nom est requis.",
         }
     },
 });

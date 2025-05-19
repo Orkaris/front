@@ -108,7 +108,7 @@ export default function ProfileScreen() {
         }
         console.log("Navigation vers EditProfile avec user:", user);
 
-        navigation.navigate({ pathname: "/editProfile", params: { userId: user.id } });
+        navigation.navigate({ pathname: "/profile/edit", params: { userId: user.id } });
     };
 
     if (isLoading) {

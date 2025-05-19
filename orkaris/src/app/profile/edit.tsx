@@ -25,14 +25,14 @@ import { Dropdown } from 'react-native-element-dropdown';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { useThemeContext } from "@/src/context/ThemeContext";
-import { apiService } from "../services/api";
-import { User } from "../model/types";
-import { useAuth } from "../context/AuthContext";
+import { apiService } from "../../services/api";
+import { User } from "../../model/types";
+import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
-import Loader from "../components/loader";
-import { i18n } from "../i18n/i18n";
-import { createCommonTextInputProps } from "../components/commonTextInputProps";
-import CustomButton from "../components/CustomButton";
+import Loader from "../../components/loader";
+import { i18n } from "../../i18n/i18n";
+import { createCommonTextInputProps } from "../../components/commonTextInputProps";
+import CustomButton from "../../components/CustomButton";
 
 const formatDateForDisplay = (date: Date | null | undefined): string => {
     if (!date) return "";
@@ -116,7 +116,8 @@ export default function EditProfileScreen() {
     if (error) { return <SafeAreaView style={[styles.safeArea, styles.centerContent]}><Text style={styles.errorText}>{error}</Text><Button mode="outlined" onPress={fetchDataForEdit} icon="refresh">Réessayer</Button><Button mode="text" onPress={() => navigation.back()} style={{ marginTop: 10 }}>Retour</Button></SafeAreaView>; }
 
     return (
-        <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoiding} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.keyboardAvoiding} keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}>
                 <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     <View style={styles.container}>
                         <TextInput label={i18n.t('edit_profile.name')} value={formData.name} onChangeText={(text) => handleInputChange("name", text)} {...createCommonTextInputProps(theme)} error={!!errors.name} disabled={isSubmitting} />
@@ -128,9 +129,9 @@ export default function EditProfileScreen() {
                         <TextInput label={i18n.t('edit_profile.height')} value={formData.height} onChangeText={(text) => handleInputChange("height", text.replace(/[^0-9]/g, ""))} {...createCommonTextInputProps(theme)} keyboardType="numeric" error={!!errors.height} disabled={isSubmitting} />
                         <HelperText type="error" visible={!!errors.height}>{errors.height}</HelperText>
 
-                        <TextInput label={i18n.t('edit_profile.birthdate')} value={formatDateForDisplay(formData.birthDate)} editable={false} mode="outlined" {...createCommonTextInputProps(theme)} error={!!errors.birthDate} disabled={isSubmitting} right={ <TextInput.Icon icon="calendar" onPress={() => !isSubmitting && setShowDatePicker(true)} forceTextInputFocus={false} disabled={isSubmitting} /> } />
+                        <TextInput label={i18n.t('edit_profile.birthdate')} value={formatDateForDisplay(formData.birthDate)} editable={false} mode="outlined" {...createCommonTextInputProps(theme)} error={!!errors.birthDate} disabled={isSubmitting} right={<TextInput.Icon icon="calendar" onPress={() => !isSubmitting && setShowDatePicker(true)} forceTextInputFocus={false} disabled={isSubmitting} />} />
                         <HelperText type="error" visible={!!errors.birthDate}>{errors.birthDate}</HelperText>
-                        {showDatePicker && ( <DateTimePicker value={formData.birthDate || new Date()} mode="date" display={Platform.OS === "ios" ? "spinner" : "default"} onChange={onDateChange} maximumDate={new Date()} /> )}
+                        {showDatePicker && (<DateTimePicker value={formData.birthDate || new Date()} mode="date" display={Platform.OS === "ios" ? "spinner" : "default"} onChange={onDateChange} maximumDate={new Date()} />)}
 
                         <View style={styles.dropdownContainer}>
                             {renderGenderLabel()}
@@ -157,10 +158,10 @@ export default function EditProfileScreen() {
                                     setIsGenderFocus(false);
                                 }}
                                 renderLeftIcon={() => (
-                                    <Ionicons style={[styles.icon, { color: theme.colors.text }]} name={ formData.gender === 'male' ? 'male-outline' : formData.gender === 'female' ? 'female-outline' : formData.gender === 'other' ? 'male-female-outline' : 'help-circle-outline' } size={20} />
+                                    <Ionicons style={[styles.icon, { color: theme.colors.text }]} name={formData.gender === 'male' ? 'male-outline' : formData.gender === 'female' ? 'female-outline' : formData.gender === 'other' ? 'male-female-outline' : 'help-circle-outline'} size={20} />
                                 )}
                                 renderItem={(item, isSelected) => (
-                                    <View style={[ styles.item, { backgroundColor: isSelected ? theme.colors.surfaceVariant : theme.colors.background } ]}>
+                                    <View style={[styles.item, { backgroundColor: isSelected ? theme.colors.surfaceVariant : theme.colors.background }]}>
                                         {item.icon()}
                                         <Text style={[styles.textItem, { color: theme.colors.text }]}>{item.label}</Text>
                                     </View>

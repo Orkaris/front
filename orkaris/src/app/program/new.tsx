@@ -1,11 +1,12 @@
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, View, Text, StyleSheet, Platform, Alert } from "react-native";
-import { useThemeContext } from "../context/ThemeContext";
-import { TextInput, Button } from "react-native-paper";
+import { SafeAreaView, View, StyleSheet, Alert } from "react-native";
+import { useThemeContext } from "@/src/context/ThemeContext";
+import { TextInput } from "react-native-paper";
 import { useState } from "react";
-import { apiService } from "../services/api";
-import { useAuth } from "../context/AuthContext";
+import { apiService } from "@/src/services/api";
+import { useAuth } from "@/src/context/AuthContext";
 import { useRouter } from "expo-router";
-import { i18n } from "../i18n/i18n";
+import { i18n } from "@/src/i18n/i18n";
+import CustomButton from "@/src/components/CustomButton";
 
 export default function NewTrainingScreen() {
     const { theme } = useThemeContext();
@@ -21,7 +22,7 @@ export default function NewTrainingScreen() {
             setIsError(true);
             Alert.alert(
                 i18n.t('alert.error'),
-                i18n.t('program.name_required'),
+                i18n.t('error.name_required'),
             );
             return;
         }
@@ -45,16 +46,18 @@ export default function NewTrainingScreen() {
                     onChangeText={setName}
                     style={styles.input}
                     mode="outlined"
-                    autoCapitalize="words"
-                    theme={{ roundness: 20 }}
-                    outlineColor={theme.colors.text}
-                    activeOutlineColor={theme.colors.text}
+                    autoCapitalize="none"
+                    theme={{ roundness: 20, colors: { onSurfaceVariant: theme.colors.textSecondary, background: theme.colors.background } }}
+                    activeOutlineColor={theme.colors.primary}
                     textColor={theme.colors.text}
                     error={isError}
                 />
-                <Button onPress={createProgram}>
-                    {i18n.t('program.create_program')}
-                </Button>
+
+                <CustomButton
+                    onPress={createProgram}
+                    label={i18n.t('program.create')}
+                    theme={theme}
+                />
             </View>
         </SafeAreaView>
     );
