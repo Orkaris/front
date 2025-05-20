@@ -16,13 +16,47 @@ interface SessionExercise {
     sets: string;
 }
 
-export default function NewSessionScreen() {
+export default function EditSessionScreen() {
     const [name, setName] = useState('');
     const [exercises, setExercises] = useState<SessionExercise[]>([]);
     const { theme } = useThemeContext();
     const { userId } = useAuth();
-    const { id: workoutId, selectedExercise } = useLocalSearchParams();
+    const { id: sessionId, selectedExercise } = useLocalSearchParams();
     const router = useRouter();
+
+    const fetchSession = useCallback(async () => {
+        try {
+            const response = await apiService.get<{
+                id: string;
+                name: string;
+                userId: string;
+                workoutId: string;
+                createdAt: string;
+                sessionExerciseSession: Array<{
+                    exerciseId: string;
+                    exerciseName: string;
+                    reps: number;
+                    sets: number;
+                }>;
+            }>(`/Session/ById/${sessionId}/ByUserId/${userId}`);
+            console.log('Session response:', JSON.stringify(response, null, 2));
+            setName(response.name);
+            setExercises(response.sessionExerciseSession.map(ex => ({
+                exerciseId: ex.exerciseId,
+                exerciseName: ex.exerciseName,
+                reps: ex.reps.toString(),
+                sets: ex.sets.toString()
+            })));
+        } catch (error) {
+            console.error('Error fetching session:', error);
+            Alert.alert(i18n.t('session.session_creation_error'));
+            router.back();
+        }
+    }, [sessionId, userId]);
+
+    useEffect(() => {
+        fetchSession();
+    }, [fetchSession]);
 
     useEffect(() => {
         if (selectedExercise) {
@@ -42,16 +76,19 @@ export default function NewSessionScreen() {
         setExercises(newExercises);
     };
 
-    const handleCreateSession = async () => {
-        if (!name.trim() || exercises.length === 0) {
+    const handleUpdateSession = async () => {
+        console.log('Current name value:', name);
+        console.log('Current name trimmed:', name.trim());
+        console.log('Exercises length:', exercises.length);
+        
+        if (!name.trim()) {
             Alert.alert(i18n.t('error.name_required'));
             return;
         }
 
         try {
-            await apiService.post('/Session', {
+            await apiService.put(`/Session/${sessionId}`, {
                 name: name.trim(),
-                workoutId: workoutId,
                 userId: userId,
                 exercises: exercises.map(ex => ({
                     exerciseId: ex.exerciseId,
@@ -59,11 +96,11 @@ export default function NewSessionScreen() {
                     sets: parseInt(ex.sets)
                 }))
             });
-            Alert.alert(i18n.t('session.session_created'));
+            Alert.alert(i18n.t('session.session_updated'));
             router.back();
         } catch (error) {
-            console.error('Error creating session:', error);
-            Alert.alert(i18n.t('session.session_creation_error'));
+            console.error('Error updating session:', error);
+            Alert.alert(i18n.t('session.session_update_error'));
         }
     };
 
@@ -147,10 +184,10 @@ export default function NewSessionScreen() {
             <View style={styles.footer}>
                 <TouchableOpacity 
                     style={[styles.createButton, { backgroundColor: theme.colors.primary }]}
-                    onPress={handleCreateSession}
+                    onPress={handleUpdateSession}
                 >
                     <Text style={[styles.createButtonText, { color: theme.colors.textButton }]}>
-                        {i18n.t('session.create')}
+                        {i18n.t('session.update')}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -241,4 +278,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-});
+}); 

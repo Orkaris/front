@@ -15,7 +15,7 @@ export default function ProgramScreen() {
     const [newName, setNewName] = useState('');
     const { id: workoutId } = useLocalSearchParams();
     const { theme } = useThemeContext();
-    const navigation = useRouter();
+    const router = useRouter();
     const { userId } = useAuth();
 
     const fetchSessions = useCallback(async () => {
@@ -53,8 +53,10 @@ export default function ProgramScreen() {
     };
 
     const handleRename = async (session: Session) => {
-        setEditingSession(session);
-        setNewName(session.name);
+        router.push({
+            pathname: '/session/edit',
+            params: { id: session.id }
+        });
     };
 
     const saveRename = async () => {
@@ -140,7 +142,7 @@ export default function ProgramScreen() {
             )}
             <TouchableOpacity 
                 style={[styles.fab, { backgroundColor: theme.colors.primary }]}
-                onPress={() => navigation.navigate({
+                onPress={() => router.navigate({
                     pathname: "/session/new",
                     params: { id: workoutId }
                 })}
