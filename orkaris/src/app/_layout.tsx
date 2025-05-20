@@ -1,7 +1,7 @@
-import { AuthProvider } from '../context/AuthContext';
-import { ThemeProvider } from '../context/ThemeContext';
-import { LanguageProvider } from '../context/LanguageContext';
-import AppNavigator from './navigation/AppNavigator';
+import { AuthProvider } from '@/src/context/AuthContext';
+import { ThemeProvider } from '@/src/context/ThemeContext';
+import { LanguageProvider } from '@/src/context/LanguageContext';
+import AppNavigator from '@/src/app/navigation/AppNavigator';
 
 const AppContent = () => {
   return <AppNavigator />;
