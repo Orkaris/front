@@ -14,6 +14,7 @@ export const i18n = new I18n({
             history: "History",
             profile: "Profile",
             back: "Back",
+            my_sessions: "My sessions",
         },
         alert: {
             cancel: "Cancel",
@@ -67,7 +68,11 @@ export const i18n = new I18n({
             new: "New program",
             name: "Program name",
             create: "Create program",
-            no_session: "No program found",
+            no_program: "No program found",
+            delete: "Delete program",
+            delete_confirmation: "Are you sure you want to delete this program?",
+            rename: "Rename program",
+            new_name: "New name",
         },
         edit_profile: {
             title: "Edit profile",
@@ -88,6 +93,10 @@ export const i18n = new I18n({
             name: "Session name",
             create: "Create session",
             no_session: "No session found",
+            delete: "Delete session",
+            delete_confirmation: "Are you sure you want to delete this session?",
+            rename: "Rename session",
+            new_name: "New name",
         },
         exercise: {
             new: "New exercise",
@@ -107,6 +116,7 @@ export const i18n = new I18n({
             history: "Historique",
             profile: "Profil",
             back: "Retour",
+            my_sessions: "Mes sessions",
         },
         alert: {
             cancel: "Annuler",
@@ -161,6 +171,10 @@ export const i18n = new I18n({
             name: "Nom du programme",
             create: "Créer le programme",
             no_program: "Aucun programme trouvé",
+            delete: "Supprimer le programme",
+            delete_confirmation: "Êtes-vous sûr de vouloir supprimer ce programme ?",
+            rename: "Renommer le programme",
+            new_name: "Nouveau nom",
         },
         edit_profile: {
             title: "Modifier le profil",
@@ -181,6 +195,10 @@ export const i18n = new I18n({
             name: "Nom de la session",
             create: "Créer la session",
             no_session: "Aucune session trouvée",
+            delete: "Supprimer la session",
+            delete_confirmation: "Êtes-vous sûr de vouloir supprimer cette session ?",
+            rename: "Renommer la session",
+            new_name: "Nouveau nom",
         },
         exercise: {
             new: "Nouvel exercice",

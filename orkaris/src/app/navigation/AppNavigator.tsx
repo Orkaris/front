@@ -43,14 +43,16 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
+      headerTintColor: theme.colors.navigationIcon,
     }} />
     <Stack.Screen name="program/[id]" options={{
-      headerTitle: '',
+      headerTitle: i18n.t('navigation.my_sessions'),
       headerBackTitle: i18n.t('navigation.back'),
       headerShadowVisible: false,
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
+      headerTintColor: theme.colors.navigationIcon,
     }} />
     <Stack.Screen name="program/new" options={{
       headerTitle: i18n.t('program.new'),
@@ -59,7 +61,7 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
-      headerTintColor: theme.colors.text,
+      headerTintColor: theme.colors.navigationIcon,
     }} />
     <Stack.Screen name="session/[id]" options={{
       headerTitle: '',
@@ -68,6 +70,7 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
+      headerTintColor: theme.colors.navigationIcon,
     }} />
     <Stack.Screen name="session/new" options={{
       headerTitle: i18n.t('session.new'),
@@ -76,7 +79,7 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
-      headerTintColor: theme.colors.text,
+      headerTintColor: theme.colors.navigationIcon,
     }} />
     <Stack.Screen name="profile/edit" options={{
       headerTitle: i18n.t('edit_profile.title'),
@@ -85,7 +88,7 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       headerStyle: {
         backgroundColor: theme.colors.background,
       },
-      headerTintColor: theme.colors.text,
+      headerTintColor: theme.colors.navigationIcon,
     }} />
   </Stack>
 );

@@ -41,7 +41,7 @@ export default function TabLayout() {
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: theme.colors.text,
+                tabBarActiveTintColor: theme.colors.primary,
                 tabBarInactiveTintColor: theme.colors.text,
                 tabBarStyle: {
                     backgroundColor: theme.colors.background,
@@ -55,7 +55,6 @@ export default function TabLayout() {
                 headerStyle: { backgroundColor: theme.colors.background },
                 headerShadowVisible: false,
                 headerTintColor: theme.colors.text,
-                headerRight: settings, headerRightContainerStyle: { paddingRight: 10 },
                 headerLeft: placeholder, headerLeftContainerStyle: { paddingLeft: 10 },
                 tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
@@ -67,7 +66,6 @@ export default function TabLayout() {
                 headerStyle: { backgroundColor: theme.colors.background },
                 headerShadowVisible: false,
                 headerTintColor: theme.colors.text,
-                headerRight: settings, headerRightContainerStyle: { paddingRight: 10 },
                 headerLeft: placeholder, headerLeftContainerStyle: { paddingLeft: 10 },
                 tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'list' : 'list-outline'} color={color} size={24} />
@@ -79,7 +77,6 @@ export default function TabLayout() {
                 headerStyle: { backgroundColor: theme.colors.background },
                 headerShadowVisible: false,
                 headerTintColor: theme.colors.text,
-                headerRight: settings, headerRightContainerStyle: { paddingRight: 10 },
                 headerLeft: placeholder, headerLeftContainerStyle: { paddingLeft: 10 },
                 tabBarIcon: ({ color, focused }: { color: string; focused: boolean }) => (
                     <Ionicons name={focused ? 'time' : 'time-outline'} color={color} size={24} />
