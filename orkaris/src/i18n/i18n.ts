@@ -2,7 +2,7 @@ import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import Statistics from "../app/statistics";
+import Statistics from "../app/statistics/statistics";
 
 export const deviceLanguage = getLocales()?.[0]?.languageCode ?? "en";
 

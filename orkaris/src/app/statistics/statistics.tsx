@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { BarChart, PieChart, RadarChart } from 'react-native-gifted-charts';
 import { useThemeContext } from '@/src/context/ThemeContext';
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../../components/CustomButton";
 
 
 const Statistics = () => {
