@@ -20,12 +20,13 @@ export default function SelectExerciseScreen() {
 
     const fetchExercises = useCallback(async () => {
         try {
-            const response = await apiService.get<Exercise[]>(`/Exercise/ByUserId/${userId}`);
+            const response = await apiService.get<Exercise[]>('/Exercise');
             setExercises(response);
         } catch (error) {
             console.error('Error fetching exercises:', error);
+            Alert.alert(i18n.t('alert.error'), 'Error fetching exercises');
         }
-    }, [userId]);
+    }, []);
 
     const handleCreateExercise = async () => {
         if (!newExerciseName.trim()) return;
@@ -33,7 +34,7 @@ export default function SelectExerciseScreen() {
         try {
             const response = await apiService.post<Exercise>('/Exercise', {
                 name: newExerciseName.trim(),
-                userId: userId
+                description: '',
             });
             setExercises([...exercises, response]);
             setIsCreatingExercise(false);

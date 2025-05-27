@@ -29,28 +29,13 @@ export default function ProgramsScreen() {
     }, [userId]);
 
     const handleDelete = async (programId: string) => {
-        Alert.alert(
-            i18n.t('program.delete'),
-            i18n.t('program.delete_confirmation'),
-            [
-                {
-                    text: i18n.t('alert.cancel'),
-                    style: 'cancel'
-                },
-                {
-                    text: i18n.t('alert.ok'),
-                    onPress: async () => {
-                        try {
-                            await apiService.delete(`/Workout/${programId}/${userId}`);
-                            fetchPrograms();
-                        } catch (error) {
-                            console.error('Error deleting program:', error);
-                            Alert.alert(i18n.t('alert.error'), 'Error deleting program');
-                        }
-                    }
-                }
-            ]
-        );
+        try {
+            await apiService.delete(`/Workout/${programId}`);
+            fetchPrograms();
+        } catch (error) {
+            console.error('Error deleting program:', error);
+            Alert.alert(i18n.t('alert.error'), 'Error deleting program');
+        }
     };
 
     const handleRename = async (program: Program) => {

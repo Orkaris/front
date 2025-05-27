@@ -6,52 +6,52 @@ import { Exercise } from "@/src/model/types";
 import { apiService } from "@/src/services/api";
 import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
-import { SafeAreaView, Text, StyleSheet, View, Button } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, Button, Alert } from "react-native";
+
+interface SessionExerciseResponse {
+    exerciseId: string;
+    exerciseName: string;
+    reps: number;
+    sets: number;
+}
 
 export default function SessionScreen() {
-    const [exercises, setExercises] = useState<Exercise[] | null>(null);
+    const [exercises, setExercises] = useState<SessionExerciseResponse[]>([]);
     const { id: sessionId } = useLocalSearchParams();
     const { theme } = useThemeContext();
     const navigation = useRouter();
     const { userId } = useAuth();
 
-    const fetchExercises = useCallback(async () => {
+    const fetchSessionExercises = useCallback(async () => {
         try {
-            const response = await apiService.get<Exercise[]>(`/Exercise/ByUserId/${userId}/BySessionId/${sessionId}`);
+            const response = await apiService.get<SessionExerciseResponse[]>(`/SessionExercise/BySessionId/${sessionId}`);
             setExercises(response);
         } catch (error) {
-            console.error('Error fetching exercises:', error);
+            console.error('Error fetching session exercises:', error);
+            Alert.alert(i18n.t('alert.error'), 'Error fetching session exercises');
         }
-    }, []);
+    }, [sessionId]);
 
     useFocusEffect(
         useCallback(() => {
-            fetchExercises();
-        }, [fetchExercises])
+            fetchSessionExercises();
+        }, [fetchSessionExercises])
     );
 
     return (
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
-            {exercises ? (
+            {exercises.length > 0 ? (
                 <View style={styles.container}>
-                    {exercises.length > 0 ? (
-                        <>
-                            {exercises.map((exercise) => (
-                                <View key={exercise.id} style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
-                                    <Link style={[styles.exercise, { color: theme.colors.text }]} href={{
-                                        pathname: '/exercise/[id]',
-                                        params: { id: exercise.id }
-                                    }}>
-                                        {exercise.name}
-                                    </Link>
-                                </View>
-                            ))}
-                        </>
-                    ) : (
-                        <Text style={{ color: theme.colors.text }}>
-                            {i18n.t('exercise.no_exercise')}
-                        </Text>
-                    )}
+                    {exercises.map((exercise) => (
+                        <View key={exercise.exerciseId} style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+                            <Link style={[styles.exercise, { color: theme.colors.text }]} href={{
+                                pathname: '/exercise/[id]',
+                                params: { id: exercise.exerciseId }
+                            }}>
+                                {exercise.exerciseName}
+                            </Link>
+                        </View>
+                    ))}
 
                     <Button
                         title={i18n.t('exercise.new')}
@@ -62,7 +62,9 @@ export default function SessionScreen() {
                     />
                 </View>
             ) : (
-                <Loader />
+                <Text style={{ color: theme.colors.text }}>
+                    {i18n.t('exercise.no_exercise')}
+                </Text>
             )}
         </SafeAreaView>
     )

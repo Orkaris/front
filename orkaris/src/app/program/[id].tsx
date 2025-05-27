@@ -20,7 +20,7 @@ export default function ProgramScreen() {
 
     const fetchSessions = useCallback(async () => {
         try {
-            const response = await apiService.get<Session[]>(`/Session/ByUserId/${userId}/BySessionId/${workoutId}`);
+            const response = await apiService.get<Session[]>(`/Workout/${workoutId}`);
             setSessions(response);
         } catch (error) {
             console.error('Error fetching sessions:', error);

@@ -38,7 +38,7 @@ export default function EditSessionScreen() {
                     reps: number;
                     sets: number;
                 }>;
-            }>(`/Session/ById/${sessionId}/ByUserId/${userId}`);
+            }>(`/Session/${sessionId}`);
             console.log('Session response:', JSON.stringify(response, null, 2));
             setName(response.name);
             setExercises(response.sessionExerciseSession.map(ex => ({
@@ -52,7 +52,7 @@ export default function EditSessionScreen() {
             Alert.alert(i18n.t('session.session_creation_error'));
             router.back();
         }
-    }, [sessionId, userId]);
+    }, [sessionId]);
 
     useEffect(() => {
         fetchSession();
