@@ -8,47 +8,64 @@ import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-rout
 import { useCallback, useState } from "react";
 import { SafeAreaView, Text, StyleSheet, View, Button, Alert } from "react-native";
 
-interface SessionExerciseResponse {
-    exerciseId: string;
-    exerciseName: string;
-    reps: number;
-    sets: number;
+interface SessionExercise {
+    exerciseGoalSessionExercise: {
+        exerciseExerciseGoal: {
+            id: string;
+            name: string;
+        };
+        reps: number;
+        sets: number;
+    };
+}
+
+interface Session {
+    id: string;
+    name: string;
+    sessionExerciseSession: SessionExercise[];
 }
 
 export default function SessionScreen() {
-    const [exercises, setExercises] = useState<SessionExerciseResponse[]>([]);
+    const [session, setSession] = useState<Session | null>(null);
     const { id: sessionId } = useLocalSearchParams();
     const { theme } = useThemeContext();
     const navigation = useRouter();
     const { userId } = useAuth();
 
-    const fetchSessionExercises = useCallback(async () => {
+    const fetchSession = useCallback(async () => {
         try {
-            const response = await apiService.get<SessionExerciseResponse[]>(`/SessionExercise/BySessionId/${sessionId}`);
-            setExercises(response);
+            console.log('Fetching session:', sessionId);
+            const response = await apiService.get<Session>(`/Session/${sessionId}`);
+            console.log('Session response:', JSON.stringify(response, null, 2));
+            setSession(response);
         } catch (error) {
-            console.error('Error fetching session exercises:', error);
-            Alert.alert(i18n.t('alert.error'), 'Error fetching session exercises');
+            console.error('Error fetching session:', error);
+            Alert.alert(i18n.t('alert.error'), 'Error fetching session');
         }
     }, [sessionId]);
 
     useFocusEffect(
         useCallback(() => {
-            fetchSessionExercises();
-        }, [fetchSessionExercises])
+            fetchSession();
+        }, [fetchSession])
     );
+
+    if (!session) {
+        return <Loader />;
+    }
 
     return (
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
-            {exercises.length > 0 ? (
+            {session.sessionExerciseSession.length > 0 ? (
                 <View style={styles.container}>
-                    {exercises.map((exercise) => (
-                        <View key={exercise.exerciseId} style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+                    {session.sessionExerciseSession.map((exercise) => (
+                        <View key={exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id} 
+                              style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
                             <Link style={[styles.exercise, { color: theme.colors.text }]} href={{
                                 pathname: '/exercise/[id]',
-                                params: { id: exercise.exerciseId }
+                                params: { id: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id }
                             }}>
-                                {exercise.exerciseName}
+                                {exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name}
                             </Link>
                         </View>
                     ))}

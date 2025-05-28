@@ -1,9 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, FlatList, Alert } from 'react-native';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import { useAuth } from '@/src/context/AuthContext';
+import { useExercise } from '@/src/context/ExerciseContext';
 import { i18n } from '@/src/i18n/i18n';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { apiService } from '@/src/services/api';
 import { Exercise } from '@/src/model/types';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +18,8 @@ export default function SelectExerciseScreen() {
     const { theme } = useThemeContext();
     const { userId } = useAuth();
     const router = useRouter();
+    const { workoutId } = useLocalSearchParams();
+    const { addExercise } = useExercise();
 
     const fetchExercises = useCallback(async () => {
         try {
@@ -28,6 +31,10 @@ export default function SelectExerciseScreen() {
         }
     }, []);
 
+    useEffect(() => {
+        fetchExercises();
+    }, [fetchExercises]);
+
     const handleCreateExercise = async () => {
         if (!newExerciseName.trim()) return;
 
@@ -36,10 +43,15 @@ export default function SelectExerciseScreen() {
                 name: newExerciseName.trim(),
                 description: '',
             });
+            console.log('Select-exercise.tsx - Created exercise:', response);
             setExercises([...exercises, response]);
             setIsCreatingExercise(false);
             setNewExerciseName('');
             Alert.alert(i18n.t('session.exercise_created'));
+            
+            // Sélectionner automatiquement l'exercice créé
+            addExercise(response);
+            router.back();
         } catch (error) {
             console.error('Error creating exercise:', error);
             Alert.alert(i18n.t('session.exercise_creation_error'));
@@ -54,9 +66,8 @@ export default function SelectExerciseScreen() {
         <TouchableOpacity
             style={[styles.exerciseItem, { backgroundColor: theme.colors.surfaceVariant }]}
             onPress={() => {
+                addExercise(item);
                 router.back();
-                // Pass the selected exercise back to the previous screen
-                router.setParams({ selectedExercise: JSON.stringify(item) });
             }}
         >
             <Text style={[styles.exerciseName, { color: theme.colors.text }]}>{item.name}</Text>

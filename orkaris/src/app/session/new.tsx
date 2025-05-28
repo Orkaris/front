@@ -2,6 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import { useAuth } from '@/src/context/AuthContext';
+import { useExercise } from '@/src/context/ExerciseContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { apiService } from '@/src/services/api';
@@ -9,57 +10,37 @@ import { Exercise } from '@/src/model/types';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface SessionExercise {
-    exerciseId: string;
-    exerciseName: string;
-    reps: string;
-    sets: string;
-}
-
 export default function NewSessionScreen() {
     const [name, setName] = useState('');
-    const [exercises, setExercises] = useState<SessionExercise[]>([]);
     const { theme } = useThemeContext();
     const { userId } = useAuth();
-    const { id: workoutId, selectedExercise } = useLocalSearchParams();
+    const { id: workoutId } = useLocalSearchParams();
     const router = useRouter();
-
-    useEffect(() => {
-        if (selectedExercise) {
-            const exercise = JSON.parse(selectedExercise as string) as Exercise;
-            setExercises([...exercises, {
-                exerciseId: exercise.id,
-                exerciseName: exercise.name,
-                reps: '',
-                sets: ''
-            }]);
-        }
-    }, [selectedExercise]);
+    const { sessionExercises, addExercise, removeExercise, clearExercises, updateExercise } = useExercise();
 
     const handleRemoveExercise = (index: number) => {
-        const newExercises = [...exercises];
-        newExercises.splice(index, 1);
-        setExercises(newExercises);
+        removeExercise(index);
     };
 
     const handleCreateSession = async () => {
-        if (!name.trim() || exercises.length === 0) {
+        if (!name.trim() || sessionExercises.length === 0) {
             Alert.alert(i18n.t('error.name_required'));
             return;
         }
 
         try {
-            await apiService.post('/Session', {
+            await apiService.post('/Session/PostSession2', {
                 name: name.trim(),
                 workoutId: workoutId,
                 userId: userId,
-                exercises: exercises.map(ex => ({
+                sessionExerciseSession: sessionExercises.map(ex => ({
                     exerciseId: ex.exerciseId,
                     reps: parseInt(ex.reps),
                     sets: parseInt(ex.sets)
                 }))
             });
             Alert.alert(i18n.t('session.session_created'));
+            clearExercises();
             router.back();
         } catch (error) {
             console.error('Error creating session:', error);
@@ -83,7 +64,7 @@ export default function NewSessionScreen() {
                         {i18n.t('session.add_exercise')}
                     </Text>
 
-                    {exercises.map((exercise, index) => (
+                    {sessionExercises.map((exercise, index) => (
                         <View key={index} style={[styles.exerciseCard, { backgroundColor: theme.colors.surfaceVariant }]}>
                             <View style={styles.exerciseHeader}>
                                 <Text style={[styles.exerciseName, { color: theme.colors.text }]}>
@@ -101,11 +82,7 @@ export default function NewSessionScreen() {
                                     <TextInput
                                         style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
                                         value={exercise.reps}
-                                        onChangeText={(value) => {
-                                            const newExercises = [...exercises];
-                                            newExercises[index].reps = value;
-                                            setExercises(newExercises);
-                                        }}
+                                        onChangeText={(value) => updateExercise(index, 'reps', value)}
                                         keyboardType="numeric"
                                         placeholder="0"
                                         placeholderTextColor={theme.colors.textSecondary}
@@ -118,11 +95,7 @@ export default function NewSessionScreen() {
                                     <TextInput
                                         style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
                                         value={exercise.sets}
-                                        onChangeText={(value) => {
-                                            const newExercises = [...exercises];
-                                            newExercises[index].sets = value;
-                                            setExercises(newExercises);
-                                        }}
+                                        onChangeText={(value) => updateExercise(index, 'sets', value)}
                                         keyboardType="numeric"
                                         placeholder="0"
                                         placeholderTextColor={theme.colors.textSecondary}
