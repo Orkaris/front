@@ -112,6 +112,9 @@ export const i18n = new I18n({
             update: "Update session",
             session_updated: "Session updated",
             session_update_error: "Error updating session",
+            save: "Save",
+            reps_label: "reps",
+            sets_label: "sets",
         },
         exercise: {
             new: "New exercise",
@@ -122,9 +125,19 @@ export const i18n = new I18n({
             delete_confirmation: "Are you sure you want to delete this exercise?",
             rename: "Rename exercise",
             new_name: "New name",
+            add_exercise: "Add exercise",
         },
         error: {
             name_required: "Name is required.",
+            fetching_exercise: "Error fetching exercise",
+            fetching_session: "Error fetching session",
+            fetching_exercises: "Error fetching exercises",
+            fetching_sessions: "Error fetching sessions",
+            fetching_workouts: "Error fetching workouts",
+            creating_exercise: "Error creating exercise",
+            creating_session: "Error creating session",
+            creating_training: "Error creating training",
+            updating_session: "Error updating session",
         }
     },
     fr: {
@@ -233,6 +246,9 @@ export const i18n = new I18n({
             update: "Mettre à jour la session",
             session_updated: "Session mise à jour",
             session_update_error: "Erreur lors de la mise à jour de la session",
+            save: "Sauvegarder",
+            reps_label: "reps",
+            sets_label: "séries",
         },
         exercise: {
             new: "Nouvel exercice",
@@ -243,9 +259,19 @@ export const i18n = new I18n({
             delete_confirmation: "Êtes-vous sûr de vouloir supprimer cet exercice ?",
             rename: "Renommer l'exercice",
             new_name: "Nouveau nom",
+            add_exercise: "Ajouter un exercice",
         },
         error: {
             name_required: "Le nom est requis.",
+            fetching_exercise: "Erreur lors de la récupération de l'exercice",
+            fetching_session: "Erreur lors de la récupération de la session",
+            fetching_exercises: "Erreur lors de la récupération des exercices",
+            fetching_sessions: "Erreur lors de la récupération des sessions",
+            fetching_workouts: "Erreur lors de la récupération des entraînements",
+            creating_exercise: "Erreur lors de la création de l'exercice",
+            creating_session: "Erreur lors de la création de la session",
+            creating_training: "Erreur lors de la création de l'entraînement",
+            updating_session: "Erreur lors de la mise à jour de la session",
         }
     },
 });

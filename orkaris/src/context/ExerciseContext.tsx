@@ -1,5 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { Exercise } from '@/src/model/types';
+
+interface ExerciseInput {
+    id: string;
+    name: string;
+}
 
 interface SessionExercise {
     exerciseId: string;
@@ -10,7 +15,7 @@ interface SessionExercise {
 
 interface ExerciseContextType {
     sessionExercises: SessionExercise[];
-    addExercise: (exercise: Exercise) => void;
+    addExercise: (exercise: ExerciseInput) => void;
     removeExercise: (index: number) => void;
     clearExercises: () => void;
     updateExercise: (index: number, field: 'reps' | 'sets', value: string) => void;
@@ -21,7 +26,7 @@ const ExerciseContext = createContext<ExerciseContextType | undefined>(undefined
 export function ExerciseProvider({ children }: { children: ReactNode }) {
     const [sessionExercises, setSessionExercises] = useState<SessionExercise[]>([]);
 
-    const addExercise = (exercise: Exercise) => {
+    const addExercise = useCallback((exercise: ExerciseInput) => {
         setSessionExercises(prevExercises => {
             const exerciseExists = prevExercises.some(ex => ex.exerciseId === exercise.id);
             if (!exerciseExists) {
@@ -34,17 +39,17 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
             }
             return prevExercises;
         });
-    };
+    }, []);
 
-    const removeExercise = (index: number) => {
+    const removeExercise = useCallback((index: number) => {
         setSessionExercises(prevExercises => {
             const newExercises = [...prevExercises];
             newExercises.splice(index, 1);
             return newExercises;
         });
-    };
+    }, []);
 
-    const updateExercise = (index: number, field: 'reps' | 'sets', value: string) => {
+    const updateExercise = useCallback((index: number, field: 'reps' | 'sets', value: string) => {
         setSessionExercises(prevExercises => {
             const newExercises = [...prevExercises];
             newExercises[index] = {
@@ -53,11 +58,11 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
             };
             return newExercises;
         });
-    };
+    }, []);
 
-    const clearExercises = () => {
+    const clearExercises = useCallback(() => {
         setSessionExercises([]);
-    };
+    }, []);
 
     return (
         <ExerciseContext.Provider value={{ sessionExercises, addExercise, removeExercise, clearExercises, updateExercise }}>

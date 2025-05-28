@@ -27,7 +27,7 @@ export default function SelectExerciseScreen() {
             setExercises(response);
         } catch (error) {
             console.error('Error fetching exercises:', error);
-            Alert.alert(i18n.t('alert.error'), 'Error fetching exercises');
+            Alert.alert(i18n.t('alert.error'), i18n.t('error.fetching_exercises'));
         }
     }, []);
 
@@ -54,7 +54,7 @@ export default function SelectExerciseScreen() {
             router.back();
         } catch (error) {
             console.error('Error creating exercise:', error);
-            Alert.alert(i18n.t('session.exercise_creation_error'));
+            Alert.alert(i18n.t('alert.error'), i18n.t('error.creating_exercise'));
         }
     };
 
