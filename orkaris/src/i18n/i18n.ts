@@ -16,6 +16,11 @@ export const i18n = new I18n({
             back: "Back",
             my_sessions: "My sessions",
         },
+        history: {
+            title: "Workout History",
+            loading: "Loading workouts...",
+            no_workouts: "No workouts found",
+        },
         alert: {
             cancel: "Cancel",
             ok: "OK",
@@ -157,6 +162,11 @@ export const i18n = new I18n({
             profile: "Profil",
             back: "Retour",
             my_sessions: "Mes sessions",
+        },
+        history: {
+            title: "Historique des séances",
+            loading: "Chargement des séances...",
+            no_workouts: "Aucune séance trouvée",
         },
         alert: {
             cancel: "Annuler",
