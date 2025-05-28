@@ -40,7 +40,15 @@ export default function ProfileScreen() {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const { userId, signOut } = useAuth();
+    const { userId, signOut, isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (!isAuthenticated()) {
+            console.log("User not authenticated, redirecting to signin");
+            navigation.replace('/authentication/signin');
+            return;
+        }
+    }, [isAuthenticated, navigation]);
 
     useEffect(() => {
         console.log("ProfileScreen - Current userId from context:", userId);
@@ -219,9 +227,18 @@ export default function ProfileScreen() {
 
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton onPress={
+            <CustomButton onPress={
                     () =>
                         showAlert(i18n.t('profile.sign_out'), i18n.t('profile.sign_out_confirmation'), signOut)
+                }
+                    label={i18n.t('profile.sign_out')}
+                    theme={theme}
+                    loading={false}
+                    disabled={false}
+                    type="danger"
+                /><CustomButton onPress={
+                    () =>
+                        signOut()
                 }
                     label={i18n.t('profile.sign_out')}
                     theme={theme}
