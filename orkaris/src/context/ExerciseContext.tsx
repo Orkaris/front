@@ -4,6 +4,8 @@ import { Exercise } from '@/src/model/types';
 interface ExerciseInput {
     id: string;
     name: string;
+    reps?: string;
+    sets?: string;
 }
 
 interface SessionExercise {
@@ -33,8 +35,8 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
                 return [...prevExercises, {
                     exerciseId: exercise.id,
                     exerciseName: exercise.name,
-                    reps: '',
-                    sets: ''
+                    reps: exercise.reps || '',
+                    sets: exercise.sets || ''
                 }];
             }
             return prevExercises;

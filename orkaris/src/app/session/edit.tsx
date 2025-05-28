@@ -51,7 +51,9 @@ export default function EditSessionScreen() {
                     response.sessionExerciseSession.forEach(exercise => {
                         addExercise({
                             id: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
-                            name: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name
+                            name: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
+                            reps: exercise.exerciseGoalSessionExercise.reps.toString(),
+                            sets: exercise.exerciseGoalSessionExercise.sets.toString()
                         });
                     });
                 }

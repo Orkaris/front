@@ -102,6 +102,16 @@ export default function SessionScreen() {
                         <Ionicons name="add" size={24} color="white" />
                         <Text style={styles.addButtonText}>{i18n.t('exercise.add_exercise')}</Text>
                     </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.startButton, { backgroundColor: theme.colors.primary }]}
+                        onPress={() => router.push({
+                            pathname: "/session/log-workout",
+                            params: { id: sessionId }
+                        })}
+                    >
+                        <Text style={styles.startButtonText}>{i18n.t('session.start_routine')}</Text>
+                    </TouchableOpacity>
                 </View>
             ) : (
                 <View style={styles.emptyContainer}>
@@ -185,5 +195,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         marginLeft: 8,
+    },
+    startButton: {
+        padding: 15,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    startButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '500',
     },
 });

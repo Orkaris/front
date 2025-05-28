@@ -115,6 +115,14 @@ export const i18n = new I18n({
             save: "Save",
             reps_label: "reps",
             sets_label: "sets",
+            start_routine: "Start routine",
+            finish: "Finish",
+            total_sets: "{{count}} total sets",
+            target_sets_reps: "{{sets}} sets × {{reps}} reps",
+            set_number: "SET {{number}}",
+            enter_reps: "Reps",
+            add_set: "Add set",
+            workout_completed: "Workout completed successfully"
         },
         exercise: {
             new: "New exercise",
@@ -249,6 +257,14 @@ export const i18n = new I18n({
             save: "Sauvegarder",
             reps_label: "reps",
             sets_label: "séries",
+            start_routine: "Commencer routine",
+            finish: "Terminer",
+            total_sets: "{{count}} séries au total",
+            target_sets_reps: "{{sets}} séries × {{reps}} reps",
+            set_number: "SET {{number}}",
+            enter_reps: "Reps",
+            add_set: "Ajouter une série",
+            workout_completed: "Séance terminée avec succès"
         },
         exercise: {
             new: "Nouvel exercice",
