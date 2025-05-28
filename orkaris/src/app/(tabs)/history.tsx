@@ -6,6 +6,7 @@ import { i18n } from "@/src/i18n/i18n";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import dayjs from "dayjs";
+import Loader from "@/src/components/loader";
 
 interface WorkoutSession {
     id: string;
@@ -77,15 +78,7 @@ export default function HistoryScreen() {
     );
 
     if (loading) {
-        return (
-            <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
-                <View style={styles.loadingContainer}>
-                    <Text style={[styles.loadingText, { color: theme.colors.text }]}>
-                        {i18n.t('history.loading')}
-                    </Text>
-                </View>
-            </SafeAreaView>
-        );
+        return <Loader />
     }
 
     return (

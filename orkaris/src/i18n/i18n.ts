@@ -274,7 +274,7 @@ export const i18n = new I18n({
             set_number: "SET {{number}}",
             enter_reps: "Reps",
             add_set: "Ajouter une série",
-            workout_completed: "Séance terminée avec succès"
+            workout_completed: "Séance terminée avec succès",
         },
         exercise: {
             new: "Nouvel exercice",
