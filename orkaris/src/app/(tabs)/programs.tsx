@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, TextInput } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, TextInput, Modal, Animated, Dimensions } from 'react-native';
 import { apiService } from '@/src/services/api';
 import { Program } from '@/src/model/types';
 import { useThemeContext } from '@/src/context/ThemeContext';
@@ -9,15 +9,42 @@ import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useLanguageContext } from '@/src/context/LanguageContext';
 import { useAuth } from '@/src/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
+import { TouchableRipple } from 'react-native-paper';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ProgramsScreen() {
     const [programs, setPrograms] = useState<Program[] | null>(null);
     const [editingProgram, setEditingProgram] = useState<Program | null>(null);
     const [newName, setNewName] = useState('');
+    const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const slideAnim = useState(new Animated.Value(SCREEN_HEIGHT))[0];
     const { theme } = useThemeContext();
     const { language } = useLanguageContext();
     const navigation = useRouter();
     const { userId, userToken } = useAuth();
+
+    const openModal = (program: Program) => {
+        setSelectedProgram(program);
+        setModalVisible(true);
+        Animated.spring(slideAnim, {
+            toValue: 0,
+            useNativeDriver: true,
+            bounciness: 0,
+        }).start();
+    };
+
+    const closeModal = () => {
+        Animated.timing(slideAnim, {
+            toValue: SCREEN_HEIGHT,
+            duration: 200,
+            useNativeDriver: true,
+        }).start(() => {
+            setModalVisible(false);
+            setSelectedProgram(null);
+        });
+    };
 
     const fetchPrograms = useCallback(async () => {
         try {
@@ -31,6 +58,7 @@ export default function ProgramsScreen() {
     const handleDelete = async (programId: string) => {
         try {
             await apiService.delete(`/Workout/${programId}`);
+            closeModal();
             fetchPrograms();
         } catch (error) {
             console.error('Error deleting program:', error);
@@ -39,6 +67,7 @@ export default function ProgramsScreen() {
     };
 
     const handleRename = async (program: Program) => {
+        closeModal();
         setEditingProgram(program);
         setNewName(program.name);
     };
@@ -47,7 +76,7 @@ export default function ProgramsScreen() {
         if (!editingProgram || !newName.trim()) return;
 
         try {
-            await apiService.put(`/Workout/${editingProgram.id}/${userId}`, {
+            await apiService.put(`/Workout/${editingProgram.id}`, {
                 ...editingProgram,
                 name: newName.trim()
             });
@@ -102,14 +131,12 @@ export default function ProgramsScreen() {
                                                     {program.name}
                                                 </Text>
                                             </Link>
-                                            <View style={styles.actions}>
-                                                <TouchableOpacity onPress={() => handleRename(program)} style={styles.actionButton}>
-                                                    <Ionicons name="pencil" size={20} color={theme.colors.primary} />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity onPress={() => handleDelete(program.id)} style={styles.actionButton}>
-                                                    <Ionicons name="trash" size={20} color={theme.colors.error} />
-                                                </TouchableOpacity>
-                                            </View>
+                                            <TouchableOpacity 
+                                                onPress={() => openModal(program)}
+                                                style={styles.menuButton}
+                                            >
+                                                <Ionicons name="ellipsis-vertical" size={20} color={theme.colors.text} />
+                                            </TouchableOpacity>
                                         </View>
                                     )}
                                 </View>
@@ -128,6 +155,54 @@ export default function ProgramsScreen() {
             >
                 <Ionicons name="add" size={24} color="white" />
             </TouchableOpacity>
+
+            <Modal
+                visible={isModalVisible}
+                transparent
+                animationType="none"
+                onRequestClose={closeModal}
+            >
+                <TouchableOpacity 
+                    style={styles.modalOverlay} 
+                    activeOpacity={1} 
+                    onPress={closeModal}
+                >
+                    <Animated.View 
+                        style={[
+                            styles.modalContent,
+                            { 
+                                backgroundColor: theme.colors.surfaceVariant,
+                                transform: [{ translateY: slideAnim }]
+                            }
+                        ]}
+                    >
+                        <View style={styles.modalHandle} />
+                        <TouchableRipple 
+                            onPress={() => selectedProgram && handleRename(selectedProgram)}
+                            style={styles.modalItem}
+                        >
+                            <View style={styles.modalItemContent}>
+                                <Ionicons name="pencil" size={24} color={theme.colors.primary} />
+                                <Text style={[styles.modalItemText, { color: theme.colors.text }]}>
+                                    {i18n.t('program.rename')}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                        <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
+                        <TouchableRipple 
+                            onPress={() => selectedProgram && handleDelete(selectedProgram.id)}
+                            style={styles.modalItem}
+                        >
+                            <View style={styles.modalItemContent}>
+                                <Ionicons name="trash" size={24} color={theme.colors.error} />
+                                <Text style={[styles.modalItemText, { color: theme.colors.error }]}>
+                                    {i18n.t('program.delete')}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                    </Animated.View>
+                </TouchableOpacity>
+            </Modal>
         </SafeAreaView>
     );
 }
@@ -158,13 +233,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
     },
-    actions: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    actionButton: {
+    menuButton: {
         padding: 8,
-        marginLeft: 8,
     },
     editContainer: {
         flexDirection: 'row',
@@ -202,5 +272,39 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'flex-end',
+    },
+    modalContent: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+    },
+    modalHandle: {
+        width: 40,
+        height: 5,
+        backgroundColor: '#ccc',
+        borderRadius: 3,
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
+    modalItem: {
+        padding: 16,
+    },
+    modalItemContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    modalItemText: {
+        marginLeft: 16,
+        fontSize: 16,
+    },
+    divider: {
+        height: 1,
+        marginHorizontal: 16,
     },
 });

@@ -1,22 +1,49 @@
+import React, { useCallback, useState } from "react";
+import { SafeAreaView, StyleSheet, View, TouchableOpacity, Text, Alert, TextInput, Modal, Animated, Dimensions } from "react-native";
+import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { Ionicons } from '@expo/vector-icons';
+import { TouchableRipple } from 'react-native-paper';
 import Loader from "@/src/components/loader";
 import { useAuth } from "@/src/context/AuthContext";
 import { useThemeContext } from "@/src/context/ThemeContext";
 import { i18n } from "@/src/i18n/i18n";
 import { Session } from "@/src/model/types";
 import { apiService } from "@/src/services/api";
-import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
-import { SafeAreaView, StyleSheet, View, TouchableOpacity, Text, Alert, TextInput } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export default function ProgramScreen() {
     const [sessions, setSessions] = useState<Session[] | null>(null);
     const [editingSession, setEditingSession] = useState<Session | null>(null);
     const [newName, setNewName] = useState('');
+    const [selectedSession, setSelectedSession] = useState<Session | null>(null);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const slideAnim = useState(new Animated.Value(SCREEN_HEIGHT))[0];
     const { id: workoutId } = useLocalSearchParams();
     const { theme } = useThemeContext();
     const router = useRouter();
     const { userId } = useAuth();
+
+    const openModal = (session: Session) => {
+        setSelectedSession(session);
+        setModalVisible(true);
+        Animated.spring(slideAnim, {
+            toValue: 0,
+            useNativeDriver: true,
+            bounciness: 0,
+        }).start();
+    };
+
+    const closeModal = () => {
+        Animated.timing(slideAnim, {
+            toValue: SCREEN_HEIGHT,
+            duration: 200,
+            useNativeDriver: true,
+        }).start(() => {
+            setModalVisible(false);
+            setSelectedSession(null);
+        });
+    };
 
     const fetchSessions = useCallback(async () => {
         try {
@@ -29,19 +56,28 @@ export default function ProgramScreen() {
     }, [userId, workoutId]);
 
     const handleDelete = async (sessionId: string) => {
+        console.log('handleDelete called with sessionId:', sessionId);
         Alert.alert(
             i18n.t('session.delete'),
             i18n.t('session.delete_confirmation'),
             [
                 {
                     text: i18n.t('alert.cancel'),
-                    style: 'cancel'
+                    style: 'cancel',
+                    onPress: () => {
+                        console.log('Delete cancelled');
+                        closeModal();
+                    }
                 },
                 {
                     text: i18n.t('alert.ok'),
                     onPress: async () => {
+                        console.log('Delete confirmed for sessionId:', sessionId);
                         try {
-                            await apiService.delete(`/Session/${sessionId}/${userId}`);
+                            console.log('Attempting to delete session:', sessionId);
+                            await apiService.delete(`/Session/${sessionId}`);
+                            console.log('Session deleted successfully');
+                            closeModal();
                             fetchSessions();
                         } catch (error) {
                             console.error('Error deleting session:', error);
@@ -54,6 +90,7 @@ export default function ProgramScreen() {
     };
 
     const handleRename = async (session: Session) => {
+        closeModal();
         router.push({
             pathname: '/session/edit',
             params: { id: session.id }
@@ -64,7 +101,7 @@ export default function ProgramScreen() {
         if (!editingSession || !newName.trim()) return;
 
         try {
-            await apiService.put(`/Session/${editingSession.id}/${userId}`, {
+            await apiService.put(`/Session/${editingSession.id}`, {
                 ...editingSession,
                 name: newName.trim()
             });
@@ -119,14 +156,12 @@ export default function ProgramScreen() {
                                                     {session.name}
                                                 </Text>
                                             </Link>
-                                            <View style={styles.actions}>
-                                                <TouchableOpacity onPress={() => handleRename(session)} style={styles.actionButton}>
-                                                    <Ionicons name="pencil" size={20} color={theme.colors.primary} />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity onPress={() => handleDelete(session.id)} style={styles.actionButton}>
-                                                    <Ionicons name="trash" size={20} color={theme.colors.error} />
-                                                </TouchableOpacity>
-                                            </View>
+                                            <TouchableOpacity 
+                                                onPress={() => openModal(session)}
+                                                style={styles.menuButton}
+                                            >
+                                                <Ionicons name="ellipsis-vertical" size={20} color={theme.colors.text} />
+                                            </TouchableOpacity>
                                         </View>
                                     )}
                                 </View>
@@ -150,6 +185,57 @@ export default function ProgramScreen() {
             >
                 <Ionicons name="add" size={24} color="white" />
             </TouchableOpacity>
+
+            <Modal
+                visible={isModalVisible}
+                transparent
+                animationType="none"
+                onRequestClose={closeModal}
+            >
+                <TouchableOpacity 
+                    style={styles.modalOverlay} 
+                    activeOpacity={1} 
+                    onPress={closeModal}
+                >
+                    <Animated.View 
+                        style={[
+                            styles.modalContent,
+                            { 
+                                backgroundColor: theme.colors.surfaceVariant,
+                                transform: [{ translateY: slideAnim }]
+                            }
+                        ]}
+                    >
+                        <View style={styles.modalHandle} />
+                        <TouchableRipple 
+                            onPress={() => selectedSession && handleRename(selectedSession)}
+                            style={styles.modalItem}
+                        >
+                            <View style={styles.modalItemContent}>
+                                <Ionicons name="pencil" size={24} color={theme.colors.primary} />
+                                <Text style={[styles.modalItemText, { color: theme.colors.text }]}>
+                                    {i18n.t('session.rename')}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                        <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
+                        <TouchableRipple 
+                            onPress={() => {
+                                console.log('Delete button pressed for session:', selectedSession?.id);
+                                selectedSession && handleDelete(selectedSession.id);
+                            }}
+                            style={styles.modalItem}
+                        >
+                            <View style={styles.modalItemContent}>
+                                <Ionicons name="trash" size={24} color={theme.colors.error} />
+                                <Text style={[styles.modalItemText, { color: theme.colors.error }]}>
+                                    {i18n.t('session.delete')}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                    </Animated.View>
+                </TouchableOpacity>
+            </Modal>
         </SafeAreaView>
     )
 }
@@ -180,13 +266,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '500',
     },
-    actions: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    actionButton: {
+    menuButton: {
         padding: 8,
-        marginLeft: 8,
     },
     editContainer: {
         flexDirection: 'row',
@@ -224,5 +305,39 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'flex-end',
+    },
+    modalContent: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+    },
+    modalHandle: {
+        width: 40,
+        height: 5,
+        backgroundColor: '#ccc',
+        borderRadius: 3,
+        alignSelf: 'center',
+        marginBottom: 10,
+    },
+    modalItem: {
+        padding: 16,
+    },
+    modalItemContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    modalItemText: {
+        marginLeft: 16,
+        fontSize: 16,
+    },
+    divider: {
+        height: 1,
+        marginHorizontal: 16,
     },
 });

@@ -3,6 +3,7 @@ import { ThemeProvider } from '@/src/context/ThemeContext';
 import { LanguageProvider } from '@/src/context/LanguageContext';
 import { AuthProvider } from '@/src/context/AuthContext';
 import { ExerciseProvider } from '@/src/context/ExerciseContext';
+import { Provider as PaperProvider } from 'react-native-paper';
 
 export default function Layout() {
     return (
@@ -10,7 +11,9 @@ export default function Layout() {
             <LanguageProvider>
                 <AuthProvider>
                     <ExerciseProvider>
-                        <Stack />
+                        <PaperProvider>
+                            <Stack />
+                        </PaperProvider>
                     </ExerciseProvider>
                 </AuthProvider>
             </LanguageProvider>
