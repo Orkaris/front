@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import { AuthState, ConnectUser, CreateUser, DecodedToken, ResponseToken, User } from '@/src/model/types';
 import { apiService } from '../services/api';
+import { router } from 'expo-router';
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -21,6 +22,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         const decoded = jwtDecode<DecodedToken>(token);
         const idFromToken = decoded.sub;
+        const expirationTime = decoded.exp ? decoded.exp * 1000 : 0; // Convert to milliseconds
+
+        // Check if token is expired
+        if (expirationTime === 0 || Date.now() >= expirationTime) {
+          console.log("Token expired");
+          setUserId(null);
+          setUserToken(null);
+          AsyncStorage.removeItem('userToken');
+          router.replace('/authentication/signin');
+          return;
+        }
 
         if (idFromToken) {
           setUserId(idFromToken);
@@ -29,10 +41,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         } else {
           setUserId(null);
           setUserToken(null);
+          AsyncStorage.removeItem('userToken');
+          router.replace('/authentication/signin');
         }
       } catch (e) {
+        console.error("Error processing token:", e);
         setUserId(null);
         setUserToken(null);
+        AsyncStorage.removeItem('userToken');
+        router.replace('/authentication/signin');
       }
     } else {
       setUserId(null);
@@ -49,6 +66,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         token = await AsyncStorage.getItem('userToken');
         processToken(token);
       } catch (e) {
+        console.error("Error during bootstrap:", e);
         processToken(null);
       } finally {
         setIsLoading(false);
@@ -69,13 +87,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           });
 
           const receivedToken = response.token;
-          console.log("Token reçu:", receivedToken);
           if (receivedToken) {
             await AsyncStorage.setItem('userToken', receivedToken);
-            console.log("Token enregistré dans AsyncStorage");
-
             setUserToken(receivedToken);
             processToken(receivedToken);
+            router.replace('/(tabs)');
           } else {
             throw new Error("Token non reçu après connexion.");
           }
@@ -90,11 +106,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setIsLoading(true);
         try {
           await AsyncStorage.removeItem('userToken');
+          processToken(null);
+          setIsSignout(true);
+          router.replace('/authentication/signin');
         } catch (e) {
+          console.error("Error during signout:", e);
+        } finally {
+          setIsLoading(false);
         }
-        processToken(null);
-        setIsSignout(true);
-        setIsLoading(false);
       },
       signUp: async (data: CreateUser) => {
         setIsLoading(true);
@@ -110,12 +129,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setIsLoading(false);
         }
       },
+      isAuthenticated: () => {
+        return !!userToken && !!userId;
+      },
     }),
-    [processToken]
+    [processToken, userToken, userId]
   );
 
   return (
-    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout, }}>
+    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout }}>
       {children}
     </AuthContext.Provider>
   );

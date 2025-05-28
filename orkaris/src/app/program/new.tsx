@@ -28,7 +28,7 @@ export default function NewProgramScreen() {
         }
 
         try {
-            const response = await apiService.post(`/Workout/${userId}`, { name });
+            const response = await apiService.post(`/Workout`, { name });
             console.log('Training created:', response);
             navigation.back();
         } catch (error) {

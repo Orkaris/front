@@ -1,21 +1,19 @@
-import { AuthProvider } from '@/src/context/AuthContext';
+import { Stack } from 'expo-router';
 import { ThemeProvider } from '@/src/context/ThemeContext';
 import { LanguageProvider } from '@/src/context/LanguageContext';
-import AppNavigator from '@/src/app/navigation/AppNavigator';
+import { AuthProvider } from '@/src/context/AuthContext';
+import { ExerciseProvider } from '@/src/context/ExerciseContext';
 
-const AppContent = () => {
-  return <AppNavigator />;
-}
-
-export default function RootLayout() {
-  return (
-    <AuthProvider>
-      <ThemeProvider>
-        <LanguageProvider>
-          <AppContent />
-        </LanguageProvider>
-      </ThemeProvider>
-    </AuthProvider>
-
-  );
+export default function Layout() {
+    return (
+        <ThemeProvider>
+            <LanguageProvider>
+                <AuthProvider>
+                    <ExerciseProvider>
+                        <Stack />
+                    </ExerciseProvider>
+                </AuthProvider>
+            </LanguageProvider>
+        </ThemeProvider>
+    );
 }

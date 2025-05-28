@@ -9,6 +9,7 @@ export const lightTheme = {
         error: '#f44336',
         outline: '#888888',
         surfaceVariant: '#f0f0f0',
+        navigationIcon: '#222222',
     },
 };
 
@@ -22,6 +23,7 @@ export const darkTheme = {
         textSecondary: '#888888',
         error: '#f44336',
         surfaceVariant: '#444444',
+        navigationIcon: '#ffffff',
     },
 };
 
