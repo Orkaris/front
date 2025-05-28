@@ -2,6 +2,7 @@ import { I18n } from "i18n-js";
 import { getLocales } from "expo-localization";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
+import Statistics from "../app/statistics/statistics";
 
 export const deviceLanguage = getLocales()?.[0]?.languageCode ?? "en";
 
@@ -151,7 +152,10 @@ export const i18n = new I18n({
             creating_session: "Error creating session",
             creating_training: "Error creating training",
             updating_session: "Error updating session",
-        }
+        },
+        statistics: {
+            statistics_button: "Statistics",
+        },
     },
     fr: {
         hello: "Bonjour",
@@ -298,7 +302,10 @@ export const i18n = new I18n({
             creating_session: "Erreur lors de la création de la session",
             creating_training: "Erreur lors de la création de l'entraînement",
             updating_session: "Erreur lors de la mise à jour de la session",
-        }
+        },
+        statistics: {
+            statistics_button: "Statistiques",
+        },
     },
 });
 
