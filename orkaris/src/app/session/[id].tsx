@@ -68,6 +68,15 @@ export default function SessionScreen() {
                 <Text style={[styles.title, { color: theme.colors.text }]}>{session.name}</Text>
                 <TouchableOpacity
                     onPress={() => router.push({
+                        pathname: "/session/stats",
+                        params: { id: sessionId }
+                    })}
+                    style={styles.editButton}
+                >
+                    <Ionicons name="stats-chart" size={24} color={theme.colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => router.push({
                         pathname: "/session/edit",
                         params: { id: sessionId }
                     })}
