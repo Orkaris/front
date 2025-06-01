@@ -4,6 +4,7 @@ import { useThemeContext } from '@/src/context/ThemeContext';
 import MotivationalStats, { MotivationalStat } from '@/src/components/statistics/motivationalStats';
 import WeeklyPerformance from '@/src/components/statistics/weeklyPerformance';
 import { apiService } from '@/src/services/api';
+import { useAuth } from '@/src/context/AuthContext';
 
 interface RawSession {
   date: string; // ISO
@@ -17,53 +18,64 @@ export default function HomeScreen() {
   const [sessions, setSessions] = useState<RawSession[]>([]);
   const [loading, setLoading] = useState(true);
   const [motivStats, setMotivStats] = useState<MotivationalStat[]>([]);
+  const { userId } = useAuth();
 
-  // Fonctions API pour les MotivationalStats
+  // MotivationalStats
   async function fetchWeeklyVolume() {
-    // return await apiService.get('/stats/weekly-volume');
+    //return await apiService.get('/stats/weekly-volume');
     return "12 500 kg";
   }
-  async function fetchMonthlySets() {
-    // return await apiService.get('/stats/monthly-sets');
-    return 345;
+  async function fetchWeeklySets() {
+    try {
+      const response = await apiService.get<number>(`/stats/weekly-sets/${userId}`);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch weekly sets", error);
+      return 0; 
+    }
   }
   async function fetchMonthlySessions() {
-    // return await apiService.get('/stats/monthly-sessions');
-    return 5;
-  }
-  async function fetchBenchProgress() {
-    // return await apiService.get('/stats/bench-progress');
-    return "+10 kg";
-  }
-  async function fetchProgramCompletion() {
-    // return await apiService.get('/stats/program-completion');
-    return "60 %";
+    try {
+      const response = await apiService.get(`/stats/monthly-sessions/${userId}`);
+      return response;
+    } catch (error) {
+      console.error("Failed to fetch weekly sets", error);
+      return 0;
+    }
   }
 
-  // Appel API pour récupérer les données MotivationalStats et WeeklyPerformance
+  // A voir si on veut réactiver ces stats plus tard
+  // async function fetchBenchProgress() {
+  //   // return await apiService.get('/stats/bench-progress');
+  //   return "+10 kg";
+  // }
+  // async function fetchProgramCompletion() {
+  //   // return await apiService.get('/stats/program-completion');
+  //   return "60 %";
+  // }
+
+  // Appel API pour récupérer les données + mocks en cas d'erreur
   useEffect(() => {
     async function fetchAllStats() {
       setLoading(true);
       try {
-        // WeeklyPerformance
-        const sessionsData = await apiService.get<RawSession[]>('/sessions/weekly');
-        setSessions(sessionsData);
 
         // MotivationalStats
-        const [volume, sets, nbSessions, bench, completion] = await Promise.all([
+        const [rawVolume, sets, nbSessions] = await Promise.all([
           fetchWeeklyVolume(),
-          fetchMonthlySets(),
+          fetchWeeklySets(),
           fetchMonthlySessions(),
-          fetchBenchProgress(),
-          fetchProgramCompletion(),
         ]);
         setMotivStats([
-          { value: volume, message: `Tu as soulevé ${volume} cette semaine !`, icon: "🏋️" },
-          { value: sets, message: `${sets} séries terminées ce mois-ci.`, icon: "📊" },
-          { value: nbSessions, message: `${nbSessions} sessions complètes ce mois-ci. Garde le rythme !`, icon: "🔥" },
-          { value: bench, message: `Ton record au développé couché a augmenté de ${bench} depuis le mois dernier.`, icon: "💪" },
-          { value: completion, message: `Tu as complété ${completion} de ton programme 'Force 5x5'.`, icon: "📈" },
+          { value: rawVolume, message: `Tu as soulevé ${rawVolume} cette semaine !`, icon: "🏋️" },
+          { value: sets, message: `${sets} séries terminées cette semaine.`, icon: "📊" },
+          { value: nbSessions as string | number, message: `${nbSessions} sessions complètes ce mois-ci. Garde le rythme !`, icon: "🔥" },
         ]);
+
+        // WeeklyPerformance TODO: à réactiver quand l'API sera prête
+        const sessionsData = await apiService.get<RawSession[]>(`/stats/last-8-weeks-sessions/${userId}`);
+        setSessions(sessionsData);
+
       } catch (e) {
         // fallback sur les mocks en cas d'erreur
         setSessions([
@@ -83,10 +95,10 @@ export default function HomeScreen() {
         ]);
         setMotivStats([
           { value: "12 500 kg", message: "Tu as soulevé 12 500 kg cette semaine !", icon: "🏋️" },
-          { value: 345, message: "345 séries terminées ce mois-ci.", icon: "📊" },
+          { value: 345, message: "345 séries terminées cette semaine.", icon: "📊" },
           { value: 5, message: "5 sessions complètes ce mois-ci. Garde le rythme !", icon: "🔥" },
-          { value: "+10 kg", message: "Ton record au développé couché a augmenté de +10 kg depuis le mois dernier.", icon: "💪" },
-          { value: "60 %", message: "Tu as complété 60 % de ton programme 'Force 5x5'.", icon: "📈" },
+          //{ value: "+10 kg", message: "Ton record au développé couché a augmenté de +10 kg depuis le mois dernier.", icon: "💪" },
+          //{ value: "60 %", message: "Tu as complété 60 % de ton programme 'Force 5x5'.", icon: "📈" },
         ]);
       } finally {
         setLoading(false);
