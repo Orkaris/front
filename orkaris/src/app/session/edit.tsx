@@ -12,6 +12,7 @@ import { useExercise } from "@/src/context/ExerciseContext";
 
 interface SessionExercise {
     exerciseGoalSessionExercise: {
+        id: string;
         exerciseExerciseGoal: {
             id: string;
             name: string;
@@ -43,6 +44,7 @@ export default function EditSessionScreen() {
         const fetchSession = async () => {
             try {
                 const response = await apiService.get<Session>(`/Session/${sessionId}`);
+          
                 if (isMounted) {
                     setSession(response);
                     setSessionName(response.name);
@@ -83,32 +85,49 @@ export default function EditSessionScreen() {
         }
 
         try {
-            // Mettre à jour la session
+            // Format exercises data according to the API requirements
+            const sessionExerciseSession = sessionExercises.map(exercise => ({
+                reps: parseInt(exercise.reps) || 0,
+                sets: parseInt(exercise.sets) || 0,
+                weight: parseInt(exercise.weight) || 0,
+                exerciseId: exercise.exerciseId
+            }));
+
+            // Update the session with the new format
             await apiService.put(`/Session/${sessionId}`, {
                 name: sessionName.trim(),
-                userId: userId
+                userId: userId,
+                workoutId: sessionId,
+                sessionExerciseSession: sessionExerciseSession
             });
-
-            // Supprimer tous les exercices existants
-            if (session?.sessionExerciseSession) {
-                for (const exercise of session.sessionExerciseSession) {
-                    await apiService.delete(`/SessionExercise/${sessionId}/${exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id}`);
-                }
-            }
-
-            // Ajouter les nouveaux exercices
-            for (const exercise of sessionExercises) {
-                await apiService.post('/SessionExercise', {
-                    sessionId: sessionId,
-                    exerciseId: exercise.exerciseId
-                });
-            }
 
             Alert.alert(i18n.t('alert.success'), i18n.t('session.updated'));
             router.back();
         } catch (error) {
             console.error('Error updating session:', error);
             Alert.alert(i18n.t('alert.error'), i18n.t('error.updating_session'));
+        }
+    };
+
+    const handleRemoveExercise = async (index: number) => {
+        try {
+            const exercise = sessionExercises[index];
+            // Find the corresponding exercise goal ID from the session data
+            const sessionExercise = session?.sessionExerciseSession.find(
+                se => se.exerciseGoalSessionExercise.exerciseExerciseGoal.id === exercise.exerciseId
+            );
+            
+            if (!sessionExercise) {
+                throw new Error('Exercise goal not found');
+            }
+
+            // Call the API to delete the exercise goal using the correct ID
+            await apiService.delete(`/Session/${sessionId}/exercise-goal/${sessionExercise.exerciseGoalSessionExercise.id}`);
+            // Update local state
+            removeExercise(index);
+        } catch (error) {
+            console.error('Error removing exercise:', error);
+            Alert.alert(i18n.t('alert.error'), i18n.t('error.removing_exercise'));
         }
     };
 
@@ -163,7 +182,7 @@ export default function EditSessionScreen() {
                                 </Text>
                             </View>
                             <TouchableOpacity
-                                onPress={() => removeExercise(index)}
+                                onPress={() => handleRemoveExercise(index)}
                                 style={styles.removeButton}
                             >
                                 <Ionicons name="trash-outline" size={24} color={theme.colors.error} />
