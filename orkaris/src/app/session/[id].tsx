@@ -18,6 +18,7 @@ interface SessionExercise {
         };
         reps: number;
         sets: number;
+        weight: number;
     };
 }
 
@@ -98,7 +99,7 @@ export default function SessionScreen() {
                             </Link>
                             <View style={styles.exerciseDetails}>
                                 <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
-                                    {exercise.exerciseGoalSessionExercise.sets} sets × {exercise.exerciseGoalSessionExercise.reps} reps
+                                    {exercise.exerciseGoalSessionExercise.sets} sets × {exercise.exerciseGoalSessionExercise.reps} reps × {exercise.exerciseGoalSessionExercise.weight} kg
                                 </Text>
                             </View>
                         </View>

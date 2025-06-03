@@ -22,8 +22,8 @@ export default function HomeScreen() {
 
   // MotivationalStats
   async function fetchWeeklyVolume() {
-    //return await apiService.get('/stats/weekly-volume');
-    return "12 500 kg";
+    return await apiService.get(`/stats/weekly-volume/${userId}`);
+    //return "12 500 kg";
   }
   async function fetchWeeklySets() {
     try {
@@ -67,7 +67,7 @@ export default function HomeScreen() {
           fetchMonthlySessions(),
         ]);
         setMotivStats([
-          { value: rawVolume, message: `Tu as soulevé ${rawVolume} cette semaine !`, icon: "🏋️" },
+          { value: rawVolume as string | number, message: `Tu as soulevé ${rawVolume} cette semaine !`, icon: "🏋️" },
           { value: sets, message: `${sets} séries terminées cette semaine.`, icon: "📊" },
           { value: nbSessions as string | number, message: `${nbSessions} sessions complètes ce mois-ci. Garde le rythme !`, icon: "🔥" },
         ]);

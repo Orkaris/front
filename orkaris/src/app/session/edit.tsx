@@ -18,6 +18,7 @@ interface SessionExercise {
         };
         reps: number;
         sets: number;
+        weight: number;
     };
 }
 
@@ -53,7 +54,8 @@ export default function EditSessionScreen() {
                             id: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
                             name: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
                             reps: exercise.exerciseGoalSessionExercise.reps.toString(),
-                            sets: exercise.exerciseGoalSessionExercise.sets.toString()
+                            sets: exercise.exerciseGoalSessionExercise.sets.toString(),
+                            weight: exercise.exerciseGoalSessionExercise.weight.toString()
                         });
                     });
                 }
@@ -147,6 +149,17 @@ export default function EditSessionScreen() {
                                 />
                                 <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
                                     {i18n.t('session.sets_label')}
+                                </Text>
+                                <TextInput
+                                    style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                    value={exercise.weight}
+                                    onChangeText={(value) => updateExercise(index, 'weight', value)}
+                                    keyboardType="numeric"
+                                    placeholder="0"
+                                    placeholderTextColor={theme.colors.textSecondary}
+                                />
+                                <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+                                    {i18n.t('session.weight_label')}
                                 </Text>
                             </View>
                             <TouchableOpacity

@@ -36,7 +36,8 @@ export default function NewSessionScreen() {
                 sessionExerciseSession: sessionExercises.map(ex => ({
                     exerciseId: ex.exerciseId,
                     reps: parseInt(ex.reps),
-                    sets: parseInt(ex.sets)
+                    sets: parseInt(ex.sets),
+                    weight: parseFloat(ex.weight)
                 }))
             });
             Alert.alert(i18n.t('session.session_created'));
@@ -96,6 +97,19 @@ export default function NewSessionScreen() {
                                         style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
                                         value={exercise.sets}
                                         onChangeText={(value) => updateExercise(index, 'sets', value)}
+                                        keyboardType="numeric"
+                                        placeholder="0"
+                                        placeholderTextColor={theme.colors.textSecondary}
+                                    />
+                                </View>
+                                <View style={styles.inputGroup}>
+                                    <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+                                        {i18n.t('session.weight')}
+                                    </Text>
+                                    <TextInput
+                                        style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                        value={exercise.weight}
+                                        onChangeText={(value) => updateExercise(index, 'weight', value)}
                                         keyboardType="numeric"
                                         placeholder="0"
                                         placeholderTextColor={theme.colors.textSecondary}

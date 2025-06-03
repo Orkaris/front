@@ -31,7 +31,9 @@ export default function SessionStats() {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const session: Session = await apiService.get(`/Session/${sessionId}`);
+                const session: Session = await apiService.get(`/Session/${sessionId}/muscles`);
+                console.log(session);
+                
                 // Compter les muscles travaillés
                 
                 const muscleCount: { [muscle: string]: number } = {};
