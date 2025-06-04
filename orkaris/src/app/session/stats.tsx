@@ -5,22 +5,11 @@ import { useThemeContext } from '@/src/context/ThemeContext';
 import { apiService } from '@/src/services/api';
 import { useLocalSearchParams } from 'expo-router';
 
-interface SessionExercise {
-    exerciseGoalSessionExercise: {
-        exerciseExerciseGoal: {
-            id: string;
-            name: string;
-            description: string; // Assurez-vous que chaque exercice a bien cette propriété
-        };
-        reps: number;
-        sets: number;
-    };
-}
-
-interface Session {
-    id: string;
-    name: string;
-    sessionExerciseSession: SessionExercise[];
+interface MuscleStat {
+    nomMuscle: string;
+    valeur: number;
+    nbRep?: number;
+    nbSet?: number;
 }
 
 export default function SessionStats() {
@@ -29,35 +18,21 @@ export default function SessionStats() {
     const [muscleData, setMuscleData] = useState<{ [muscle: string]: number }>({});
 
     useEffect(() => {
-        const fetchSession = async () => {
+        const fetchMuscleStats = async () => {
             try {
-                const session: Session = await apiService.get(`/Session/${sessionId}/muscles`);
-                console.log(session);
-                
-                // Compter les muscles travaillés
-                
+                const stats: MuscleStat[] = await apiService.get(`/Session/${sessionId}/muscles`);
                 const muscleCount: { [muscle: string]: number } = {};
-                
-                // Regrouper les exercices par groupe musculaire et sommer la charge totale (reps * sets)
-                session.sessionExerciseSession.forEach((ex) => {
-                    // On suppose que la description contient le groupe musculaire principal, par exemple "Pectoraux développé couché haltères"
-                    // On prend le premier mot comme groupe musculaire, ou 'Autre' si absent
-                    const description = ex.exerciseGoalSessionExercise.exerciseExerciseGoal.description || '';
-                    const muscle = description.split(" ")[0] || 'Autre';
-                    // Calculer la "charge" totale pour ce muscle
-                    const charge = ex.exerciseGoalSessionExercise.reps * ex.exerciseGoalSessionExercise.sets;
-                    muscleCount[muscle] = (muscleCount[muscle] || 0) + charge;
+                stats.forEach(stat => {
+                    muscleCount[stat.nomMuscle] = stat.valeur;
                 });
-                
                 setMuscleData(muscleCount);
             } catch (e) {
                 setMuscleData({});
             }
         };
-        if (sessionId) fetchSession();
+        if (sessionId) fetchMuscleStats();
     }, [sessionId]);
 
-    // Préparer les données pour le RadarChart
     const labels = Object.keys(muscleData);
     const data = labels.map(label => muscleData[label]);
     const maxValue = Math.max(5, ...data);
