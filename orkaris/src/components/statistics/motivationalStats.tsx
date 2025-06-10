@@ -14,7 +14,7 @@ interface MotivationalStatsProps {
     theme: any;
 }
 
-const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = "Lets'go baby !", theme }) => {
+const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = "Let's go baby !", theme }) => {
     const listRef = useRef<FlatList>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 

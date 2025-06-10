@@ -81,6 +81,60 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
       },
       headerTintColor: theme.colors.navigationIcon,
     }} />
+    <Stack.Screen name="session/edit" options={{
+      headerTitle: i18n.t('session.edit'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
+    <Stack.Screen name="session/log-workout" options={{
+      headerTitle: i18n.t('session.log_workout'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
+    <Stack.Screen name="session/stats" options={{
+      headerTitle: i18n.t('session.stats'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
+    <Stack.Screen name="session/select-exercise" options={{
+      headerTitle: i18n.t('session.select_exercise'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
+    <Stack.Screen name="exercise/[id]" options={{
+      headerTitle: i18n.t('exercise.details'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
+    <Stack.Screen name="exercise/new" options={{
+      headerTitle: i18n.t('exercise.new'),
+      headerBackTitle: i18n.t('navigation.back'),
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: theme.colors.background,
+      },
+      headerTintColor: theme.colors.navigationIcon,
+    }} />
     <Stack.Screen name="profile/edit" options={{
       headerTitle: i18n.t('edit_profile.title'),
       headerBackTitle: i18n.t('navigation.back'),
