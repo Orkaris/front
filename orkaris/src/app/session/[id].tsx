@@ -18,6 +18,7 @@ interface SessionExercise {
         };
         reps: number;
         sets: number;
+        weight: number;
     };
 }
 
@@ -68,6 +69,15 @@ export default function SessionScreen() {
                 <Text style={[styles.title, { color: theme.colors.text }]}>{session.name}</Text>
                 <TouchableOpacity
                     onPress={() => router.push({
+                        pathname: "/session/stats",
+                        params: { id: sessionId }
+                    })}
+                    style={styles.editButton}
+                >
+                    <Ionicons name="stats-chart" size={24} color={theme.colors.primary} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => router.push({
                         pathname: "/session/edit",
                         params: { id: sessionId }
                     })}
@@ -89,7 +99,7 @@ export default function SessionScreen() {
                             </Link>
                             <View style={styles.exerciseDetails}>
                                 <Text style={[styles.detailText, { color: theme.colors.textSecondary }]}>
-                                    {exercise.exerciseGoalSessionExercise.sets} sets × {exercise.exerciseGoalSessionExercise.reps} reps
+                                    {exercise.exerciseGoalSessionExercise.sets} sets × {exercise.exerciseGoalSessionExercise.reps} reps × {exercise.exerciseGoalSessionExercise.weight} kg
                                 </Text>
                             </View>
                         </View>

@@ -35,17 +35,51 @@ export default function HistoryScreen() {
     useEffect(() => {
         fetchWorkouts();
     }, []);
-
+    const mockWorkout: WorkoutSession = {
+        id: 'mock-1',
+        date: new Date().toISOString(),
+        session: {
+            id: '1bca7a9c-b7a4-44d8-97d3-5d8f82f8743c',
+            name: 'Mock Full Body',
+        },
+        exerciseGoalPerformances: [
+            {
+                exerciseGoal: {
+                    exercise: { name: 'Pompes' }
+                },
+                reps: 12,
+                sets: 4,
+            },
+            {
+                exerciseGoal: {
+                    exercise: { name: 'Squats' }
+                },
+                reps: 15,
+                sets: 3,
+            },
+            {
+                exerciseGoal: {
+                    exercise: { name: 'Tractions' }
+                },
+                reps: 8,
+                sets: 4,
+            },
+        ],
+    };
     const fetchWorkouts = async () => {
         try {
             const response = await apiService.get<WorkoutSession[]>('/WorkoutSession');
-            // Trier les séances par date (du plus récent au plus ancien)
-            const sortedWorkouts = response.sort((a, b) => 
+            const sortedWorkouts = response.sort((a, b) =>
                 new Date(b.date).getTime() - new Date(a.date).getTime()
             );
-            setWorkouts(sortedWorkouts);
+            if (sortedWorkouts.length === 0) {
+                setWorkouts([mockWorkout]);
+            } else {
+                setWorkouts(sortedWorkouts);
+            }
         } catch (error) {
             console.error('Error fetching workouts:', error);
+            setWorkouts([mockWorkout]);
         } finally {
             setLoading(false);
         }

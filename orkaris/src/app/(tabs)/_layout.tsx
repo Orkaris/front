@@ -24,7 +24,13 @@ export default function TabLayout() {
 
     const settings = () => {
         return (
-            <Ionicons name="settings-sharp" size={24} color={theme.colors.text} onPress={() => navigation.push('/settings')} />
+            <Ionicons 
+                name="settings-sharp" 
+                size={24} 
+                color={theme.colors.text} 
+                onPress={() => navigation.push('/settings')} 
+                accessibilityLabel={i18n.t('navigation.settings')}
+            />
         );
     }
 

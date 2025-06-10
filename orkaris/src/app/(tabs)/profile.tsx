@@ -236,15 +236,6 @@ export default function ProfileScreen() {
                     loading={false}
                     disabled={false}
                     type="danger"
-                /><CustomButton onPress={
-                    () =>
-                        signOut()
-                }
-                    label={i18n.t('profile.sign_out')}
-                    theme={theme}
-                    loading={false}
-                    disabled={false}
-                    type="danger"
                 />
             </View>
 

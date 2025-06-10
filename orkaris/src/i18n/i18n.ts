@@ -16,6 +16,7 @@ export const i18n = new I18n({
             profile: "Profile",
             back: "Back",
             my_sessions: "My sessions",
+            settings: "Settings"
         },
         history: {
             title: "Workout History",
@@ -108,6 +109,7 @@ export const i18n = new I18n({
             create_exercise: "Create exercise",
             reps: "Repetitions",
             sets: "Sets",
+            weight: "Weight",
             exercise_name: "Exercise name",
             no_exercises: "No exercises added",
             create_new_exercise: "Create new exercise",
@@ -127,8 +129,11 @@ export const i18n = new I18n({
             target_sets_reps: "{{sets}} sets × {{reps}} reps",
             set_number: "SET {{number}}",
             enter_reps: "Reps",
+            enter_weight: "Weight",
             add_set: "Add set",
-            workout_completed: "Workout completed successfully"
+            workout_completed: "Workout completed successfully",
+            weight_label: "Weight (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg"
         },
         exercise: {
             new: "New exercise",
@@ -155,6 +160,30 @@ export const i18n = new I18n({
         },
         statistics: {
             statistics_button: "Statistics",
+            muscles_worked: "Muscles worked",
+            no_data: "No data for this session.",
+            title: "Statistics",
+            monthly_performance: "Monthly Performance",
+            pull_up_goal: "Pull-Up Goal Progress",
+            session_info: "Session Info",
+            avg_session_time: "Average session time",
+            avg_break_time: "Average break time",
+            avg_exercise_time: "Average exercise time",
+            minutes: "min",
+            muscles: {
+                chest: "Chest",
+                biceps: "Biceps",
+                triceps: "Triceps",
+                legs: "Legs",
+                back: "Back"
+            }
+        },
+        motivational: {
+            title: "Let's go baby!",
+            minutes: "minutes"
+        },
+        weekly_performance: {
+            title: "Weekly Performance"
         },
     },
     fr: {
@@ -166,6 +195,7 @@ export const i18n = new I18n({
             profile: "Profil",
             back: "Retour",
             my_sessions: "Mes sessions",
+            settings: "Paramètres"
         },
         history: {
             title: "Historique des séances",
@@ -258,6 +288,7 @@ export const i18n = new I18n({
             create_exercise: "Créer un exercice",
             reps: "Répétitions",
             sets: "Séries",
+            weight: "Poids",
             exercise_name: "Nom de l'exercice",
             no_exercises: "Aucun exercice ajouté",
             create_new_exercise: "Créer un nouvel exercice",
@@ -277,8 +308,11 @@ export const i18n = new I18n({
             target_sets_reps: "{{sets}} séries × {{reps}} reps",
             set_number: "SET {{number}}",
             enter_reps: "Reps",
+            enter_weight: "Poids",
             add_set: "Ajouter une série",
             workout_completed: "Séance terminée avec succès",
+            weight_label: "Poids (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg"
         },
         exercise: {
             new: "Nouvel exercice",
@@ -305,6 +339,30 @@ export const i18n = new I18n({
         },
         statistics: {
             statistics_button: "Statistiques",
+            muscles_worked: "Muscles travaillés",
+            no_data: "Pas de données pour cette session.",
+            title: "Statistiques",
+            monthly_performance: "Performance Mensuelle",
+            pull_up_goal: "Progression Tractions",
+            session_info: "Infos de sessions",
+            avg_session_time: "Temps moyen des sessions",
+            avg_break_time: "Temps moyen de pause",
+            avg_exercise_time: "Temps moyen d'exercice",
+            minutes: "min",
+            muscles: {
+                chest: "Pectoraux",
+                biceps: "Biceps",
+                triceps: "Triceps",
+                legs: "Jambes",
+                back: "Dos"
+            }
+        },
+        motivational: {
+            title: "Allez, on y va !",
+            minutes: "minutes"
+        },
+        weekly_performance: {
+            title: "Performance Hebdomadaire"
         },
     },
 });

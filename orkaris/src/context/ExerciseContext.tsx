@@ -6,6 +6,7 @@ interface ExerciseInput {
     name: string;
     reps?: string;
     sets?: string;
+    weight?: string;
 }
 
 interface SessionExercise {
@@ -13,6 +14,7 @@ interface SessionExercise {
     exerciseName: string;
     reps: string;
     sets: string;
+    weight: string;
 }
 
 interface ExerciseContextType {
@@ -20,7 +22,7 @@ interface ExerciseContextType {
     addExercise: (exercise: ExerciseInput) => void;
     removeExercise: (index: number) => void;
     clearExercises: () => void;
-    updateExercise: (index: number, field: 'reps' | 'sets', value: string) => void;
+    updateExercise: (index: number, key: 'reps' | 'sets' | 'weight', value: string) => void;
 }
 
 const ExerciseContext = createContext<ExerciseContextType | undefined>(undefined);
@@ -36,7 +38,8 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
                     exerciseId: exercise.id,
                     exerciseName: exercise.name,
                     reps: exercise.reps || '',
-                    sets: exercise.sets || ''
+                    sets: exercise.sets || '',
+                    weight: exercise.weight || ''
                 }];
             }
             return prevExercises;
@@ -51,7 +54,7 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
         });
     }, []);
 
-    const updateExercise = useCallback((index: number, field: 'reps' | 'sets', value: string) => {
+    const updateExercise = useCallback((index: number, field: 'reps' | 'sets' | 'weight', value: string) => {
         setSessionExercises(prevExercises => {
             const newExercises = [...prevExercises];
             newExercises[index] = {
