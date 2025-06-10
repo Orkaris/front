@@ -109,6 +109,7 @@ export const i18n = new I18n({
             create_exercise: "Create exercise",
             reps: "Repetitions",
             sets: "Sets",
+            weight: "Weight",
             exercise_name: "Exercise name",
             no_exercises: "No exercises added",
             create_new_exercise: "Create new exercise",
@@ -128,8 +129,11 @@ export const i18n = new I18n({
             target_sets_reps: "{{sets}} sets × {{reps}} reps",
             set_number: "SET {{number}}",
             enter_reps: "Reps",
+            enter_weight: "Weight",
             add_set: "Add set",
-            workout_completed: "Workout completed successfully"
+            workout_completed: "Workout completed successfully",
+            weight_label: "Weight (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg"
         },
         exercise: {
             new: "New exercise",
@@ -284,6 +288,7 @@ export const i18n = new I18n({
             create_exercise: "Créer un exercice",
             reps: "Répétitions",
             sets: "Séries",
+            weight: "Poids",
             exercise_name: "Nom de l'exercice",
             no_exercises: "Aucun exercice ajouté",
             create_new_exercise: "Créer un nouvel exercice",
@@ -303,8 +308,11 @@ export const i18n = new I18n({
             target_sets_reps: "{{sets}} séries × {{reps}} reps",
             set_number: "SET {{number}}",
             enter_reps: "Reps",
+            enter_weight: "Poids",
             add_set: "Ajouter une série",
             workout_completed: "Séance terminée avec succès",
+            weight_label: "Poids (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg"
         },
         exercise: {
             new: "Nouvel exercice",

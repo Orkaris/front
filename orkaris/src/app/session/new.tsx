@@ -104,7 +104,7 @@ export default function NewSessionScreen() {
                                 </View>
                                 <View style={styles.inputGroup}>
                                     <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-                                        {i18n.t('session.weight')}
+                                        {i18n.t('session.weight_label')}
                                     </Text>
                                     <TextInput
                                         style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}

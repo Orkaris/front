@@ -17,6 +17,7 @@ interface SessionExercise {
         };
         reps: number;
         sets: number;
+        id: string;
     };
 }
 
@@ -28,6 +29,7 @@ interface Session {
 
 interface Set {
     reps: string;
+    weight: string;
     completed: boolean;
 }
 
@@ -55,12 +57,14 @@ export default function LogWorkoutScreen() {
                 
                 // Initialiser les performances pour chaque exercice
                 const initialPerformances = response.sessionExerciseSession.map(exercise => ({
-                    exerciseId: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
+                    exerciseGoaldId: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
+                    exerciseId: exercise.exerciseGoalSessionExercise.id,
                     exerciseName: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
                     targetSets: exercise.exerciseGoalSessionExercise.sets,
                     targetReps: exercise.exerciseGoalSessionExercise.reps,
                     sets: [{
                         reps: '',
+                        weight: '',
                         completed: false
                     }]
                 }));
@@ -80,6 +84,7 @@ export default function LogWorkoutScreen() {
         const newPerformances = [...performances];
         newPerformances[exerciseIndex].sets.push({
             reps: '',
+            weight: '',
             completed: false
         });
         setPerformances(newPerformances);
@@ -92,7 +97,8 @@ export default function LogWorkoutScreen() {
                 const completedSets = performance.sets.filter(set => set.completed);
                 if (completedSets.length > 0) {
                     await apiService.post('/ExerciseGoalPerformance', {
-                        reps: parseInt(completedSets[0].reps), // Pour l'instant, on utilise la même valeur pour tous les sets
+                        reps: parseInt(completedSets[0].reps),
+                        weight: parseFloat(completedSets[0].weight),
                         sets: completedSets.length,
                         exerciseGoalId: performance.exerciseId
                     });
@@ -159,18 +165,32 @@ export default function LogWorkoutScreen() {
                                 <Text style={[styles.setNumber, { color: theme.colors.text }]}>
                                     {i18n.t('session.set_number', { number: setIndex + 1 })}
                                 </Text>
-                                <TextInput
-                                    style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                    value={set.reps}
-                                    onChangeText={(value) => {
-                                        const newPerformances = [...performances];
-                                        newPerformances[exerciseIndex].sets[setIndex].reps = value;
-                                        setPerformances(newPerformances);
-                                    }}
-                                    keyboardType="numeric"
-                                    placeholder={i18n.t('session.enter_reps')}
-                                    placeholderTextColor={theme.colors.textSecondary}
-                                />
+                                <View style={styles.inputsContainer}>
+                                    <TextInput
+                                        style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                        value={set.reps}
+                                        onChangeText={(value) => {
+                                            const newPerformances = [...performances];
+                                            newPerformances[exerciseIndex].sets[setIndex].reps = value;
+                                            setPerformances(newPerformances);
+                                        }}
+                                        keyboardType="numeric"
+                                        placeholder={i18n.t('session.enter_reps')}
+                                        placeholderTextColor={theme.colors.textSecondary}
+                                    />
+                                    <TextInput
+                                        style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                        value={set.weight}
+                                        onChangeText={(value) => {
+                                            const newPerformances = [...performances];
+                                            newPerformances[exerciseIndex].sets[setIndex].weight = value;
+                                            setPerformances(newPerformances);
+                                        }}
+                                        keyboardType="numeric"
+                                        placeholder={i18n.t('session.enter_weight')}
+                                        placeholderTextColor={theme.colors.textSecondary}
+                                    />
+                                </View>
                                 <Checkbox
                                     value={set.completed}
                                     onValueChange={(value: boolean) => {
@@ -264,12 +284,17 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '500',
     },
+    inputsContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        gap: 10,
+        marginRight: 10,
+    },
     input: {
         flex: 1,
         borderWidth: 1,
         borderRadius: 4,
         padding: 8,
-        marginRight: 10,
         textAlign: 'center',
     },
     addSetButton: {
