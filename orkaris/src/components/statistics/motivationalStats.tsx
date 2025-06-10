@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ViewToken } from 'react-native';
 import Animated, { FadeInUp } from 'react-native-reanimated';
+import { i18n } from '@/src/i18n/i18n';
 
 export interface MotivationalStat {
     value?: string | number;
@@ -14,7 +15,7 @@ interface MotivationalStatsProps {
     theme: any;
 }
 
-const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = "Let's go baby !", theme }) => {
+const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = i18n.t('motivational.title'), theme }) => {
     const listRef = useRef<FlatList>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
