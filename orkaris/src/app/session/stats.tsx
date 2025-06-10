@@ -4,6 +4,7 @@ import { RadarChart } from 'react-native-gifted-charts';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import { apiService } from '@/src/services/api';
 import { useLocalSearchParams } from 'expo-router';
+import { i18n } from '@/src/i18n/i18n';
 
 interface MuscleStat {
     nomMuscle: string;
@@ -40,7 +41,7 @@ export default function SessionStats() {
     return (
         <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
             <View style={styles.radarContainer}>
-                <Text style={[styles.radarTitle, { color: theme.colors.text }]}>Muscles travaillés</Text>
+                <Text style={[styles.radarTitle, { color: theme.colors.text }]}>{i18n.t('statistics.muscles_worked')}</Text>
                 {labels.length > 0 ? (
                     <RadarChart
                         hideAsterLines={true}
@@ -76,7 +77,7 @@ export default function SessionStats() {
                     />
                 ) : (
                     <Text style={{ color: theme.colors.textSecondary, marginTop: 20 }}>
-                        Pas de données pour cette session.
+                        {i18n.t('statistics.no_data')}
                     </Text>
                 )}
             </View>

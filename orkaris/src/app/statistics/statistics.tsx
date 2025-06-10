@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { BarChart, PieChart, RadarChart } from 'react-native-gifted-charts';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import CustomButton from "../../components/CustomButton";
+import { i18n } from '@/src/i18n/i18n';
 
 
 const Statistics = () => {
@@ -52,8 +53,8 @@ const Statistics = () => {
         <ScrollView 
         style={[styles.container, { backgroundColor: theme.colors.background }]}
         contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={[styles.title, { color: theme.colors.text }]}>Statistics</Text>
-            <Text style={[styles.chartTitle, { color: theme.colors.text }]}>Monthly Performance</Text>
+            <Text style={[styles.title, { color: theme.colors.text }]}>{i18n.t('statistics.title')}</Text>
+            <Text style={[styles.chartTitle, { color: theme.colors.text }]}>{i18n.t('statistics.monthly_performance')}</Text>
             <BarChart
                 data={data}
                 barWidth={30}
@@ -67,7 +68,7 @@ const Statistics = () => {
                 yAxisTextStyle={{ color: theme.colors.text }}
             />
             <View style={styles.pieContainer}>
-                <Text style={[styles.pieTitle, { color: theme.colors.text }]}>Pull-Up Goal Progress</Text>
+                <Text style={[styles.pieTitle, { color: theme.colors.text }]}>{i18n.t('statistics.pull_up_goal')}</Text>
                 { <PieChart
                     data={pieData}
                     donut
@@ -86,24 +87,24 @@ const Statistics = () => {
                 /> }
             </View>
             <View style={styles.sessionInfoContainer}>
-                <Text style={[styles.sessionInfoTitle, { color: theme.colors.text, fontSize: 20 }]}>Infos de sessions</Text>
+                <Text style={[styles.sessionInfoTitle, { color: theme.colors.text, fontSize: 20 }]}>{i18n.t('statistics.session_info')}</Text>
                 <View style={styles.sessionInfoColumn}>
                     <View style={[styles.sessionInfoBubble, { alignSelf: 'flex-start' }]}>  
-                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>Temps moyen des sessions</Text>
-                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>45 min</Text>
+                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>{i18n.t('statistics.avg_session_time')}</Text>
+                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>45 {i18n.t('statistics.minutes')}</Text>
                     </View>
                     <View style={[styles.sessionInfoBubble, { alignSelf: 'flex-end' }]}>  
-                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>Temps moyen de pause</Text>
-                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>2 min</Text>
+                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>{i18n.t('statistics.avg_break_time')}</Text>
+                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>2 {i18n.t('statistics.minutes')}</Text>
                     </View>
                     <View style={[styles.sessionInfoBubble, { alignSelf: 'flex-start' }]}>  
-                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>Temps moyen d'exercice</Text>
-                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>1 min</Text>
+                        <Text style={[styles.sessionInfoLabel, { color: theme.colors.textSecondary, fontSize: 16 }]}>{i18n.t('statistics.avg_exercise_time')}</Text>
+                        <Text style={[styles.sessionInfoValue, { color: theme.colors.primary, fontSize: 22 }]}>1 {i18n.t('statistics.minutes')}</Text>
                     </View>
                 </View>
             </View>
             <View style={[styles.radarContainer, { paddingRight: 0 }]}>
-                <Text style={[styles.radarTitle, { color: theme.colors.textSecondary }]}>Muscles travaillés</Text>
+                <Text style={[styles.radarTitle, { color: theme.colors.textSecondary }]}>{i18n.t('statistics.muscles_worked')}</Text>
                 <RadarChart
                     hideAsterLines={true}
                     hideGrid={false} 
@@ -111,7 +112,13 @@ const Statistics = () => {
                     chartSize={250}
 
                     data={[8, 5, 6, 3, 9]} // Array of numbers
-                    labels={['Pectoraux', 'Biceps', 'Triceps', 'Jambes', 'Dos']} // Labels for each value
+                    labels={[
+                        i18n.t('statistics.muscles.chest'),
+                        i18n.t('statistics.muscles.biceps'),
+                        i18n.t('statistics.muscles.triceps'),
+                        i18n.t('statistics.muscles.legs'),
+                        i18n.t('statistics.muscles.back')
+                    ]} // Labels for each value
                     maxValue={10}
                     polygonConfig={{
                         stroke: theme.colors.primary,

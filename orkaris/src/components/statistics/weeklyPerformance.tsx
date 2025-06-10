@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { BarChart } from 'react-native-gifted-charts';
 import { format, subWeeks, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale/fr';
+import { i18n } from '@/src/i18n/i18n';
 
 interface RawSession {
     date: string; // ISO date string
@@ -18,7 +19,7 @@ interface WeeklyPerformanceProps {
 const WeeklyPerformance: React.FC<WeeklyPerformanceProps> = ({
     sessions,
     theme,
-    title = "Performance Hebdomadaire"
+    title = i18n.t('weekly_performance.title')
 }) => {
     const now = new Date();
     // Génère les 8 dernières semaines (de la plus ancienne à la plus récente)
@@ -52,7 +53,7 @@ const WeeklyPerformance: React.FC<WeeklyPerformanceProps> = ({
         <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
             <Text style={[styles.chartTitle, { color: theme.colors.text }]}>{title}</Text>
             <Text style={[styles.selectedValue, { color: theme.colors.primary }]}>
-                {weeks[selectedIndex]?.value ?? 0} minutes
+                {weeks[selectedIndex]?.value ?? 0} {i18n.t('statistics.minutes')}
             </Text>
 
             <BarChart

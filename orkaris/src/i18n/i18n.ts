@@ -16,6 +16,7 @@ export const i18n = new I18n({
             profile: "Profile",
             back: "Back",
             my_sessions: "My sessions",
+            settings: "Settings"
         },
         history: {
             title: "Workout History",
@@ -155,6 +156,30 @@ export const i18n = new I18n({
         },
         statistics: {
             statistics_button: "Statistics",
+            muscles_worked: "Muscles worked",
+            no_data: "No data for this session.",
+            title: "Statistics",
+            monthly_performance: "Monthly Performance",
+            pull_up_goal: "Pull-Up Goal Progress",
+            session_info: "Session Info",
+            avg_session_time: "Average session time",
+            avg_break_time: "Average break time",
+            avg_exercise_time: "Average exercise time",
+            minutes: "min",
+            muscles: {
+                chest: "Chest",
+                biceps: "Biceps",
+                triceps: "Triceps",
+                legs: "Legs",
+                back: "Back"
+            }
+        },
+        motivational: {
+            title: "Let's go baby!",
+            minutes: "minutes"
+        },
+        weekly_performance: {
+            title: "Weekly Performance"
         },
     },
     fr: {
@@ -166,6 +191,7 @@ export const i18n = new I18n({
             profile: "Profil",
             back: "Retour",
             my_sessions: "Mes sessions",
+            settings: "Paramètres"
         },
         history: {
             title: "Historique des séances",
@@ -305,6 +331,30 @@ export const i18n = new I18n({
         },
         statistics: {
             statistics_button: "Statistiques",
+            muscles_worked: "Muscles travaillés",
+            no_data: "Pas de données pour cette session.",
+            title: "Statistiques",
+            monthly_performance: "Performance Mensuelle",
+            pull_up_goal: "Progression Tractions",
+            session_info: "Infos de sessions",
+            avg_session_time: "Temps moyen des sessions",
+            avg_break_time: "Temps moyen de pause",
+            avg_exercise_time: "Temps moyen d'exercice",
+            minutes: "min",
+            muscles: {
+                chest: "Pectoraux",
+                biceps: "Biceps",
+                triceps: "Triceps",
+                legs: "Jambes",
+                back: "Dos"
+            }
+        },
+        motivational: {
+            title: "Allez, on y va !",
+            minutes: "minutes"
+        },
+        weekly_performance: {
+            title: "Performance Hebdomadaire"
         },
     },
 });

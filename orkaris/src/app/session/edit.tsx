@@ -5,7 +5,6 @@ import { useAuth } from '@/src/context/AuthContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { apiService } from '@/src/services/api';
-import { Exercise } from '@/src/model/types';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useExercise } from "@/src/context/ExerciseContext";
