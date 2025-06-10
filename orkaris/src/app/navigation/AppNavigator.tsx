@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Stack } from "expo-router";
 import { i18n } from "@/src/i18n/i18n";
@@ -91,9 +91,13 @@ const MainAppNavigator = ({ theme }: { theme: ThemeType }) => (
 );
 
 export default function AppNavigator() {
-  const { userToken, isLoading } = useAuth();
+  const { userToken, isLoading, processToken } = useAuth();
   const { theme } = useThemeContext();
   const { language } = useLanguageContext();
+
+  useEffect(() => {
+    processToken(userToken);
+  }, [userToken, processToken])
 
   if (isLoading) {
     return <Loader />

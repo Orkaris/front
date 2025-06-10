@@ -85,7 +85,8 @@ export default function EditProfileScreen() {
         try {
             const fetchedUser = await apiService.get<User>(`/Users/ById/${userId}`); if (!fetchedUser) throw new Error("Aucune donnée utilisateur reçue.");
             const initialFormState = { name: fetchedUser.name || "", weight: fetchedUser.weight?.toString() || "", height: fetchedUser.height?.toString() || "", birthDate: fetchedUser.birthDate ? new Date(fetchedUser.birthDate) : null, gender: fetchedUser.gender || "" };
-            setFormData(initialFormState); setInitialData(initialFormState);
+            setFormData(initialFormState);
+            setInitialData(initialFormState);
         } catch (err: any) { console.error("Erreur fetchDataForEdit:", err.response?.data || err.message); setError("Impossible de charger les informations."); setUser(null); setFormData({ name: "", weight: "", height: "", birthDate: null, gender: "" }); setInitialData({ name: "", weight: "", height: "", birthDate: null, gender: "" }); if (err.response?.status === 401 || err.response?.status === 403) { Alert.alert("Session expirée", "Veuillez vous reconnecter.", [{ text: "OK", onPress: signOut }]); } else { Alert.alert("Erreur", "Impossible de charger les informations."); } } finally { setIsLoading(false); }
     }, [userId, apiService, signOut]);
     useFocusEffect(useCallback(() => { fetchDataForEdit(); }, [fetchDataForEdit]));

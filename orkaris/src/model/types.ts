@@ -115,6 +115,7 @@ export interface AuthState {
   signOut: () => Promise<void>;
   signUp: (data: CreateUser) => Promise<void>;
   userId: string | null; // ID de l'utilisateur connecté
+  processToken: (token: string | null) => void;
   // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
   // user: User | null;
 }

@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode, useCa
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import { AuthState, ConnectUser, CreateUser, DecodedToken, ResponseToken, User } from '@/src/model/types';
-import { apiService } from '../services/api';
+import { apiService } from '@/src/services/api';
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -115,7 +115,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   return (
-    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout, }}>
+    <AuthContext.Provider value={{ ...authActions, userToken, userId, isLoading, isSignout, processToken }}>
       {children}
     </AuthContext.Provider>
   );

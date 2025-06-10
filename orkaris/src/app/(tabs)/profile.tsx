@@ -52,11 +52,6 @@ export default function ProfileScreen() {
             return;
         }
 
-        if (user) {
-            console.log("User data already loaded:", user);
-            return;
-        }
-
         setIsLoading(true);
         setError(null);
 
