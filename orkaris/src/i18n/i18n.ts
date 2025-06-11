@@ -22,6 +22,8 @@ export const i18n = new I18n({
             title: "Workout History",
             loading: "Loading workouts...",
             no_workouts: "No workouts found",
+            total_volume: "Total Volume",
+            total_sets: "Total Sets"
         },
         alert: {
             cancel: "Cancel",
@@ -133,7 +135,11 @@ export const i18n = new I18n({
             add_set: "Add set",
             workout_completed: "Workout completed successfully",
             weight_label: "Weight (kg)",
-            reps_and_weight: "{{reps}} reps × {{weight}} kg"
+            reps_and_weight: "{{reps}} reps × {{weight}} kg",
+            edit: "Edit session",
+            log_workout: "Log workout",
+            stats: "Statistics",
+            previous: "Previous"
         },
         exercise: {
             new: "New exercise",
@@ -145,6 +151,15 @@ export const i18n = new I18n({
             rename: "Rename exercise",
             new_name: "New name",
             add_exercise: "Add exercise",
+            details: "Exercise details",
+            add_set: "Add set",
+            workout_completed: "Workout completed successfully",
+            weight_label: "Weight (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg",
+            edit: "Edit session",
+            log_workout: "Log workout",
+            stats: "Statistics",
+            previous: "Previous"
         },
         error: {
             name_required: "Name is required.",
@@ -157,6 +172,7 @@ export const i18n = new I18n({
             creating_session: "Error creating session",
             creating_training: "Error creating training",
             updating_session: "Error updating session",
+            saving_performance: "Error saving performance",
         },
         statistics: {
             statistics_button: "Statistics",
@@ -176,7 +192,10 @@ export const i18n = new I18n({
                 triceps: "Triceps",
                 legs: "Legs",
                 back: "Back"
-            }
+            },
+            creating_training: "Erreur lors de la création de l'entraînement",
+            updating_session: "Erreur lors de la mise à jour de la session",
+            saving_performance: "Erreur lors de la sauvegarde de la performance",
         },
         motivational: {
             title: "Let's go baby!",
@@ -201,6 +220,8 @@ export const i18n = new I18n({
             title: "Historique des séances",
             loading: "Chargement des séances...",
             no_workouts: "Aucune séance trouvée",
+            total_volume: "Volume Total",
+            total_sets: "Séries Totales"
         },
         alert: {
             cancel: "Annuler",
@@ -312,7 +333,11 @@ export const i18n = new I18n({
             add_set: "Ajouter une série",
             workout_completed: "Séance terminée avec succès",
             weight_label: "Poids (kg)",
-            reps_and_weight: "{{reps}} reps × {{weight}} kg"
+            reps_and_weight: "{{reps}} reps × {{weight}} kg",
+            edit: "Modifier la session",
+            log_workout: "Enregistrer la séance",
+            stats: "Statistiques",
+            previous: "Précédent"
         },
         exercise: {
             new: "Nouvel exercice",
@@ -324,6 +349,15 @@ export const i18n = new I18n({
             rename: "Renommer l'exercice",
             new_name: "Nouveau nom",
             add_exercise: "Ajouter un exercice",
+            details: "Détails de l'exercice",
+            add_set: "Ajouter une série",
+            workout_completed: "Séance terminée avec succès",
+            weight_label: "Poids (kg)",
+            reps_and_weight: "{{reps}} reps × {{weight}} kg",
+            edit: "Modifier la session",
+            log_workout: "Enregistrer la séance",
+            stats: "Statistiques",
+            previous: "Précédent"
         },
         error: {
             name_required: "Le nom est requis.",
@@ -336,6 +370,7 @@ export const i18n = new I18n({
             creating_session: "Erreur lors de la création de la session",
             creating_training: "Erreur lors de la création de l'entraînement",
             updating_session: "Erreur lors de la mise à jour de la session",
+            saving_performance: "Erreur lors de la sauvegarde de la performance",
         },
         statistics: {
             statistics_button: "Statistiques",
@@ -355,7 +390,10 @@ export const i18n = new I18n({
                 triceps: "Triceps",
                 legs: "Jambes",
                 back: "Dos"
-            }
+            },
+            creating_training: "Erreur lors de la création de l'entraînement",
+            updating_session: "Erreur lors de la mise à jour de la session",
+            saving_performance: "Erreur lors de la sauvegarde de la performance",
         },
         motivational: {
             title: "Allez, on y va !",
