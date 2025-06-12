@@ -1,131 +1,81 @@
-import { View, SafeAreaView, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, SafeAreaView, Text, StyleSheet, FlatList } from "react-native";
 import { useThemeContext } from "@/src/context/ThemeContext";
 import { useState, useEffect } from "react";
 import { apiService } from "@/src/services/api";
 import { i18n } from "@/src/i18n/i18n";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
-import dayjs from "dayjs";
+import { useAuth } from "@/src/context/AuthContext";
 import Loader from "@/src/components/loader";
+import HistoryCard from "@/src/components/HistoryCard";
+import { SessionPerformance } from "@/src/model/types";
 
-interface WorkoutSession {
-    id: string;
-    date: string;
-    session: {
+interface SessionExercise {
+    exerciseGoalSessionExercise: {
         id: string;
-        name: string;
-    };
-    exerciseGoalPerformances: {
-        exerciseGoal: {
-            exercise: {
-                name: string;
-            };
-        };
         reps: number;
         sets: number;
-    }[];
+        exerciseExerciseGoal: {
+            id: string;
+            name: string;
+        };
+    };
+}
+
+interface Session {
+    id: string;
+    name: string;
+    userId: string;
+    workoutId: string;
+    createdAt: string;
+    sessionExerciseSession: SessionExercise[];
 }
 
 export default function HistoryScreen() {
     const { theme } = useThemeContext();
-    const [workouts, setWorkouts] = useState<WorkoutSession[]>([]);
+    const [sessions, setSessions] = useState<SessionPerformance[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const { userId } = useAuth();
 
     useEffect(() => {
-        fetchWorkouts();
+        fetchSessions();
     }, []);
-    const mockWorkout: WorkoutSession = {
-        id: 'mock-1',
-        date: new Date().toISOString(),
-        session: {
-            id: '1bca7a9c-b7a4-44d8-97d3-5d8f82f8743c',
-            name: 'Mock Full Body',
-        },
-        exerciseGoalPerformances: [
-            {
-                exerciseGoal: {
-                    exercise: { name: 'Pompes' }
-                },
-                reps: 12,
-                sets: 4,
-            },
-            {
-                exerciseGoal: {
-                    exercise: { name: 'Squats' }
-                },
-                reps: 15,
-                sets: 3,
-            },
-            {
-                exerciseGoal: {
-                    exercise: { name: 'Tractions' }
-                },
-                reps: 8,
-                sets: 4,
-            },
-        ],
-    };
-    const fetchWorkouts = async () => {
+
+    const fetchSessions = async () => {
         try {
-            const response = await apiService.get<WorkoutSession[]>('/WorkoutSession');
-            const sortedWorkouts = response.sort((a, b) =>
+            const response = await apiService.get<SessionPerformance[]>(`/SessionPerformance/user/${userId}`);
+            const sortedSessions = response.sort((a, b) =>
                 new Date(b.date).getTime() - new Date(a.date).getTime()
             );
-            if (sortedWorkouts.length === 0) {
-                setWorkouts([mockWorkout]);
-            } else {
-                setWorkouts(sortedWorkouts);
-            }
+            setSessions(sortedSessions);
         } catch (error) {
-            console.error('Error fetching workouts:', error);
-            setWorkouts([mockWorkout]);
+            console.error('Error fetching sessions:', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const renderWorkoutItem = ({ item }: { item: WorkoutSession }) => (
-        <TouchableOpacity
-            style={[styles.workoutCard, { backgroundColor: theme.colors.surfaceVariant }]}
-            onPress={() => router.push({
-                pathname: '/session/[id]',
-                params: { id: item.session.id }
-            })}
-        >
-            <View style={styles.workoutHeader}>
-                <Text style={[styles.sessionName, { color: theme.colors.text }]}>
-                    {item.session.name}
-                </Text>
-                <Text style={[styles.date, { color: theme.colors.textSecondary }]}>
-                    {dayjs(item.date).format('DD/MM/YYYY HH:mm')}
-                </Text>
-            </View>
-            <View style={styles.exercisesList}>
-                {item.exerciseGoalPerformances.map((performance, index) => (
-                    <Text key={index} style={[styles.exerciseText, { color: theme.colors.textSecondary }]}>
-                        • {performance.exerciseGoal.exercise.name}: {performance.sets} sets × {performance.reps} reps
-                    </Text>
-                ))}
-            </View>
-        </TouchableOpacity>
-    );
-
     if (loading) {
-        return <Loader />
+        return <Loader />;
     }
 
     return (
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
-            <View style={styles.header}>
-                <Text style={[styles.title, { color: theme.colors.text }]}>
-                    {i18n.t('history.title')}
-                </Text>
-            </View>
-            {workouts.length > 0 ? (
+            {sessions.length > 0 ? (
                 <FlatList
-                    data={workouts}
-                    renderItem={renderWorkoutItem}
+                    data={sessions}
+                    renderItem={({ item }) => (
+                        <HistoryCard
+                            id={item.id}
+                            sessionName={item.sessionName}
+                            date={item.date}
+                            exerciseGoalPerformances={item.exerciseGoalPerformances}
+                            onPress={() => router.push({
+                                pathname: '/session/[id]',
+                                params: { id: item.id }
+                            })}
+                        />
+                    )}
                     keyExtractor={item => item.id}
                     contentContainerStyle={styles.listContainer}
                 />
@@ -155,38 +105,6 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         padding: 20,
-    },
-    workoutCard: {
-        borderRadius: 8,
-        padding: 15,
-        marginBottom: 15,
-        elevation: 3,
-    },
-    workoutHeader: {
-        marginBottom: 10,
-    },
-    sessionName: {
-        fontSize: 18,
-        fontWeight: '500',
-    },
-    date: {
-        fontSize: 14,
-        marginTop: 5,
-    },
-    exercisesList: {
-        marginTop: 5,
-    },
-    exerciseText: {
-        fontSize: 14,
-        marginBottom: 5,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    loadingText: {
-        fontSize: 16,
     },
     emptyContainer: {
         flex: 1,

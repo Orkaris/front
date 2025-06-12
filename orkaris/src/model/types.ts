@@ -88,16 +88,21 @@ export interface ExerciseGoalPerformance {
   id: UniqueId;
   reps: number;
   sets: number;
+  weight: number;
   createdAt: ISOString;
   exerciseGoalId: UniqueId;
+  exerciseName: string;
+  exerciseDescription: string;
 }
 
 // Interface pour la Performance Globale d'une Séance
 export interface SessionPerformance {
   id: UniqueId;
   sessionId: UniqueId;
+  sessionName: string;
   feeling: string;
   date: ISOString;
+  exerciseGoalPerformances: ExerciseGoalPerformance[];
 }
 
 // Interface pour un Sport 

@@ -18,6 +18,7 @@ interface SessionExercise {
         reps: number;
         sets: number;
         id: string;
+        weight: number;
     };
 }
 
@@ -38,7 +39,12 @@ interface ExercisePerformance {
     exerciseName: string;
     targetSets: number;
     targetReps: number;
+    targetWeight: number;
     sets: Set[];
+    lastPerformance: {
+        reps: number;
+        weight: number;
+    } | null;
 }
 
 export default function LogWorkoutScreen() {
@@ -55,22 +61,31 @@ export default function LogWorkoutScreen() {
                 const response = await apiService.get<Session>(`/Session/${sessionId}`);
                 setSession(response);
                 
-                // Initialiser les performances pour chaque exercice
-                const initialPerformances = response.sessionExerciseSession.map(exercise => ({
-                    exerciseGoaldId: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
-                    exerciseId: exercise.exerciseGoalSessionExercise.id,
-                    exerciseName: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
-                    targetSets: exercise.exerciseGoalSessionExercise.sets,
-                    targetReps: exercise.exerciseGoalSessionExercise.reps,
-                    sets: [{
-                        reps: '',
-                        weight: '',
-                        completed: false
-                    }]
+                // Fetch last performances for each exercise
+                const performancesWithLastData = await Promise.all(response.sessionExerciseSession.map(async (exercise) => {
+                    const lastPerformanceResponse = await apiService.get<any[]>(`/ExerciseGoalPerformance/ByExerciseGoal/${exercise.exerciseGoalSessionExercise.id}`);
+                    // Sort by createdAt descending to get the latest performance
+                    const sortedPerformances = lastPerformanceResponse.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                    const lastPerformance = sortedPerformances.length > 0 ? sortedPerformances[0] : null;
+
+                    return {
+                        exerciseGoaldId: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
+                        exerciseId: exercise.exerciseGoalSessionExercise.id,
+                        exerciseName: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
+                        targetSets: exercise.exerciseGoalSessionExercise.sets,
+                        targetReps: exercise.exerciseGoalSessionExercise.reps,
+                        targetWeight: exercise.exerciseGoalSessionExercise.weight,
+                        sets: [{
+                            reps: '',
+                            weight: '',
+                            completed: false
+                        }],
+                        lastPerformance: lastPerformance ? { reps: lastPerformance.reps, weight: lastPerformance.weight } : null
+                    };
                 }));
-                setPerformances(initialPerformances);
+                setPerformances(performancesWithLastData);
             } catch (error) {
-                console.error('Error fetching session:', error);
+                console.error('Error fetching session or last performance:', error);
                 Alert.alert(i18n.t('alert.error'), i18n.t('error.fetching_session'));
             }
         };
@@ -91,19 +106,30 @@ export default function LogWorkoutScreen() {
     };
 
     const handleFinish = async () => {
+        if (!session) {
+            Alert.alert(i18n.t('alert.error'), i18n.t('error.session_not_loaded'));
+            return;
+        }
         try {
             // Sauvegarder les performances pour chaque exercice
             for (const performance of performances) {
-                const completedSets = performance.sets.filter(set => set.completed);
+                const completedSets = performance.sets.filter(set => set.completed && set.reps && set.weight);
                 if (completedSets.length > 0) {
-                    await apiService.post('/ExerciseGoalPerformance', {
-                        reps: parseInt(completedSets[0].reps),
-                        weight: parseFloat(completedSets[0].weight),
-                        sets: completedSets.length,
-                        exerciseGoalId: performance.exerciseId
-                    });
+                    for (const set of completedSets) {
+                        await apiService.post('/ExerciseGoalPerformance', {
+                            reps: parseInt(set.reps),
+                            weight: parseFloat(set.weight),
+                            sets: 1, // Each logged set is 1 set in the performance
+                            exerciseGoalId: performance.exerciseId
+                        });
+                    }
                 }
             }
+            await apiService.post('/SessionPerformance', {
+                    sessionId: session.id,
+                    feeling: 'good',
+                    date: new Date().toISOString(),
+                });
 
             Alert.alert(i18n.t('alert.success'), i18n.t('session.workout_completed'));
             router.back();
@@ -160,37 +186,48 @@ export default function LogWorkoutScreen() {
                             })}
                         </Text>
 
+                        <View style={styles.tableHeader}>
+                            <Text style={[styles.columnHeader, { color: theme.colors.textSecondary }]}>SET</Text>
+                            <Text style={[styles.columnHeader, { color: theme.colors.textSecondary }]}>{i18n.t('session.previous')}</Text>
+                            <Text style={[styles.columnHeader, { color: theme.colors.textSecondary }]}>
+                                <Ionicons name="barbell-outline" size={16} color={theme.colors.textSecondary} /> KG
+                            </Text>
+                            <Text style={[styles.columnHeader, { color: theme.colors.textSecondary }]}>REPS</Text>
+                            <View style={styles.columnHeader}><Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.textSecondary} /></View>
+                        </View>
+
                         {performance.sets.map((set, setIndex) => (
-                            <View key={setIndex} style={styles.setContainer}>
+                            <View key={setIndex} style={styles.setRow}>
                                 <Text style={[styles.setNumber, { color: theme.colors.text }]}>
-                                    {i18n.t('session.set_number', { number: setIndex + 1 })}
+                                    {setIndex + 1}
                                 </Text>
-                                <View style={styles.inputsContainer}>
-                                    <TextInput
-                                        style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                        value={set.reps}
-                                        onChangeText={(value) => {
-                                            const newPerformances = [...performances];
-                                            newPerformances[exerciseIndex].sets[setIndex].reps = value;
-                                            setPerformances(newPerformances);
-                                        }}
-                                        keyboardType="numeric"
-                                        placeholder={i18n.t('session.enter_reps')}
-                                        placeholderTextColor={theme.colors.textSecondary}
-                                    />
-                                    <TextInput
-                                        style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                        value={set.weight}
-                                        onChangeText={(value) => {
-                                            const newPerformances = [...performances];
-                                            newPerformances[exerciseIndex].sets[setIndex].weight = value;
-                                            setPerformances(newPerformances);
-                                        }}
-                                        keyboardType="numeric"
-                                        placeholder={i18n.t('session.enter_weight')}
-                                        placeholderTextColor={theme.colors.textSecondary}
-                                    />
-                                </View>
+                                <Text style={[styles.previousText, { color: theme.colors.textSecondary }]}>
+                                    {performance.lastPerformance ? `${performance.lastPerformance.weight}kg x ${performance.lastPerformance.reps}` : '-'}
+                                </Text>
+                                <TextInput
+                                    style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                    value={set.weight}
+                                    onChangeText={(value) => {
+                                        const newPerformances = [...performances];
+                                        newPerformances[exerciseIndex].sets[setIndex].weight = value;
+                                        setPerformances(newPerformances);
+                                    }}
+                                    keyboardType="numeric"
+                                    placeholder={performance.targetWeight.toString()}
+                                    placeholderTextColor={theme.colors.textSecondary}
+                                />
+                                <TextInput
+                                    style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
+                                    value={set.reps}
+                                    onChangeText={(value) => {
+                                        const newPerformances = [...performances];
+                                        newPerformances[exerciseIndex].sets[setIndex].reps = value;
+                                        setPerformances(newPerformances);
+                                    }}
+                                    keyboardType="numeric"
+                                    placeholder={performance.targetReps.toString()}
+                                    placeholderTextColor={theme.colors.textSecondary}
+                                />
                                 <Checkbox
                                     value={set.completed}
                                     onValueChange={(value: boolean) => {
@@ -198,6 +235,7 @@ export default function LogWorkoutScreen() {
                                         newPerformances[exerciseIndex].sets[setIndex].completed = value;
                                         setPerformances(newPerformances);
                                     }}
+                                    color={set.completed ? theme.colors.primary : theme.colors.outline}
                                 />
                             </View>
                         ))}
@@ -271,23 +309,29 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 15,
     },
-    setContainer: {
+    tableHeader: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
-        padding: 10,
-        backgroundColor: 'rgba(0,0,0,0.05)',
-        borderRadius: 4,
+    },
+    columnHeader: {
+        flex: 1,
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    setRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
     },
     setNumber: {
         width: 60,
         fontSize: 14,
         fontWeight: '500',
     },
-    inputsContainer: {
+    previousText: {
         flex: 1,
-        flexDirection: 'row',
-        gap: 10,
+        fontSize: 14,
         marginRight: 10,
     },
     input: {
