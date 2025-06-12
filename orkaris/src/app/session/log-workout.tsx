@@ -106,6 +106,10 @@ export default function LogWorkoutScreen() {
     };
 
     const handleFinish = async () => {
+        if (!session) {
+            Alert.alert(i18n.t('alert.error'), i18n.t('error.session_not_loaded'));
+            return;
+        }
         try {
             // Sauvegarder les performances pour chaque exercice
             for (const performance of performances) {
@@ -121,6 +125,11 @@ export default function LogWorkoutScreen() {
                     }
                 }
             }
+            await apiService.post('/SessionPerformance', {
+                    sessionId: session.id,
+                    feeling: 'good',
+                    date: new Date().toISOString(),
+                });
 
             Alert.alert(i18n.t('alert.success'), i18n.t('session.workout_completed'));
             router.back();
