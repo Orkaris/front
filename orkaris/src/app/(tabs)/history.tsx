@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "@/src/context/AuthContext";
 import Loader from "@/src/components/loader";
 import HistoryCard from "@/src/components/HistoryCard";
+import { SessionPerformance } from "@/src/model/types";
 
 interface SessionExercise {
     exerciseGoalSessionExercise: {
@@ -31,7 +32,7 @@ interface Session {
 
 export default function HistoryScreen() {
     const { theme } = useThemeContext();
-    const [sessions, setSessions] = useState<Session[]>([]);
+    const [sessions, setSessions] = useState<SessionPerformance[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const { userId } = useAuth();
@@ -42,9 +43,9 @@ export default function HistoryScreen() {
 
     const fetchSessions = async () => {
         try {
-            const response = await apiService.get<Session[]>(`/Session/ByUserId/${userId}`);
+            const response = await apiService.get<SessionPerformance[]>(`/SessionPerformance/user/${userId}`);
             const sortedSessions = response.sort((a, b) =>
-                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                new Date(b.date).getTime() - new Date(a.date).getTime()
             );
             setSessions(sortedSessions);
         } catch (error) {
@@ -66,9 +67,9 @@ export default function HistoryScreen() {
                     renderItem={({ item }) => (
                         <HistoryCard
                             id={item.id}
-                            name={item.name}
-                            createdAt={item.createdAt}
-                            sessionExerciseSession={item.sessionExerciseSession}
+                            sessionName={item.sessionName}
+                            date={item.date}
+                            exerciseGoalPerformances={item.exerciseGoalPerformances}
                             onPress={() => router.push({
                                 pathname: '/session/[id]',
                                 params: { id: item.id }

@@ -4,36 +4,27 @@ import { useThemeContext } from '@/src/context/ThemeContext';
 import { i18n } from '@/src/i18n/i18n';
 import dayjs from 'dayjs';
 import { Ionicons } from '@expo/vector-icons';
-
-interface SessionExercise {
-    exerciseGoalSessionExercise: {
-        reps: number;
-        sets: number;
-        exerciseExerciseGoal: {
-            name: string;
-        };
-    };
-}
+import { ExerciseGoalPerformance } from '@/src/model/types';
 
 interface HistoryCardProps {
     id: string;
-    name: string;
-    createdAt: string;
-    sessionExerciseSession: SessionExercise[];
+    sessionName: string;
+    date: string;
+    exerciseGoalPerformances: ExerciseGoalPerformance[];
     onPress: () => void;
 }
 
-export default function HistoryCard({ id, name, createdAt, sessionExerciseSession, onPress }: HistoryCardProps) {
+export default function HistoryCard({ id, sessionName, date, exerciseGoalPerformances, onPress }: HistoryCardProps) {
     const { theme } = useThemeContext();
 
     // Calculate total volume (weight × reps × sets)
-    const totalVolume = sessionExerciseSession.reduce((acc, exercise) => {
-        return acc + (exercise.exerciseGoalSessionExercise.reps * exercise.exerciseGoalSessionExercise.sets);
+    const totalVolume = exerciseGoalPerformances.reduce((acc, exercise) => {
+        return acc + (exercise.weight * exercise.reps * exercise.sets);
     }, 0);
 
     // Calculate total sets
-    const totalSets = sessionExerciseSession.reduce((acc, exercise) => {
-        return acc + exercise.exerciseGoalSessionExercise.sets;
+    const totalSets = exerciseGoalPerformances.reduce((acc, exercise) => {
+        return acc + exercise.sets;
     }, 0);
 
     return (
@@ -43,10 +34,10 @@ export default function HistoryCard({ id, name, createdAt, sessionExerciseSessio
         >
             <View style={styles.header}>
                 <Text style={[styles.title, { color: theme.colors.text }]}>
-                    {name}
+                    {sessionName}
                 </Text>
                 <Text style={[styles.date, { color: theme.colors.textSecondary }]}>
-                    {dayjs(createdAt).format('DD/MM/YYYY HH:mm')}
+                    {dayjs(date).format('DD/MM/YYYY HH:mm')}
                 </Text>
             </View>
 
@@ -73,9 +64,9 @@ export default function HistoryCard({ id, name, createdAt, sessionExerciseSessio
             </View>
 
             <View style={styles.exercisesList}>
-                {sessionExerciseSession.map((exercise, index) => (
+                {exerciseGoalPerformances.map((exercise, index) => (
                     <Text key={index} style={[styles.exerciseText, { color: theme.colors.textSecondary }]}>
-                        • {exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.name}: {exercise.exerciseGoalSessionExercise.sets} {i18n.t('session.sets_label')} × {exercise.exerciseGoalSessionExercise.reps} {i18n.t('session.reps_label')}
+                        • {exercise.exerciseName}: {exercise.sets} {i18n.t('session.sets_label')} × {exercise.reps} {i18n.t('session.reps_label')} × {exercise.weight}kg
                     </Text>
                 ))}
             </View>
