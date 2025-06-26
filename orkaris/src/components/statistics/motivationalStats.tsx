@@ -15,6 +15,15 @@ interface MotivationalStatsProps {
     theme: any;
 }
 
+const CARD_WIDTH = 260;
+const CONTAINER_HORIZONTAL_MARGIN = 16;
+const CONTAINER_PADDING = 20;
+const SCREEN_WIDTH =  // @ts-ignore
+    typeof window !== 'undefined'
+        ? window.innerWidth
+        : require('react-native').Dimensions.get('window').width;
+const SIDE_PADDING = (SCREEN_WIDTH - CARD_WIDTH) / 2;
+
 const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = i18n.t('motivational.title'), theme }) => {
     const listRef = useRef<FlatList>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,8 +65,12 @@ const MotivationalStats: React.FC<MotivationalStatsProps> = ({ stats, title = i1
                 keyExtractor={(_, index) => index.toString()}
                 horizontal
                 pagingEnabled
+                snapToAlignment="center"
+                decelerationRate="fast"
                 showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ paddingHorizontal: 8 }}
+                contentContainerStyle={{
+                    paddingHorizontal: SIDE_PADDING,
+                }}
                 renderItem={({ item }) => (
                     <Animated.View
                         entering={FadeInUp.duration(400)}

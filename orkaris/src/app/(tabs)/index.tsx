@@ -7,6 +7,8 @@ import { apiService } from '@/src/services/api';
 import { useAuth } from '@/src/context/AuthContext';
 import { i18n } from '@/src/i18n/i18n'; // Ajout de l'import i18n
 import { useLanguageContext } from '@/src/context/LanguageContext';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 
 interface RawSession {
   date: string; // ISO
@@ -57,58 +59,50 @@ export default function HomeScreen() {
   //   return "60 %";
   // }
 
-  // Appel API pour récupérer les données + mocks en cas d'erreur
-  useEffect(() => {
-    async function fetchAllStats() {
-      setLoading(true);
-      try {
+  // Remplace useEffect par useFocusEffect pour recharger à chaque focus
+  useFocusEffect(
+    // useCallback pour éviter des effets de bord
+    React.useCallback(() => {
+      let isActive = true;
+      async function fetchAllStats() {
+        setLoading(true);
+        try {
 
-        // MotivationalStats
-        const [rawVolume, sets, nbSessions] = await Promise.all([
-          fetchWeeklyVolume(),
-          fetchWeeklySets(),
-          fetchMonthlySessions(),
-        ]);
-        setMotivStats([
-          { value: rawVolume as string | number, message: i18n.t('home.weekly_volume', { volume: rawVolume }), icon: "🏋️" },
-          { value: sets, message: i18n.t('home.weekly_sets', { sets }), icon: "📊" },
-          { value: nbSessions as string | number, message: i18n.t('home.monthly_sessions', { sessions: nbSessions }), icon: "🔥" },
-        ]);
+          // MotivationalStats
+          const [rawVolume, sets, nbSessions] = await Promise.all([
+            fetchWeeklyVolume(),
+            fetchWeeklySets(),
+            fetchMonthlySessions(),
+          ]);
+          if (!isActive) return;
+          setMotivStats([
+            { value: rawVolume as string | number, message: i18n.t('home.weekly_volume', { volume: rawVolume }), icon: "🏋️" },
+            { value: sets, message: i18n.t('home.weekly_sets', { sets }), icon: "📊" },
+            { value: nbSessions as string | number, message: i18n.t('home.monthly_sessions', { sessions: nbSessions }), icon: "🔥" },
+          ]);
 
-        // WeeklyPerformance TODO: à réactiver quand l'API sera prête
-        const sessionsData = await apiService.get<RawSession[]>(`/stats/last-8-weeks-sessions/${userId}`);
-        setSessions(sessionsData);
+          // WeeklyPerformance TODO: à réactiver quand l'API sera prête
+          const sessionsData = await apiService.get<RawSession[]>(`/stats/last-8-weeks-sessions/${userId}`);
+          if (!isActive) return;
+          setSessions(sessionsData);
 
-      } catch (e) {
-        // fallback sur les mocks en cas d'erreur
-        setSessions([
-          { date: '2025-05-28T10:00:00Z', duration: 60 },
-          { date: '2025-05-27T11:00:00Z', duration: 45 },
-          { date: '2025-05-25T09:30:00Z', duration: 90 },
-          { date: '2025-05-20T14:00:00Z', duration: 60 },
-          { date: '2025-05-21T15:30:00Z', duration: 30 },
-          { date: '2025-05-13T12:00:00Z', duration: 50 },
-          { date: '2025-05-15T10:00:00Z', duration: 40 },
-          { date: '2025-05-07T08:00:00Z', duration: 30 },
-          { date: '2025-04-30T17:00:00Z', duration: 75 },
-          { date: '2025-05-02T18:00:00Z', duration: 60 },
-          { date: '2025-04-23T16:00:00Z', duration: 90 },
-          { date: '2025-04-15T19:00:00Z', duration: 45 },
-          { date: '2025-04-09T09:00:00Z', duration: 30 },
-        ]);
-        setMotivStats([
-          { value: "12 500 kg", message: i18n.t('home.fallback_volume'), icon: "🏋️" },
-          { value: 345, message: i18n.t('home.fallback_sets'), icon: "📊" },
-          { value: 5, message: i18n.t('home.fallback_sessions'), icon: "🔥" },
-          //{ value: "+10 kg", message: "Ton record au développé couché a augmenté de +10 kg depuis le mois dernier.", icon: "💪" },
-          //{ value: "60 %", message: "Tu as complété 60 % de ton programme 'Force 5x5'.", icon: "📈" },
-        ]);
-      } finally {
-        setLoading(false);
+        } catch (e) {
+          if (!isActive) return;
+          setMotivStats([
+            { value: "12 500 kg", message: i18n.t('home.fallback_volume'), icon: "🏋️" },
+            { value: 345, message: i18n.t('home.fallback_sets'), icon: "📊" },
+            { value: 5, message: i18n.t('home.fallback_sessions'), icon: "🔥" },
+            //{ value: "+10 kg", message: "Ton record au développé couché a augmenté de +10 kg depuis le mois dernier.", icon: "💪" },
+            //{ value: "60 %", message: "Tu as complété 60 % de ton programme 'Force 5x5'.", icon: "📈" },
+          ]);
+        } finally {
+          if (isActive) setLoading(false);
+        }
       }
-    }
-    fetchAllStats();
-  }, [language]); // Ajout de language ici
+      fetchAllStats();
+      return () => { isActive = false; };
+    }, [language, userId])
+  );
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>

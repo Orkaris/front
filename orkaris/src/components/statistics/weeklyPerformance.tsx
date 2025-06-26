@@ -30,13 +30,20 @@ const WeeklyPerformance: React.FC<WeeklyPerformanceProps> = ({
         const key = start.toISOString().slice(0, 10);
         return { key, start, value: 0 };
     });
-
+    console.log("SESSIONS : ");
+    console.log(sessions);
+    
     // Additionne la durée des sessions par semaine
     sessions.forEach(({ date, duration }) => {
+        let durationMinutes = duration;
+        if (typeof duration === 'string') {
+            const [h, m, s] = (duration as string).split(':').map(Number);
+            durationMinutes = h * 60 + m + (s > 0 ? 1 : 0); // arrondi à la minute supérieure si secondes > 0
+        }
         const d = new Date(date);
         const weekStart = startOfWeek(d, { weekStartsOn: 1 }).toISOString().slice(0, 10);
         const targetWeek = weeks.find(w => w.key === weekStart);
-        if (targetWeek) targetWeek.value += duration;
+        if (targetWeek) targetWeek.value += durationMinutes;
     });
 
     const chartData = weeks.map((w, i) => ({
