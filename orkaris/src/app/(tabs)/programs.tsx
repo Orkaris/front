@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, TextInput, Modal, Animated, Dimensions } from 'react-native';
 import { apiService } from '@/src/services/api';
-import { Program } from '@/src/model/types';
+import { Program, Session, Exercise } from '@/src/model/types';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import Loader from '@/src/components/loader';
 import { i18n } from '@/src/i18n/i18n';
@@ -10,6 +10,7 @@ import { useLanguageContext } from '@/src/context/LanguageContext';
 import { useAuth } from '@/src/context/AuthContext';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
+import { Linking } from 'react-native';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -19,6 +20,8 @@ export default function ProgramsScreen() {
     const [newName, setNewName] = useState('');
     const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
     const [isModalVisible, setModalVisible] = useState(false);
+    const [programSessions, setProgramSessions] = useState<{ [programId: string]: Session[] }>({});
+    const [sessionExercises, setSessionExercises] = useState<{ [sessionId: string]: Exercise[] }>({});
     const slideAnim = useState(new Animated.Value(SCREEN_HEIGHT))[0];
     const { theme } = useThemeContext();
     const { language } = useLanguageContext();
@@ -50,6 +53,48 @@ export default function ProgramsScreen() {
         try {
             const response = await apiService.get<Program[]>(`/Workout/ByUserId/${userId}`);
             setPrograms(response);
+
+            // Pour chaque programme, récupérer ses sessions
+            const sessionsMap: { [programId: string]: Session[] } = {};
+            const exercisesMap: { [sessionId: string]: Exercise[] } = {};
+
+            await Promise.all(
+                response.map(async (program) => {
+                    try {
+                        const sessions = await apiService.get<Session[]>(`/Session/ByWorkoutId/${program.id}`);
+                        sessionsMap[program.id] = sessions;
+
+                        // Pour chaque session, récupérer ses exercices
+                        await Promise.all(
+                            sessions.map(async (session) => {
+                                try {
+                                    // On suppose que l'API /Session/{id} renvoie les exercices dans sessionExerciseSession
+                                    const sessionDetail = await apiService.get<any>(`/Session/${session.id}`);
+                                    // sessionDetail.sessionExerciseSession est un tableau d'objets contenant les infos d'exercice
+                                    if (sessionDetail.sessionExerciseSession) {
+                                        exercisesMap[session.id] = sessionDetail.sessionExerciseSession.map((ex: any) => ({
+                                            id: ex.exerciseGoalSessionExercise.exerciseExerciseGoal.id,
+                                            name: ex.exerciseGoalSessionExercise.exerciseExerciseGoal.name,
+                                            // Ajout d'un fallback pour sets, reps, weight si non présents dans Exercise
+                                            sets: ex.exerciseGoalSessionExercise.sets ?? '',
+                                            reps: ex.exerciseGoalSessionExercise.reps ?? '',
+                                            weight: ex.exerciseGoalSessionExercise.weight ?? '',
+                                        }));
+                                    } else {
+                                        exercisesMap[session.id] = [];
+                                    }
+                                } catch {
+                                    exercisesMap[session.id] = [];
+                                }
+                            })
+                        );
+                    } catch (e) {
+                        sessionsMap[program.id] = [];
+                    }
+                })
+            );
+            setProgramSessions(sessionsMap);
+            setSessionExercises(exercisesMap);
         } catch (error) {
             console.error('Error fetching workouts:', error);
         }
@@ -87,6 +132,36 @@ export default function ProgramsScreen() {
             console.error('Error renaming program:', error);
             Alert.alert(i18n.t('alert.error'), 'Error renaming program');
         }
+    };
+
+    // Génère un texte de partage structuré pour X (Twitter)
+    const generateShareText = () => {
+        if (!programs || programs.length === 0) {
+            return i18n.t('program.no_program');
+        }
+        let text = "🏋️ My Training Programs:\n";
+        programs.forEach((program, idx) => {
+            text += `\n${idx + 1}. ${program.name}`;
+            const sessions = programSessions[program.id] || [];
+            if (sessions.length > 0) {
+                sessions.forEach((session) => {
+                    text += `\n   - Session: ${session.name}`;
+                    const exercises = sessionExercises[session.id] || [];
+                    if (exercises.length > 0) {
+                        exercises.forEach((ex: any) => {
+                            // Utilise les propriétés sets/reps/weight si elles existent, sinon affiche juste le nom
+                            if (ex.sets && ex.reps) {
+                                text += `\n      • ${ex.name} (${ex.sets}x${ex.reps}${ex.weight ? ' ' + ex.weight + 'kg' : ''})`;
+                            } else {
+                                text += `\n      • ${ex.name}`;
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        text += "\n\n#Orkaris";
+        return text;
     };
 
     useFocusEffect(
@@ -131,7 +206,7 @@ export default function ProgramsScreen() {
                                                     {program.name}
                                                 </Text>
                                             </Link>
-                                            <TouchableOpacity 
+                                            <TouchableOpacity
                                                 onPress={() => openModal(program)}
                                                 style={styles.menuButton}
                                             >
@@ -149,35 +224,35 @@ export default function ProgramsScreen() {
             ) : (
                 <Loader />
             )}
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={[styles.fab, { backgroundColor: theme.colors.primary }]}
                 onPress={() => navigation.navigate("/program/new")}
             >
                 <Ionicons name="add" size={24} color="white" />
             </TouchableOpacity>
-
             <Modal
                 visible={isModalVisible}
                 transparent
                 animationType="none"
                 onRequestClose={closeModal}
             >
-                <TouchableOpacity 
-                    style={styles.modalOverlay} 
-                    activeOpacity={1} 
+                <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
                     onPress={closeModal}
                 >
-                    <Animated.View 
+                    <Animated.View
                         style={[
                             styles.modalContent,
-                            { 
+                            {
                                 backgroundColor: theme.colors.surfaceVariant,
                                 transform: [{ translateY: slideAnim }]
                             }
                         ]}
                     >
                         <View style={styles.modalHandle} />
-                        <TouchableRipple 
+                        {/* Les boutons sont maintenant les uns en dessous des autres */}
+                        <TouchableRipple
                             onPress={() => selectedProgram && handleRename(selectedProgram)}
                             style={styles.modalItem}
                         >
@@ -188,13 +263,51 @@ export default function ProgramsScreen() {
                                 </Text>
                             </View>
                         </TouchableRipple>
-                        <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
-                        <TouchableRipple 
+                        <TouchableOpacity
+                            style={[styles.modalItem]}
+                            onPress={() => {
+                                if (selectedProgram) {
+                                    const tweetText = encodeURIComponent(
+                                        (() => {
+                                            let text = `🏋️ ${selectedProgram.name}`;
+                                            const sessions = programSessions[selectedProgram.id] || [];
+                                            if (sessions.length > 0) {
+                                                sessions.forEach((session) => {
+                                                    text += `\n   - Session: ${session.name}`;
+                                                    const exercises = sessionExercises[session.id] || [];
+                                                    if (exercises.length > 0) {
+                                                        exercises.forEach((ex: any) => {
+                                                            if (ex.sets && ex.reps) {
+                                                                text += `\n      • ${ex.name} (${ex.sets}x${ex.reps}${ex.weight ? ' ' + ex.weight + 'kg' : ''})`;
+                                                            } else {
+                                                                text += `\n      • ${ex.name}`;
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                            text += "\n\n#Orkaris";
+                                            return text;
+                                        })()
+                                    );
+                                    const url = `https://twitter.com/intent/tweet?text=${tweetText}`;
+                                    Linking.openURL(url);
+                                }
+                            }}
+                        >
+                            <View style={styles.modalItemContent}>
+                                <Text style={{ fontSize: 24, color: theme.colors.primary, fontWeight: 'bold', marginRight: 2 }}>𝕏</Text>
+                                <Text style={[styles.modalItemText, { color: "white" }]}>
+                                    Partager sur X
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableRipple
                             onPress={() => selectedProgram && handleDelete(selectedProgram.id)}
                             style={styles.modalItem}
                         >
                             <View style={styles.modalItemContent}>
-                                <Ionicons name="trash" size={24} color={theme.colors.error} />
+                                <Ionicons name="trash"  color={theme.colors.error} />
                                 <Text style={[styles.modalItemText, { color: theme.colors.error }]}>
                                     {i18n.t('program.delete')}
                                 </Text>
@@ -273,6 +386,23 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
     },
+    twitterButton: {
+        display: 'none',
+    },
+    twitterButtonModal: {
+        display: 'none',
+    },
+    xShareButton: {
+        backgroundColor: '#000',
+        borderRadius: 8,
+        marginHorizontal: 16,
+        marginVertical: 8,
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
     modalOverlay: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -308,3 +438,4 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
 });
+// Note: This file is part of the Orkaris app, a fitness tracking application.

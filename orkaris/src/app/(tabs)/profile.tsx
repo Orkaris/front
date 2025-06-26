@@ -228,8 +228,10 @@ export default function ProfileScreen() {
             </View>
             <View style={styles.buttonContainer}>
             <CustomButton onPress={
-                    () =>
-                        showAlert(i18n.t('profile.sign_out'), i18n.t('profile.sign_out_confirmation'), signOut)
+                    () => {
+                        console.log("Déconnexion demandée");
+                        signOut;
+                    }
                 }
                     label={i18n.t('profile.sign_out')}
                     theme={theme}
