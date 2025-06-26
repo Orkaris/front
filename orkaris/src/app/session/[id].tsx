@@ -89,8 +89,8 @@ export default function SessionScreen() {
             {session.sessionExerciseSession.length > 0 ? (
                 <View style={styles.container}>
                     {session.sessionExerciseSession.map((exercise) => (
-                        <View key={exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id} 
-                              style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
+                        <View key={exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id}
+                            style={[styles.card, { backgroundColor: theme.colors.surfaceVariant }]}>
                             <Link style={[styles.exercise, { color: theme.colors.text }]} href={{
                                 pathname: '/exercise/[id]',
                                 params: { id: exercise.exerciseGoalSessionExercise.exerciseExerciseGoal.id }
@@ -104,14 +104,6 @@ export default function SessionScreen() {
                             </View>
                         </View>
                     ))}
-
-                    <TouchableOpacity
-                        style={[styles.addButton, { backgroundColor: theme.colors.primary }]}
-                        onPress={handleAddExercise}
-                    >
-                        <Ionicons name="add" size={24} color="white" />
-                        <Text style={styles.addButtonText}>{i18n.t('exercise.add_exercise')}</Text>
-                    </TouchableOpacity>
 
                     <TouchableOpacity
                         style={[styles.startButton, { backgroundColor: theme.colors.primary }]}

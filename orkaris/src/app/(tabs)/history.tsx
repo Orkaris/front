@@ -1,13 +1,13 @@
 import { View, SafeAreaView, Text, StyleSheet, FlatList } from "react-native";
 import { useThemeContext } from "@/src/context/ThemeContext";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { apiService } from "@/src/services/api";
 import { i18n } from "@/src/i18n/i18n";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { useAuth } from "@/src/context/AuthContext";
 import Loader from "@/src/components/loader";
 import HistoryCard from "@/src/components/HistoryCard";
-import { SessionPerformance } from "@/src/model/types";
+import { SessionPerformance, ExerciseGoalPerformance } from "@/src/model/types";
 
 interface SessionExercise {
     exerciseGoalSessionExercise: {
@@ -37,14 +37,27 @@ export default function HistoryScreen() {
     const router = useRouter();
     const { userId } = useAuth();
 
-    useEffect(() => {
-        fetchSessions();
-    }, []);
-
-    const fetchSessions = async () => {
+    const fetchSessions = useCallback(async () => {
         try {
             const response = await apiService.get<SessionPerformance[]>(`/SessionPerformance/user/${userId}`);
-            const sortedSessions = response.sort((a, b) =>
+
+            if (response.length === 0) {
+                setSessions([]);
+                return;
+            }
+
+            const filteredSessions = response.map((session: SessionPerformance) => {
+                return {
+                    ...session,
+                    exerciseGoalPerformances: session.exerciseGoalPerformances.filter((performance: ExerciseGoalPerformance) => {
+                        const sessionDateTime = new Date(session.date).toISOString().split('.')[0]; // YYYY-MM-DDTHH:MM:SS
+                        const performanceDateTime = new Date(performance.createdAt).toISOString().split('.')[0]; // YYYY-MM-DDTHH:MM:SS
+                        return performanceDateTime === sessionDateTime;
+                    })
+                };
+            });
+
+            const sortedSessions = filteredSessions.sort((a, b) =>
                 new Date(b.date).getTime() - new Date(a.date).getTime()
             );
             setSessions(sortedSessions);
@@ -53,7 +66,13 @@ export default function HistoryScreen() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [userId]);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchSessions();
+        }, [fetchSessions])
+    );
 
     if (loading) {
         return <Loader />;
@@ -72,7 +91,7 @@ export default function HistoryScreen() {
                             exerciseGoalPerformances={item.exerciseGoalPerformances}
                             onPress={() => router.push({
                                 pathname: '/session/[id]',
-                                params: { id: item.id }
+                                params: { id: item.sessionId }
                             })}
                         />
                     )}
