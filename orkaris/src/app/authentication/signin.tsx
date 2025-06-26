@@ -42,7 +42,6 @@ export default function SignInScreen() {
 
         try {
             await signIn({ email, password });
-            console.log('Sign In Successful');
         } catch (error: any) {
             const errorMessage = error.response?.data?.message || error.response?.data?.error || "Email ou mot de passe incorrect.";
             Alert.alert('Échec de la connexion', errorMessage);
@@ -53,7 +52,6 @@ export default function SignInScreen() {
     };
 
     const handleSignUp = () => {
-        console.log('Navigate to Sign Up Screen');
         navigation.navigate("authentication/register");
     };
 

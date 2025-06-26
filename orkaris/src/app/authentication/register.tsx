@@ -55,8 +55,6 @@ export default function SignUpScreen() {
 
         setIsSubmitting(true);
         try {
-            console.log(email, username, password);
-
             // Assurez-vous que la clé correspond à ce que l'API attend ('name' ou 'username')
             await signUp({ name: username, email, password });
             Alert.alert(
@@ -80,7 +78,6 @@ export default function SignUpScreen() {
 
 
     const handleSignIn = () => {
-        console.log('Navigate to Sign In Screen');
         navigation.navigate("authentication/signin");
     };
 
@@ -143,7 +140,7 @@ export default function SignUpScreen() {
                             </Text>
                         ) : null}
 
-                        
+
                         <CustomButton
                             onPress={handleSignUp}
                             label={i18n.t('authentication.register_button')}

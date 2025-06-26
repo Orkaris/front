@@ -44,24 +44,17 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         if (!isAuthenticated()) {
-            console.log("User not authenticated, redirecting to signin");
             navigation.replace('/authentication/signin');
             return;
         }
     }, [isAuthenticated, navigation]);
 
-    useEffect(() => {
-        console.log("ProfileScreen - Current userId from context:", userId);
-    }, [userId]);
-
     const fetchUserProfile = useCallback(async () => {
         if (!userId) {
-            console.error("fetchUserProfile: userId non disponible, arrêt.");
             return;
         }
 
         if (user) {
-            console.log("User data already loaded:", user);
             return;
         }
 
@@ -72,7 +65,6 @@ export default function ProfileScreen() {
             const response = await apiService.get<User>(`/Users/ById/${userId}`);
 
             if (response) {
-                console.log("User data received:", response);
                 setUser(response);
             } else {
                 throw new Error("Aucune donnée utilisateur reçue de l'API.");
@@ -103,7 +95,6 @@ export default function ProfileScreen() {
 
     useFocusEffect(
         useCallback(() => {
-            console.log("ProfileScreen focused, fetching profile...");
             fetchUserProfile();
         }, [fetchUserProfile])
     );
@@ -114,7 +105,6 @@ export default function ProfileScreen() {
             Alert.alert(i18n.t('alert.error'), "Les données utilisateur ne sont pas chargées.");
             return;
         }
-        console.log("Navigation vers EditProfile avec user:", user);
 
         navigation.navigate({ pathname: "/profile/edit", params: { userId: user.id } });
     };
@@ -227,9 +217,8 @@ export default function ProfileScreen() {
 
             </View>
             <View style={styles.buttonContainer}>
-            <CustomButton onPress={
+                <CustomButton onPress={
                     () => {
-                        console.log("Déconnexion demandée");
                         signOut;
                     }
                 }

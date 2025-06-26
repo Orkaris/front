@@ -40,7 +40,7 @@ export default function SettingsScreen() {
                     setThemeValue(storedValue);
                 }
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
         };
 

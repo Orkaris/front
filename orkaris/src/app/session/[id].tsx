@@ -4,7 +4,7 @@ import { useThemeContext } from "@/src/context/ThemeContext";
 import { i18n } from "@/src/i18n/i18n";
 import { Exercise } from "@/src/model/types";
 import { apiService } from "@/src/services/api";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { Link, useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState, useEffect } from "react";
 import { SafeAreaView, Text, StyleSheet, View, Button, Alert, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -40,16 +40,17 @@ export default function SessionScreen() {
         try {
             const response = await apiService.get<Session>(`/Session/${sessionId}`);
             setSession(response);
-            console.log(response.sessionExerciseSession)
         } catch (error) {
             console.error('Error fetching session:', error);
             Alert.alert(i18n.t('alert.error'), i18n.t('error.fetching_session'));
         }
     }, [sessionId]);
 
-    useEffect(() => {
-        fetchSession();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchSession();
+        }, [fetchSession])
+    );
 
     const handleAddExercise = async () => {
         router.push({

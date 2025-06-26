@@ -96,7 +96,8 @@ export const i18n = new I18n({
                 male: "Male",
                 female: "Female",
                 other: "Other"
-            }
+            },
+            close: "Close"
         },
         session: {
             new: "New session",
@@ -307,7 +308,8 @@ export const i18n = new I18n({
                 male: "Homme",
                 female: "Femme",
                 other: "Autre"
-            }
+            },
+            close: "Fermer"
         },
         session: {
             new: "Nouvelle session",

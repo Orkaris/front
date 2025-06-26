@@ -25,7 +25,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Check if token is expired
         if (expirationTime === 0 || Date.now() >= expirationTime) {
-          console.log("Token expired");
           setUserId(null);
           setUserToken(null);
           AsyncStorage.removeItem('userToken');

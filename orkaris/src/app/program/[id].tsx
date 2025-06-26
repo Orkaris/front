@@ -48,7 +48,6 @@ export default function ProgramScreen() {
     const fetchSessions = useCallback(async () => {
         try {
             const response = await apiService.get<Session[]>(`/Session/ByWorkoutId/${workoutId}`);
-            console.log('Sessions response:', JSON.stringify(response, null, 2));
             setSessions(response);
         } catch (error) {
             console.error('Error fetching sessions:', error);
@@ -56,7 +55,6 @@ export default function ProgramScreen() {
     }, [userId, workoutId]);
 
     const handleDelete = async (sessionId: string) => {
-        console.log('handleDelete called with sessionId:', sessionId);
         Alert.alert(
             i18n.t('session.delete'),
             i18n.t('session.delete_confirmation'),
@@ -65,18 +63,14 @@ export default function ProgramScreen() {
                     text: i18n.t('alert.cancel'),
                     style: 'cancel',
                     onPress: () => {
-                        console.log('Delete cancelled');
                         closeModal();
                     }
                 },
                 {
                     text: i18n.t('alert.ok'),
                     onPress: async () => {
-                        console.log('Delete confirmed for sessionId:', sessionId);
                         try {
-                            console.log('Attempting to delete session:', sessionId);
                             await apiService.delete(`/Session/${sessionId}`);
-                            console.log('Session deleted successfully');
                             closeModal();
                             fetchSessions();
                         } catch (error) {
@@ -156,7 +150,7 @@ export default function ProgramScreen() {
                                                     {session.name}
                                                 </Text>
                                             </Link>
-                                            <TouchableOpacity 
+                                            <TouchableOpacity
                                                 onPress={() => openModal(session)}
                                                 style={styles.menuButton}
                                             >
@@ -176,7 +170,7 @@ export default function ProgramScreen() {
             ) : (
                 <Loader />
             )}
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={[styles.fab, { backgroundColor: theme.colors.primary }]}
                 onPress={() => router.navigate({
                     pathname: "/session/new",
@@ -192,22 +186,22 @@ export default function ProgramScreen() {
                 animationType="none"
                 onRequestClose={closeModal}
             >
-                <TouchableOpacity 
-                    style={styles.modalOverlay} 
-                    activeOpacity={1} 
+                <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
                     onPress={closeModal}
                 >
-                    <Animated.View 
+                    <Animated.View
                         style={[
                             styles.modalContent,
-                            { 
+                            {
                                 backgroundColor: theme.colors.surfaceVariant,
                                 transform: [{ translateY: slideAnim }]
                             }
                         ]}
                     >
                         <View style={styles.modalHandle} />
-                        <TouchableRipple 
+                        <TouchableRipple
                             onPress={() => selectedSession && handleRename(selectedSession)}
                             style={styles.modalItem}
                         >
@@ -219,9 +213,8 @@ export default function ProgramScreen() {
                             </View>
                         </TouchableRipple>
                         <View style={[styles.divider, { backgroundColor: theme.colors.outline }]} />
-                        <TouchableRipple 
+                        <TouchableRipple
                             onPress={() => {
-                                console.log('Delete button pressed for session:', selectedSession?.id);
                                 selectedSession && handleDelete(selectedSession.id);
                             }}
                             style={styles.modalItem}

@@ -30,9 +30,7 @@ const WeeklyPerformance: React.FC<WeeklyPerformanceProps> = ({
         const key = start.toISOString().slice(0, 10);
         return { key, start, value: 0 };
     });
-    console.log("SESSIONS : ");
-    console.log(sessions);
-    
+
     // Additionne la durée des sessions par semaine
     sessions.forEach(({ date, duration }) => {
         let durationMinutes = duration;

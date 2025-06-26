@@ -61,7 +61,6 @@ export default function LogWorkoutScreen() {
             try {
                 const response = await apiService.get<Session>(`/Session/${sessionId}`);
                 setSession(response);
-                console.log(response);
 
                 // Fetch last performances for each exercise
                 const performancesWithLastData = await Promise.all(response.sessionExerciseSession.map(async (exercise) => {
@@ -121,11 +120,11 @@ export default function LogWorkoutScreen() {
             Alert.alert(i18n.t('alert.error'), i18n.t('error.session_not_loaded'));
             return;
         }
-        if (!duration) {
-            setDurationError(true);
-            Alert.alert(i18n.t('alert.error'), i18n.t('error.duration_required'));
-            return;
-        }
+        // if (!duration) {
+        //     setDurationError(true);
+        //     Alert.alert(i18n.t('alert.error'), i18n.t('error.duration_required'));
+        //     return;
+        // }
         try {
             // Save performances for each exercise
             for (const performance of performances) {
@@ -145,6 +144,15 @@ export default function LogWorkoutScreen() {
                 sessionId: session.id,
                 feeling: 'good',
                 date: new Date().toISOString(),
+                // duration: {
+                //     ticks: 0,
+                //     days: 0,
+                //     hours: 0,
+                //     milliseconds: 0,
+                //     microseconds: 0,
+                //     minutes: duration || 0,
+                //     seconds: 0
+                // },
             });
 
             Alert.alert(i18n.t('alert.success'), i18n.t('session.workout_completed'));
@@ -227,14 +235,16 @@ export default function LogWorkoutScreen() {
                                 <Text style={styles.thSet}>{i18n.t('session.set').toUpperCase()}</Text>
                                 <Text style={styles.thPrev}>{i18n.t('session.previous').toUpperCase()}</Text>
                                 <Text style={styles.thReps}>{i18n.t('session.reps').toUpperCase()}</Text>
-                                <Text style={styles.thWeight}><Ionicons name="barbell-outline" size={16} color={theme.colors.textSecondary} /> KG</Text>
+                                <Text style={styles.thWeight}>KG</Text>
                                 <Text style={styles.thRemove}></Text>
                             </View>
 
                             {performance.sets.map((set, setIndex) => (
                                 <View key={setIndex} style={styles.setRow}>
-                                    <Text style={styles.tdSet}>{setIndex + 1}</Text>
-                                    <Text style={styles.tdPrev}>
+                                    <Text style={[styles.tdSet, { color: theme.colors.text }]}>
+                                        {setIndex + 1}
+                                    </Text>
+                                    <Text style={[styles.tdPrev, { color: theme.colors.text }]}>
                                         {performance.lastPerformance ? `${performance.lastPerformance.weight}kg x ${performance.lastPerformance.reps}` : '-'}
                                     </Text>
                                     <TextInput
@@ -439,6 +449,7 @@ const styles = StyleSheet.create({
         width: 24,
         alignItems: 'center',
         justifyContent: 'center',
+        marginHorizontal: 5,
     },
     addSetButton: {
         flexDirection: 'row',

@@ -32,7 +32,6 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
     const [sessionExercises, setSessionExercises] = useState<SessionExercise[]>([]);
 
     const addExercise = useCallback((exercise: ExerciseInput) => {
-        console.log(exercise)
         setSessionExercises(prevExercises => {
             const exerciseExists = prevExercises.some(ex => ex.exerciseId === exercise.id);
             if (!exerciseExists) {

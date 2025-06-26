@@ -43,12 +43,11 @@ export default function SelectExerciseScreen() {
                 name: newExerciseName.trim(),
                 description: '',
             });
-            console.log('Select-exercise.tsx - Created exercise:', response);
             setExercises([...exercises, response]);
             setIsCreatingExercise(false);
             setNewExerciseName('');
             Alert.alert(i18n.t('session.exercise_created'));
-            
+
             // Sélectionner automatiquement l'exercice créé
             addExercise(response);
             router.back();
@@ -106,7 +105,7 @@ export default function SelectExerciseScreen() {
                         placeholderTextColor={theme.colors.textSecondary}
                     />
                     <View style={styles.createExerciseActions}>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[styles.button, { backgroundColor: theme.colors.error }]}
                             onPress={() => setIsCreatingExercise(false)}
                         >
@@ -114,7 +113,7 @@ export default function SelectExerciseScreen() {
                                 {i18n.t('alert.cancel')}
                             </Text>
                         </TouchableOpacity>
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={[styles.button, { backgroundColor: theme.colors.primary }]}
                             onPress={handleCreateExercise}
                         >
