@@ -29,7 +29,7 @@ export const i18n = new I18n({
             cancel: "Cancel",
             ok: "OK",
             error: "Error",
-            sucess: "Success",
+            success: "Success",
         },
         settings: {
             application_theme: "Application theme",
@@ -92,10 +92,10 @@ export const i18n = new I18n({
             height: "Height (cm)",
             birthdate: "Birthdate",
             gender: "Gender",
-            genders : {
+            genders: {
                 male: "Male",
                 female: "Female",
-                other : "Other"
+                other: "Other"
             }
         },
         session: {
@@ -174,6 +174,7 @@ export const i18n = new I18n({
             creating_training: "Error creating training",
             updating_session: "Error updating session",
             saving_performance: "Error saving performance",
+            session_not_loaded: "Session not loaded",
         },
         statistics: {
             statistics_button: "Statistics",
@@ -236,7 +237,7 @@ export const i18n = new I18n({
             cancel: "Annuler",
             ok: "OK",
             error: "Erreur",
-            sucess: "Succès",
+            success: "Succès",
         },
         settings: {
             application_theme: "Thème de l'application",
@@ -299,7 +300,7 @@ export const i18n = new I18n({
             height: "Taille (cm)",
             birthdate: "Date de naissance",
             gender: "Genre",
-            genders : {
+            genders: {
                 male: "Homme",
                 female: "Femme",
                 other: "Autre"
@@ -381,6 +382,7 @@ export const i18n = new I18n({
             creating_training: "Erreur lors de la création de l'entraînement",
             updating_session: "Erreur lors de la mise à jour de la session",
             saving_performance: "Erreur lors de la sauvegarde de la performance",
+            session_not_loaded: "Session non chargée",
         },
         statistics: {
             statistics_button: "Statistiques",
