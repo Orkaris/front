@@ -29,6 +29,7 @@ export const i18n = new I18n({
             cancel: "Cancel",
             ok: "OK",
             error: "Error",
+            sucess: "Success",
         },
         settings: {
             application_theme: "Application theme",
@@ -104,7 +105,7 @@ export const i18n = new I18n({
             no_session: "No session found",
             delete: "Delete session",
             delete_confirmation: "Are you sure you want to delete this session?",
-            rename: "Rename session",
+            rename: "Edit session",
             new_name: "New name",
             add_exercise: "Add exercise",
             select_exercise: "Select exercise",
@@ -204,6 +205,14 @@ export const i18n = new I18n({
         weekly_performance: {
             title: "Weekly Performance"
         },
+        home: {
+            weekly_volume: "You lifted {{volume}} kg this week!",
+            weekly_sets: "{{sets}} sets completed this week.",
+            monthly_sessions: "{{sessions}} sessions completed this month. Keep it up!",
+            fallback_volume: "You lifted 12,500 kg this week!",
+            fallback_sets: "345 sets completed this week.",
+            fallback_sessions: "5 sessions completed this month. Keep it up!",
+        },
     },
     fr: {
         hello: "Bonjour",
@@ -227,6 +236,7 @@ export const i18n = new I18n({
             cancel: "Annuler",
             ok: "OK",
             error: "Erreur",
+            sucess: "Succès",
         },
         settings: {
             application_theme: "Thème de l'application",
@@ -302,7 +312,7 @@ export const i18n = new I18n({
             no_session: "Aucune session trouvée",
             delete: "Supprimer la session",
             delete_confirmation: "Êtes-vous sûr de vouloir supprimer cette session ?",
-            rename: "Renommer la session",
+            rename: "Editer la session",
             new_name: "Nouveau nom",
             add_exercise: "Ajouter un exercice",
             select_exercise: "Sélectionner un exercice",
@@ -401,6 +411,14 @@ export const i18n = new I18n({
         },
         weekly_performance: {
             title: "Performance Hebdomadaire"
+        },
+        home: {
+            weekly_volume: "Tu as soulevé {{volume}} kg cette semaine !",
+            weekly_sets: "{{sets}} séries terminées cette semaine.",
+            monthly_sessions: "{{sessions}} sessions complètes ce mois-ci. Garde le rythme !",
+            fallback_volume: "Tu as soulevé 12 500 kg cette semaine !",
+            fallback_sets: "345 séries terminées cette semaine.",
+            fallback_sessions: "5 sessions complètes ce mois-ci. Garde le rythme !",
         },
     },
 });

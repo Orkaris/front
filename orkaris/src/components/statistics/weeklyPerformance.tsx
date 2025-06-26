@@ -4,6 +4,7 @@ import { BarChart } from 'react-native-gifted-charts';
 import { format, subWeeks, startOfWeek } from 'date-fns';
 import { fr } from 'date-fns/locale/fr';
 import { i18n } from '@/src/i18n/i18n';
+import { useLanguageContext } from '@/src/context/LanguageContext';
 
 interface RawSession {
     date: string; // ISO date string
@@ -21,6 +22,7 @@ const WeeklyPerformance: React.FC<WeeklyPerformanceProps> = ({
     theme,
     title = i18n.t('weekly_performance.title')
 }) => {
+    const { language } = useLanguageContext();
     const now = new Date();
     // Génère les 8 dernières semaines (de la plus ancienne à la plus récente)
     const weeks = Array.from({ length: 8 }).map((_, i) => {

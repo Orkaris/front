@@ -5,6 +5,8 @@ import MotivationalStats, { MotivationalStat } from '@/src/components/statistics
 import WeeklyPerformance from '@/src/components/statistics/weeklyPerformance';
 import { apiService } from '@/src/services/api';
 import { useAuth } from '@/src/context/AuthContext';
+import { i18n } from '@/src/i18n/i18n'; // Ajout de l'import i18n
+import { useLanguageContext } from '@/src/context/LanguageContext';
 
 interface RawSession {
   date: string; // ISO
@@ -13,6 +15,7 @@ interface RawSession {
 
 export default function HomeScreen() {
   const { theme } = useThemeContext();
+  const { language } = useLanguageContext();
 
   // States
   const [sessions, setSessions] = useState<RawSession[]>([]);
@@ -67,9 +70,9 @@ export default function HomeScreen() {
           fetchMonthlySessions(),
         ]);
         setMotivStats([
-          { value: rawVolume as string | number, message: `Tu as soulevé ${rawVolume} cette semaine !`, icon: "🏋️" },
-          { value: sets, message: `${sets} séries terminées cette semaine.`, icon: "📊" },
-          { value: nbSessions as string | number, message: `${nbSessions} sessions complètes ce mois-ci. Garde le rythme !`, icon: "🔥" },
+          { value: rawVolume as string | number, message: i18n.t('home.weekly_volume', { volume: rawVolume }), icon: "🏋️" },
+          { value: sets, message: i18n.t('home.weekly_sets', { sets }), icon: "📊" },
+          { value: nbSessions as string | number, message: i18n.t('home.monthly_sessions', { sessions: nbSessions }), icon: "🔥" },
         ]);
 
         // WeeklyPerformance TODO: à réactiver quand l'API sera prête
@@ -94,9 +97,9 @@ export default function HomeScreen() {
           { date: '2025-04-09T09:00:00Z', duration: 30 },
         ]);
         setMotivStats([
-          { value: "12 500 kg", message: "Tu as soulevé 12 500 kg cette semaine !", icon: "🏋️" },
-          { value: 345, message: "345 séries terminées cette semaine.", icon: "📊" },
-          { value: 5, message: "5 sessions complètes ce mois-ci. Garde le rythme !", icon: "🔥" },
+          { value: "12 500 kg", message: i18n.t('home.fallback_volume'), icon: "🏋️" },
+          { value: 345, message: i18n.t('home.fallback_sets'), icon: "📊" },
+          { value: 5, message: i18n.t('home.fallback_sessions'), icon: "🔥" },
           //{ value: "+10 kg", message: "Ton record au développé couché a augmenté de +10 kg depuis le mois dernier.", icon: "💪" },
           //{ value: "60 %", message: "Tu as complété 60 % de ton programme 'Force 5x5'.", icon: "📈" },
         ]);
@@ -105,7 +108,7 @@ export default function HomeScreen() {
       }
     }
     fetchAllStats();
-  }, []);
+  }, [language]); // Ajout de language ici
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
