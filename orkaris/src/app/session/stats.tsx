@@ -39,7 +39,7 @@ export default function SessionStats() {
     const maxValue = Math.max(5, ...data);
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: theme.colors.background }}>
+        <ScrollView style={{ flex: 1, backgroundColor: theme.colors.surfaceVariant }}>
             <View style={styles.radarContainer}>
                 <Text style={[styles.radarTitle, { color: theme.colors.text }]}>{i18n.t('statistics.muscles_worked')}</Text>
                 {labels.length > 0 ? (

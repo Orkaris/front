@@ -119,6 +119,7 @@ export interface AuthState {
   signIn: (data: ConnectUser) => Promise<void>;
   signOut: () => Promise<void>;
   signUp: (data: CreateUser) => Promise<void>;
+  deleteAccount: () => Promise<void>;
   userId: string | null; // ID de l'utilisateur connecté
   isAuthenticated: () => boolean;
   // Ajoutez ici d'autres états ou actions si nécessaire (ex: User object)
@@ -147,4 +148,12 @@ export interface DecodedToken {
   email?: string;
   exp?: number;
   iat?: number;
+}
+
+export interface SessionExercise {
+  exerciseId: string;
+  exerciseName: string;
+  reps: string;
+  sets: string;
+  weight: string;
 }

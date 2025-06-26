@@ -128,7 +128,7 @@ export const i18n = new I18n({
             sets_label: "sets",
             start_routine: "Start routine",
             finish: "Finish",
-            total_sets: "{{count}} total sets",
+            total_sets: "{{count}} total set{{plural}}",
             target_sets_reps: "{{sets}} sets × {{reps}} reps",
             set_number: "SET {{number}}",
             enter_reps: "Reps",
@@ -140,7 +140,9 @@ export const i18n = new I18n({
             edit: "Edit session",
             log_workout: "Log workout",
             stats: "Statistics",
-            previous: "Previous"
+            previous: "Previous",
+            updated: "Session updated",
+            total_duration: "Duration of the session (in min)",
         },
         exercise: {
             new: "New exercise",
@@ -160,7 +162,7 @@ export const i18n = new I18n({
             edit: "Edit session",
             log_workout: "Log workout",
             stats: "Statistics",
-            previous: "Previous"
+            previous: "Previous",
         },
         error: {
             name_required: "Name is required.",
@@ -175,6 +177,7 @@ export const i18n = new I18n({
             updating_session: "Error updating session",
             saving_performance: "Error saving performance",
             session_not_loaded: "Session not loaded",
+            duration_required: "Duration is required",
         },
         statistics: {
             statistics_button: "Statistics",
@@ -336,9 +339,9 @@ export const i18n = new I18n({
             sets_label: "séries",
             start_routine: "Commencer routine",
             finish: "Terminer",
-            total_sets: "{{count}} séries au total",
+            total_sets: "{{count}} série{{plural}} au total",
             target_sets_reps: "{{sets}} séries × {{reps}} reps",
-            set_number: "SET {{number}}",
+            set_number: "SÉRIE {{number}}",
             enter_reps: "Reps",
             enter_weight: "Poids",
             add_set: "Ajouter une série",
@@ -348,7 +351,10 @@ export const i18n = new I18n({
             edit: "Modifier la session",
             log_workout: "Enregistrer la séance",
             stats: "Statistiques",
-            previous: "Précédent"
+            previous: "Précédent",
+            set: "Série",
+            updated: "Session mise à jour",
+            total_duration: "Durée de la session (en min)",
         },
         exercise: {
             new: "Nouvel exercice",
@@ -383,6 +389,7 @@ export const i18n = new I18n({
             updating_session: "Erreur lors de la mise à jour de la session",
             saving_performance: "Erreur lors de la sauvegarde de la performance",
             session_not_loaded: "Session non chargée",
+            duration_required: "La durée est requise",
         },
         statistics: {
             statistics_button: "Statistiques",

@@ -40,6 +40,7 @@ export default function SessionScreen() {
         try {
             const response = await apiService.get<Session>(`/Session/${sessionId}`);
             setSession(response);
+            console.log(response.sessionExerciseSession)
         } catch (error) {
             console.error('Error fetching session:', error);
             Alert.alert(i18n.t('alert.error'), i18n.t('error.fetching_session'));
@@ -47,10 +48,8 @@ export default function SessionScreen() {
     }, [sessionId]);
 
     useEffect(() => {
-        if (sessionId) {
-            fetchSession();
-        }
-    }, [sessionId, fetchSession]);
+        fetchSession();
+    }, []);
 
     const handleAddExercise = async () => {
         router.push({
@@ -67,24 +66,26 @@ export default function SessionScreen() {
         <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
             <View style={styles.header}>
                 <Text style={[styles.title, { color: theme.colors.text }]}>{session.name}</Text>
-                <TouchableOpacity
-                    onPress={() => router.push({
-                        pathname: "/session/stats",
-                        params: { id: sessionId }
-                    })}
-                    style={styles.editButton}
-                >
-                    <Ionicons name="stats-chart" size={24} color={theme.colors.primary} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => router.push({
-                        pathname: "/session/edit",
-                        params: { id: sessionId }
-                    })}
-                    style={styles.editButton}
-                >
-                    <Ionicons name="pencil" size={24} color={theme.colors.primary} />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        onPress={() => router.push({
+                            pathname: "/session/stats",
+                            params: { id: sessionId }
+                        })}
+                        style={styles.editButton}
+                    >
+                        <Ionicons name="stats-chart" size={24} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => router.push({
+                            pathname: "/session/edit",
+                            params: { id: sessionId }
+                        })}
+                        style={styles.editButton}
+                    >
+                        <Ionicons name="pencil" size={24} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                </View>
             </View>
             {session.sessionExerciseSession.length > 0 ? (
                 <View style={styles.container}>

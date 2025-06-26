@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import CustomButton from '../components/CustomButton';
 
 export default function SettingsScreen() {
-    const { signOut } = useAuth();
+    const { deleteAccount } = useAuth();
     const { theme, isDark, updateStoredTheme } = useThemeContext();
     const { language, setLanguage } = useLanguageContext();
 
@@ -129,14 +129,14 @@ export default function SettingsScreen() {
                         }
                     />
                 </View>
-                
+
             </View>
 
             <View style={styles.buttonContainer}>
-            <CustomButton
+                <CustomButton
                     onPress={
                         () =>
-                            showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), signOut)
+                            showAlert(i18n.t('settings.delete_account_information'), i18n.t('settings.delete_account_confirmation'), deleteAccount)
                     }
                     label={i18n.t('settings.delete_account')}
                     theme={theme}

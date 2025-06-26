@@ -1,12 +1,11 @@
-import { useCallback, useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, ScrollView, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, ScrollView, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useThemeContext } from '@/src/context/ThemeContext';
 import { useAuth } from '@/src/context/AuthContext';
 import { useExercise } from '@/src/context/ExerciseContext';
 import { i18n } from '@/src/i18n/i18n';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { apiService } from '@/src/services/api';
-import { Exercise } from '@/src/model/types';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -16,7 +15,11 @@ export default function NewSessionScreen() {
     const { userId } = useAuth();
     const { id: workoutId } = useLocalSearchParams();
     const router = useRouter();
-    const { sessionExercises, addExercise, removeExercise, clearExercises, updateExercise } = useExercise();
+    const { sessionExercises, setSessionExercises, addExercise, removeExercise, clearExercises, updateExercise } = useExercise();
+
+    useEffect(() => {
+        setSessionExercises([]);
+    }, []);
 
     const handleRemoveExercise = (index: number) => {
         removeExercise(index);
@@ -50,108 +53,124 @@ export default function NewSessionScreen() {
     };
 
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <ScrollView style={styles.scrollView}>
-                <TextInput
-                    style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                    value={name}
-                    onChangeText={setName}
-                    placeholder={i18n.t('session.name')}
-                    placeholderTextColor={theme.colors.textSecondary}
-                />
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.colors.background }]}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <TextInput
+                        value={name}
+                        onChangeText={setName}
+                        placeholder={i18n.t('session.name')}
+                        placeholderTextColor={theme.colors.textSecondary}
+                        style={[styles.input, { color: theme.colors.text, borderColor: theme.colors.text }]}
+                        autoCapitalize="none"
+                    />
 
-                <View style={styles.exercisesContainer}>
-                    <Text style={[styles.sectionTitle, { color: theme.colors.text }]}>
-                        {i18n.t('session.add_exercise')}
-                    </Text>
+                    <View style={styles.exercisesContainer}>
+                        <TouchableOpacity
+                            style={[styles.addExerciseButton, { backgroundColor: theme.colors.primary }]}
+                            onPress={() => router.push('/session/select-exercise')}
+                        >
+                            <Ionicons name="add" size={24} color="white" />
+                            <Text style={[styles.addExerciseText, { color: theme.colors.textButton }]}>
+                                {i18n.t('session.add_exercise')}
+                            </Text>
+                        </TouchableOpacity>
+                        <KeyboardAvoidingView
+                            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                            style={styles.keyboardView}
+                            keyboardVerticalOffset={80}
+                        >
+                            <ScrollView
+                                style={styles.scrollView}
+                                contentContainerStyle={styles.scrollContent}
+                                showsVerticalScrollIndicator={false}
+                            >
+                                {sessionExercises.map((exercise, index) => (
+                                    <View key={index} style={[styles.exerciseCard, { backgroundColor: theme.colors.surfaceVariant }]}>
+                                        <View style={styles.exerciseHeader}>
+                                            <Text style={[styles.exerciseName, { color: theme.colors.text }]}>
+                                                {exercise.exerciseName}
+                                            </Text>
+                                            <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
+                                                <Ionicons name="close-circle" size={24} color={theme.colors.error} />
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={styles.exerciseInputs}>
+                                            <View style={styles.inputGroup}>
+                                                <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+                                                    {i18n.t('session.sets')}
+                                                </Text>
+                                                <TextInput
+                                                    style={[styles.numberInput, , { color: theme.colors.text, borderColor: theme.colors.text }]}
+                                                    value={exercise.sets}
+                                                    onChangeText={(value) => updateExercise(index, 'sets', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="0"
+                                                    placeholderTextColor={theme.colors.textSecondary}
+                                                />
+                                            </View>
+                                            <View style={styles.inputGroup}>
+                                                <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+                                                    {i18n.t('session.reps')}
+                                                </Text>
+                                                <TextInput
+                                                    style={[styles.numberInput, , { color: theme.colors.text, borderColor: theme.colors.text }]}
+                                                    value={exercise.reps}
+                                                    onChangeText={(value) => updateExercise(index, 'reps', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="0"
+                                                    placeholderTextColor={theme.colors.textSecondary}
+                                                />
+                                            </View>
+                                            <View style={styles.inputGroup}>
+                                                <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
+                                                    {i18n.t('session.weight_label')}
+                                                </Text>
+                                                <TextInput
+                                                    style={[styles.numberInput, , { color: theme.colors.text, borderColor: theme.colors.text }]}
+                                                    value={exercise.weight}
+                                                    onChangeText={(value) => updateExercise(index, 'weight', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="0"
+                                                    placeholderTextColor={theme.colors.textSecondary}
+                                                />
+                                            </View>
+                                        </View>
+                                    </View>
+                                ))}
+                            </ScrollView>
+                        </KeyboardAvoidingView>
+                    </View>
+                </View>
 
-                    {sessionExercises.map((exercise, index) => (
-                        <View key={index} style={[styles.exerciseCard, { backgroundColor: theme.colors.surfaceVariant }]}>
-                            <View style={styles.exerciseHeader}>
-                                <Text style={[styles.exerciseName, { color: theme.colors.text }]}>
-                                    {exercise.exerciseName}
-                                </Text>
-                                <TouchableOpacity onPress={() => handleRemoveExercise(index)}>
-                                    <Ionicons name="close-circle" size={24} color={theme.colors.error} />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.exerciseInputs}>
-                                <View style={styles.inputGroup}>
-                                    <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-                                        {i18n.t('session.reps')}
-                                    </Text>
-                                    <TextInput
-                                        style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                        value={exercise.reps}
-                                        onChangeText={(value) => updateExercise(index, 'reps', value)}
-                                        keyboardType="numeric"
-                                        placeholder="0"
-                                        placeholderTextColor={theme.colors.textSecondary}
-                                    />
-                                </View>
-                                <View style={styles.inputGroup}>
-                                    <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-                                        {i18n.t('session.sets')}
-                                    </Text>
-                                    <TextInput
-                                        style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                        value={exercise.sets}
-                                        onChangeText={(value) => updateExercise(index, 'sets', value)}
-                                        keyboardType="numeric"
-                                        placeholder="0"
-                                        placeholderTextColor={theme.colors.textSecondary}
-                                    />
-                                </View>
-                                <View style={styles.inputGroup}>
-                                    <Text style={[styles.inputLabel, { color: theme.colors.text }]}>
-                                        {i18n.t('session.weight_label')}
-                                    </Text>
-                                    <TextInput
-                                        style={[styles.numberInput, { color: theme.colors.text, borderColor: theme.colors.outline }]}
-                                        value={exercise.weight}
-                                        onChangeText={(value) => updateExercise(index, 'weight', value)}
-                                        keyboardType="numeric"
-                                        placeholder="0"
-                                        placeholderTextColor={theme.colors.textSecondary}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                    ))}
-
-                    <TouchableOpacity 
-                        style={[styles.addExerciseButton, { backgroundColor: theme.colors.primary }]}
-                        onPress={() => router.push('/session/select-exercise')}
+                <View style={styles.footer}>
+                    <TouchableOpacity
+                        style={[styles.createButton, { backgroundColor: theme.colors.primary }]}
+                        onPress={handleCreateSession}
                     >
-                        <Ionicons name="add" size={24} color="white" />
-                        <Text style={[styles.addExerciseText, { color: theme.colors.textButton }]}>
-                            {i18n.t('session.add_exercise')}
+                        <Text style={[styles.createButtonText, { color: theme.colors.textButton }]}>
+                            {i18n.t('session.create')}
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </ScrollView>
-
-            <View style={styles.footer}>
-                <TouchableOpacity 
-                    style={[styles.createButton, { backgroundColor: theme.colors.primary }]}
-                    onPress={handleCreateSession}
-                >
-                    <Text style={[styles.createButtonText, { color: theme.colors.textButton }]}>
-                        {i18n.t('session.create')}
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+            </View >
+        </SafeAreaView >
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+    },
     container: {
         flex: 1,
     },
+    header: {
+        flex: 1,
+        paddingHorizontal: 20,
+    },
     scrollView: {
         flex: 1,
-        padding: 20,
     },
     input: {
         borderWidth: 1,
@@ -161,7 +180,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     exercisesContainer: {
-        marginBottom: 20,
+        flex: 1,
+    },
+    keyboardView: {
+        flex: 1,
+    },
+    scrollContent: {
+        flexGrow: 1,
     },
     sectionTitle: {
         fontSize: 18,

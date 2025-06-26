@@ -43,11 +43,11 @@ export default function EditSessionScreen() {
         const fetchSession = async () => {
             try {
                 const response = await apiService.get<Session>(`/Session/${sessionId}`);
-          
+
                 if (isMounted) {
                     setSession(response);
                     setSessionName(response.name);
-                    
+
                     // Initialiser les exercices dans le contexte
                     clearExercises();
                     response.sessionExerciseSession.forEach(exercise => {
@@ -86,6 +86,7 @@ export default function EditSessionScreen() {
         try {
             // Format exercises data according to the API requirements
             const sessionExerciseSession = sessionExercises.map(exercise => ({
+                id: exercise.exerciseId,
                 reps: parseInt(exercise.reps) || 0,
                 sets: parseInt(exercise.sets) || 0,
                 weight: parseInt(exercise.weight) || 0,
@@ -115,7 +116,7 @@ export default function EditSessionScreen() {
             const sessionExercise = session?.sessionExerciseSession.find(
                 se => se.exerciseGoalSessionExercise.exerciseExerciseGoal.id === exercise.exerciseId
             );
-            
+
             if (!sessionExercise) {
                 throw new Error('Exercise goal not found');
             }

@@ -297,7 +297,7 @@ export default function ProgramsScreen() {
                         >
                             <View style={styles.modalItemContent}>
                                 <Text style={{ fontSize: 24, color: theme.colors.primary, fontWeight: 'bold', marginRight: 2 }}>𝕏</Text>
-                                <Text style={[styles.modalItemText, { color: "white" }]}>
+                                <Text style={[styles.modalItemText, { color: theme.colors.text }]}>
                                     Partager sur X
                                 </Text>
                             </View>
@@ -307,7 +307,7 @@ export default function ProgramsScreen() {
                             style={styles.modalItem}
                         >
                             <View style={styles.modalItemContent}>
-                                <Ionicons name="trash"  color={theme.colors.error} />
+                                <Ionicons name="trash" color={theme.colors.error} />
                                 <Text style={[styles.modalItemText, { color: theme.colors.error }]}>
                                     {i18n.t('program.delete')}
                                 </Text>

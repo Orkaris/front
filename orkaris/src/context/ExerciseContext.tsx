@@ -19,6 +19,7 @@ interface SessionExercise {
 
 interface ExerciseContextType {
     sessionExercises: SessionExercise[];
+    setSessionExercises: React.Dispatch<React.SetStateAction<SessionExercise[]>>;
     addExercise: (exercise: ExerciseInput) => void;
     removeExercise: (index: number) => void;
     clearExercises: () => void;
@@ -31,6 +32,7 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
     const [sessionExercises, setSessionExercises] = useState<SessionExercise[]>([]);
 
     const addExercise = useCallback((exercise: ExerciseInput) => {
+        console.log(exercise)
         setSessionExercises(prevExercises => {
             const exerciseExists = prevExercises.some(ex => ex.exerciseId === exercise.id);
             if (!exerciseExists) {
@@ -70,7 +72,7 @@ export function ExerciseProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <ExerciseContext.Provider value={{ sessionExercises, addExercise, removeExercise, clearExercises, updateExercise }}>
+        <ExerciseContext.Provider value={{ sessionExercises, setSessionExercises, addExercise, removeExercise, clearExercises, updateExercise }}>
             {children}
         </ExerciseContext.Provider>
     );

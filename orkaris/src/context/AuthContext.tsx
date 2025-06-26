@@ -3,7 +3,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from 'jwt-decode';
 import { AuthState, ConnectUser, CreateUser, DecodedToken, ResponseToken, User } from '@/src/model/types';
 import { apiService } from '../services/api';
-import { router } from 'expo-router';
 
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
@@ -30,7 +29,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUserId(null);
           setUserToken(null);
           AsyncStorage.removeItem('userToken');
-          router.replace('/authentication/signin');
           return;
         }
 
@@ -42,14 +40,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUserId(null);
           setUserToken(null);
           AsyncStorage.removeItem('userToken');
-          router.replace('/authentication/signin');
         }
       } catch (e) {
         console.error("Error processing token:", e);
         setUserId(null);
         setUserToken(null);
         AsyncStorage.removeItem('userToken');
-        router.replace('/authentication/signin');
       }
     } else {
       setUserId(null);
@@ -91,7 +87,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             await AsyncStorage.setItem('userToken', receivedToken);
             setUserToken(receivedToken);
             processToken(receivedToken);
-            router.replace('/(tabs)');
           } else {
             throw new Error("Token non reçu après connexion.");
           }
@@ -108,7 +103,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           await AsyncStorage.removeItem('userToken');
           processToken(null);
           setIsSignout(true);
-          router.replace('/authentication/signin');
         } catch (e) {
           console.error("Error during signout:", e);
         } finally {
@@ -124,6 +118,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             password: data.password,
           });
         } catch (error: any) {
+          throw error;
+        } finally {
+          setIsLoading(false);
+        }
+      },
+      deleteAccount: async () => {
+        setIsLoading(true);
+        try {
+          if (!userId) {
+            throw new Error("User ID is not available for deletion.");
+          }
+          await apiService.delete(`/Users/${userId}`);
+          await AsyncStorage.removeItem('userToken');
+          processToken(null);
+          setIsSignout(true);
+        } catch (error: any) {
+          console.error("Error during user deletion:", error);
           throw error;
         } finally {
           setIsLoading(false);
